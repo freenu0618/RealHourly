@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { ApiError } from "@/lib/api/errors";
 import type { User } from "@supabase/supabase-js";
 
 export async function getUser(): Promise<User | null> {
@@ -12,12 +13,7 @@ export async function getUser(): Promise<User | null> {
 export async function requireUser(): Promise<User> {
   const user = await getUser();
   if (!user) {
-    throw new Response(
-      JSON.stringify({
-        error: { code: "UNAUTHORIZED", message: "Authentication required" },
-      }),
-      { status: 401, headers: { "Content-Type": "application/json" } },
-    );
+    throw new ApiError("UNAUTHORIZED", 401, "Authentication required");
   }
   return user;
 }
