@@ -1,5 +1,108 @@
 {
   "common": {
-    "appName": "RealHourly"
+    "appName": "RealHourly",
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "수정",
+    "create": "생성",
+    "confirm": "확인",
+    "back": "뒤로",
+    "next": "다음",
+    "search": "검색",
+    "noResults": "결과가 없습니다",
+    "error": "오류가 발생했습니다",
+    "retry": "재시도"
+  },
+  "auth": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "email": "이메일",
+    "password": "비밀번호",
+    "loginTitle": "RealHourly에 오신 것을 환영합니다",
+    "loginDescription": "AI 기반 인사이트로 프리랜서 수익성을 추적하세요",
+    "loginWithEmail": "이메일로 로그인",
+    "noAccount": "계정이 없으신가요?",
+    "signUp": "회원가입",
+    "hasAccount": "이미 계정이 있으신가요?",
+    "signUpTitle": "계정 만들기",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "checkEmail": "로그인 링크를 이메일에서 확인하세요"
+  },
+  "nav": {
+    "dashboard": "대시보드",
+    "projects": "프로젝트",
+    "timeLog": "시간 기록",
+    "settings": "설정",
+    "clients": "클라이언트"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "totalRevenue": "총 수입",
+    "totalHours": "총 작업 시간",
+    "avgHourlyRate": "평균 시급",
+    "activeProjects": "진행 중인 프로젝트",
+    "recentActivity": "최근 활동",
+    "noProjects": "프로젝트가 없습니다. 첫 프로젝트를 생성하여 시작하세요."
+  },
+  "projects": {
+    "title": "프로젝트",
+    "create": "새 프로젝트",
+    "name": "프로젝트 이름",
+    "client": "클라이언트",
+    "hourlyRate": "시급",
+    "currency": "통화",
+    "status": "상태",
+    "active": "진행 중",
+    "archived": "보관됨",
+    "noProjects": "프로젝트가 없습니다",
+    "createFirst": "첫 프로젝트를 생성하여 추적을 시작하세요",
+    "aliases": "별칭",
+    "aliasesHint": "AI 매칭을 위한 대체 이름",
+    "platformFee": "플랫폼 수수료",
+    "monthlyFixedCost": "월 고정 비용",
+    "details": "프로젝트 상세",
+    "metrics": "지표",
+    "costEntries": "비용 항목",
+    "messages": "메시지"
+  },
+  "timeLog": {
+    "title": "시간 기록",
+    "inputPlaceholder": "작업 내용을 입력하세요... (예: 'ProjectX 디자인 2시간')",
+    "parse": "분석",
+    "parsing": "분석 중...",
+    "saveAll": "모두 저장",
+    "saving": "저장 중...",
+    "project": "프로젝트",
+    "task": "작업",
+    "duration": "시간",
+    "date": "날짜",
+    "category": "카테고리",
+    "noEntries": "시간 기록이 없습니다"
+  },
+  "alerts": {
+    "title": "알림",
+    "dismiss": "닫기",
+    "generateMessage": "메시지 생성",
+    "underpaid": "저가 경고",
+    "overdue": "지연 경고"
+  },
+  "messages": {
+    "title": "생성된 메시지",
+    "copy": "복사",
+    "copied": "복사됨!",
+    "regenerate": "재생성",
+    "tone": "톤",
+    "polite": "정중한",
+    "neutral": "중립적",
+    "firm": "단호한"
+  },
+  "settings": {
+    "title": "설정",
+    "profile": "프로필",
+    "defaultCurrency": "기본 통화",
+    "timezone": "시간대",
+    "language": "언어"
   }
 }

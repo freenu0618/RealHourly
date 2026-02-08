@@ -1,5 +1,108 @@
 {
   "common": {
-    "appName": "RealHourly"
+    "appName": "RealHourly",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "noResults": "No results found",
+    "error": "An error occurred",
+    "retry": "Retry"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "loginTitle": "Welcome to RealHourly",
+    "loginDescription": "Track your freelance profitability with AI-powered insights",
+    "loginWithEmail": "Log in with email",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "hasAccount": "Already have an account?",
+    "signUpTitle": "Create your account",
+    "forgotPassword": "Forgot password?",
+    "checkEmail": "Check your email for a login link"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "timeLog": "Time Log",
+    "settings": "Settings",
+    "clients": "Clients"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalRevenue": "Total Revenue",
+    "totalHours": "Total Hours",
+    "avgHourlyRate": "Average Hourly Rate",
+    "activeProjects": "Active Projects",
+    "recentActivity": "Recent Activity",
+    "noProjects": "No projects yet. Create your first project to get started."
+  },
+  "projects": {
+    "title": "Projects",
+    "create": "New Project",
+    "name": "Project Name",
+    "client": "Client",
+    "hourlyRate": "Hourly Rate",
+    "currency": "Currency",
+    "status": "Status",
+    "active": "Active",
+    "archived": "Archived",
+    "noProjects": "No projects yet",
+    "createFirst": "Create your first project to start tracking",
+    "aliases": "Aliases",
+    "aliasesHint": "Alternative names for AI matching",
+    "platformFee": "Platform Fee",
+    "monthlyFixedCost": "Monthly Fixed Cost",
+    "details": "Project Details",
+    "metrics": "Metrics",
+    "costEntries": "Cost Entries",
+    "messages": "Messages"
+  },
+  "timeLog": {
+    "title": "Time Log",
+    "inputPlaceholder": "Describe your work... (e.g., '2 hours on ProjectX design')",
+    "parse": "Parse",
+    "parsing": "Parsing...",
+    "saveAll": "Save All",
+    "saving": "Saving...",
+    "project": "Project",
+    "task": "Task",
+    "duration": "Duration",
+    "date": "Date",
+    "category": "Category",
+    "noEntries": "No time entries yet"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "dismiss": "Dismiss",
+    "generateMessage": "Generate Message",
+    "underpaid": "Underpaid Alert",
+    "overdue": "Overdue Alert"
+  },
+  "messages": {
+    "title": "Generated Messages",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "regenerate": "Regenerate",
+    "tone": "Tone",
+    "polite": "Polite",
+    "neutral": "Neutral",
+    "firm": "Firm"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "defaultCurrency": "Default Currency",
+    "timezone": "Timezone",
+    "language": "Language"
   }
 }
