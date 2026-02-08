@@ -65,7 +65,31 @@
     "details": "Project Details",
     "metrics": "Metrics",
     "costEntries": "Cost Entries",
-    "messages": "Messages"
+    "messages": "Messages",
+    "expectedFee": "Expected Fee",
+    "expectedHours": "Expected Hours",
+    "progress": "Progress",
+    "taxEnabled": "Tax Enabled",
+    "created": "Project created",
+    "createFailed": "Failed to create project"
+  },
+  "metrics": {
+    "nominalHourly": "Nominal Hourly",
+    "realHourly": "Real Hourly",
+    "totalHours": "Total Hours",
+    "netRevenue": "Net Revenue",
+    "hourlyComparison": "Nominal vs Real Hourly",
+    "costBreakdown": "Cost Breakdown",
+    "platformFee": "Platform Fee",
+    "tax": "Tax",
+    "fixedCost": "Fixed Cost",
+    "noCosts": "No costs",
+    "noTimeLog": "No time logs to calculate",
+    "goToTimeLog": "Go to Time Log",
+    "deficit": "Deficit",
+    "active": "Active",
+    "archived": "Archived",
+    "progress": "Progress"
   },
   "timeLog": {
     "title": "Time Log",

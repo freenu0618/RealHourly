@@ -65,7 +65,31 @@
     "details": "프로젝트 상세",
     "metrics": "지표",
     "costEntries": "비용 항목",
-    "messages": "메시지"
+    "messages": "메시지",
+    "expectedFee": "예상 수입",
+    "expectedHours": "예상 시간",
+    "progress": "진행률",
+    "taxEnabled": "세금 적용",
+    "created": "프로젝트가 생성되었습니다",
+    "createFailed": "프로젝트 생성에 실패했습니다"
+  },
+  "metrics": {
+    "nominalHourly": "명목 시급",
+    "realHourly": "실제 시급",
+    "totalHours": "총 시간",
+    "netRevenue": "순수입",
+    "hourlyComparison": "명목 vs 실제 시급",
+    "costBreakdown": "비용 분해",
+    "platformFee": "플랫폼 수수료",
+    "tax": "세금",
+    "fixedCost": "고정 비용",
+    "noCosts": "비용이 없습니다",
+    "noTimeLog": "시간 로그가 없어서 계산할 수 없습니다",
+    "goToTimeLog": "타임로그 입력하기",
+    "deficit": "적자",
+    "active": "진행 중",
+    "archived": "보관됨",
+    "progress": "진행률"
   },
   "timeLog": {
     "title": "시간 기록",

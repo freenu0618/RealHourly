@@ -1,23 +1,26 @@
-import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import { ProjectDetailClient } from "@/components/projects/ProjectDetailClient";
 
 type Props = {
   params: Promise<{ locale: string; projectId: string }>;
 };
 
+// TODO: Fetch real project from API once auth is set up in browser
+const MOCK_PROJECT = {
+  name: "Demo Project",
+  clientId: null,
+  currency: "USD",
+  isActive: true,
+  progressPercent: 40,
+  expectedFee: 2000,
+  expectedHours: 40,
+};
+
 export default async function ProjectDetailPage({ params }: Props) {
-  const { locale } = await params;
+  const { locale, projectId } = await params;
   setRequestLocale(locale);
 
-  return <ProjectDetailContent />;
-}
-
-function ProjectDetailContent() {
-  const t = useTranslations("projects");
-
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">{t("details")}</h1>
-    </div>
+    <ProjectDetailClient projectId={projectId} project={MOCK_PROJECT} />
   );
 }
