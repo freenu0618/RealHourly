@@ -88,8 +88,7 @@ export function ScopeAlertModal({
       const { data } = await response.json();
       setMessages(data.messages ?? []);
       setPhase("messages");
-    } catch (error) {
-      console.error("Message generation error:", error);
+    } catch {
       toast.error("메시지 생성 중 오류가 발생했습니다");
       setPhase("alert");
     }
@@ -106,7 +105,7 @@ export function ScopeAlertModal({
 
       // Track copy event
       fetch(`/api/messages/${message.id}/copied`, { method: "POST" }).catch(
-        console.error
+        () => {}
       );
 
       // Reset copied state after 2 seconds
@@ -118,8 +117,8 @@ export function ScopeAlertModal({
   const handleDismiss = async () => {
     try {
       await fetch(`/api/alerts/${alert.id}/dismiss`, { method: "POST" });
-    } catch (error) {
-      console.error("Dismiss error:", error);
+    } catch {
+      // dismiss is best-effort
     } finally {
       onDismiss();
     }

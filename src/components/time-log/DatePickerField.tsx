@@ -1,7 +1,7 @@
 "use client";
 
-import { format, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { formatDate, parseUserDate } from "@/lib/date";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -17,7 +17,7 @@ interface DatePickerFieldProps {
 }
 
 export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
-  const date = value ? parse(value, "yyyy-MM-dd", new Date()) : undefined;
+  const date = value ? parseUserDate(value) ?? undefined : undefined;
 
   return (
     <Popover>
@@ -30,7 +30,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           )}
         >
           <CalendarIcon className="mr-1.5 size-3.5" />
-          {date ? format(date, "yyyy-MM-dd") : "Pick date"}
+          {date ? formatDate(date) : "Pick date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -38,7 +38,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           mode="single"
           selected={date}
           onSelect={(d) => {
-            if (d) onChange(format(d, "yyyy-MM-dd"));
+            if (d) onChange(formatDate(d));
           }}
           initialFocus
         />
