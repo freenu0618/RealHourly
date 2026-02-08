@@ -23,6 +23,7 @@ export function DraftCardList({ projects }: DraftCardListProps) {
 
     const el = listRef.current?.children[firstBlocking + 1] as HTMLElement;
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    el?.focus();
   }, [entries.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (entries.length === 0) return null;

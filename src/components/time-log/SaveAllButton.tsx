@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Check, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
   const t = useTranslations("timeLog");
   const { entries, canSaveAll, clearAll } = useDraftStore();
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const enabled = canSaveAll() && entries.length > 0 && !saving;
 
@@ -48,6 +49,8 @@ export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
         toast.info(t("savedPlanned", { count: plannedCount }));
       }
 
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1500);
       clearAll();
       onSaved();
     } catch {
@@ -62,9 +65,15 @@ export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
       onClick={handleSave}
       disabled={!enabled}
       size="lg"
-      className="gap-2"
+      className={`gap-2 transition-colors ${saved ? "bg-green-600 hover:bg-green-600" : ""}`}
+      aria-label={t("saveAll")}
     >
-      {saving ? (
+      {saved ? (
+        <>
+          <Check className="size-4" />
+          {t("saved", { count: 0 }).replace("0", "✓")}
+        </>
+      ) : saving ? (
         <>
           <Loader2 className="size-4 animate-spin" />
           {t("saving")}

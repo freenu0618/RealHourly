@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 import { routing } from "@/i18n/routing";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -24,9 +25,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-      <Toaster />
-    </NextIntlClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <NextIntlClientProvider messages={messages}>
+        {children}
+        <Toaster />
+      </NextIntlClientProvider>
+    </ThemeProvider>
   );
 }

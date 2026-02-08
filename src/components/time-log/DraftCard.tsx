@@ -54,7 +54,12 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
   };
 
   return (
-    <Card className={cn("relative", borderClass)}>
+    <Card
+      className={cn("relative transition-colors", borderClass)}
+      role="group"
+      aria-label={`${entry.taskDescription} — ${entry.projectNameRaw}`}
+      tabIndex={0}
+    >
       <CardContent className="space-y-3 pt-4">
         {/* Header: badges + delete */}
         <div className="flex items-start justify-between gap-2">

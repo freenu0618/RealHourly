@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/money/currency";
 import { formatFactBomb } from "@/lib/money/format";
+import { useCountUp } from "@/lib/hooks/use-count-up";
 
 interface HourlyRateBarProps {
   nominalHourly: number | null;
@@ -31,6 +32,8 @@ export function HourlyRateBar({
   net,
 }: HourlyRateBarProps) {
   const t = useTranslations("metrics");
+  const animatedReal = useCountUp(realHourly, 1000);
+  const animatedNominal = useCountUp(nominalHourly, 1000);
 
   if (realHourly === null) {
     return (
@@ -88,11 +91,15 @@ export function HourlyRateBar({
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Fact bomb */}
+      {/* Fact bomb with count-up */}
       <div className="text-center">
         {nominalHourly !== null && (
-          <p className="text-lg font-bold">
-            {formatFactBomb(nominalHourly, realHourly, currency)}
+          <p className="text-lg font-bold" aria-live="polite">
+            {formatCurrency(Math.round(animatedNominal * 100) / 100, currency)}
+            {" → "}
+            <span className={net < 0 ? "text-destructive" : "text-red-500"}>
+              {formatCurrency(Math.round(animatedReal * 100) / 100, currency)}
+            </span>
           </p>
         )}
         {net < 0 && (
