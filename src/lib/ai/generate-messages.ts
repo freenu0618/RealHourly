@@ -41,8 +41,7 @@ export async function generateMessages(
         type: "json_schema",
         json_schema: messageJsonSchema,
       },
-      temperature: 0.7,
-      max_tokens: 4096,
+      max_completion_tokens: 4096,
     });
 
     const content = completion.choices[0]?.message?.content;

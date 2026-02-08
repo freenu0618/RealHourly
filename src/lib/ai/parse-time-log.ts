@@ -29,21 +29,43 @@ export async function parseTimeLog(
     userTimezone,
   );
 
-  const model = process.env.LLM_MODEL_PARSE || "gpt-4o-mini";
+  const primaryModel = process.env.LLM_MODEL_PARSE || "gpt-4o-mini";
+  const fallbackModel =
+    process.env.LLM_MODEL_PARSE_FALLBACK || "gpt-4o-mini";
 
-  const completion = await getOpenAI().chat.completions.create({
-    model,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: input },
-    ],
-    response_format: {
-      type: "json_schema",
-      json_schema: timeLogJsonSchema,
-    },
-    temperature: 0.1,
-    max_tokens: 2048,
-  });
+  let completion;
+  try {
+    completion = await getOpenAI().chat.completions.create({
+      model: primaryModel,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: input },
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: timeLogJsonSchema,
+      },
+      max_completion_tokens: 2048,
+    });
+  } catch (primaryError) {
+    console.warn(
+      `[parseTimeLog] Primary model "${primaryModel}" failed, trying fallback "${fallbackModel}":`,
+      primaryError instanceof Error ? primaryError.message : primaryError,
+    );
+    if (primaryModel === fallbackModel) throw primaryError;
+    completion = await getOpenAI().chat.completions.create({
+      model: fallbackModel,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: input },
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: timeLogJsonSchema,
+      },
+      max_completion_tokens: 2048,
+    });
+  }
 
   const content = completion.choices[0]?.message?.content;
   if (!content) {

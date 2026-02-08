@@ -42,13 +42,15 @@
 
 | Purpose | Model | Env Var |
 |---------|-------|---------|
-| Time log parsing (1st) | gpt-5-nano | `LLM_MODEL_PARSE` |
+| Time log parsing (1st) | gpt-5-mini | `LLM_MODEL_PARSE` |
 | Time log parsing (fallback) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` |
 | Message generation (default) | gpt-5-mini | `LLM_MODEL_GENERATE` |
 | Message generation (premium) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` |
 
 - All LLM calls use **OpenAI Structured Outputs** (`json_schema`, `strict: true`)
 - LLM role is minimal: extract/structure only. Server handles validation/matching/normalization.
+- **gpt-5 계열 모델 제약사항**: `max_tokens` 대신 `max_completion_tokens` 사용 필수, 커스텀 `temperature` 미지원 (기본값 1만 허용)
+- Primary model 실패 시 fallback model로 자동 재시도 (parse-time-log.ts)
 
 ## Directory Structure
 
@@ -216,7 +218,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 OPENAI_API_KEY=
-LLM_MODEL_PARSE=gpt-5-nano
+LLM_MODEL_PARSE=gpt-5-mini
 LLM_MODEL_PARSE_FALLBACK=gpt-5-mini
 LLM_MODEL_GENERATE=gpt-5-mini
 LLM_MODEL_GENERATE_PREMIUM=gpt-5.2

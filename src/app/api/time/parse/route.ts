@@ -28,6 +28,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ data });
   } catch (error) {
+    console.error("[/api/time/parse] Error:", error);
+    console.error(
+      "[/api/time/parse] Error message:",
+      error instanceof Error ? error.message : String(error),
+    );
+    console.error(
+      "[/api/time/parse] Error stack:",
+      error instanceof Error ? error.stack : "no stack",
+    );
     return handleApiError(error);
   }
 }
