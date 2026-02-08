@@ -61,3 +61,30 @@ export interface ParsedResponse {
   entries: ParsedEntry[];
   parseSummary: ParseSummary;
 }
+
+// ── LLM raw output types ──
+
+export type DurationSource = "explicit" | "ambiguous" | "missing";
+
+export interface LLMEntry {
+  project_name_raw: string;
+  task_description: string;
+  date: string | null;
+  duration_minutes: number | null;
+  duration_source: DurationSource;
+  category: Category;
+  intent: Intent;
+}
+
+export interface LLMParseResponse {
+  entries: LLMEntry[];
+}
+
+// ── Project matching helper type ──
+
+export interface ProjectForMatching {
+  id: string;
+  name: string;
+  aliases: string[] | null;
+  clientName: string | null;
+}
