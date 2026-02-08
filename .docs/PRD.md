@@ -1,0 +1,929 @@
+# RealHourly — Product Requirements Document (PRD)
+
+> Version: P0 (Hackathon MVP)
+> Last Updated: 2026-02-08
+
+---
+
+## Table of Contents
+
+1. [Product Overview](#1-product-overview)
+2. [Tech Stack](#2-tech-stack)
+3. [Feature 1: NLP Time Log](#3-feature-1-nlp-time-log)
+4. [Feature 2: Real Hourly Rate Calculator](#4-feature-2-real-hourly-rate-calculator)
+5. [Feature 3: Scope Creep Detection + Billing Messages](#5-feature-3-scope-creep-detection--billing-messages)
+6. [Database Schema](#6-database-schema)
+7. [API Endpoints](#7-api-endpoints)
+8. [Coding Conventions](#8-coding-conventions)
+9. [Directory Structure](#9-directory-structure)
+10. [Demo Scenario](#10-demo-scenario)
+11. [Seed Data](#11-seed-data)
+
+---
+
+## 1. Product Overview
+
+### 1.1 Problem
+
+전 세계 자영·독립 노동자 15억+ 규모 중 프리랜서 플랫폼 활성 이용자 수천만 명. 대다수가 플랫폼 수수료(Fiverr 20%, Upwork 0~15%), 세금, 툴 구독료, 비청구 시간(미팅/이메일/무한 수정)을 반영한 실질 시급을 파악하지 못함. 기존 도구(Toggl, Harvest 등)는 시간 추적·청구·리포트만 제공하며, 숨은 비용 자동 반영과 스코프 크립 감지, 행동 유도까지 연결하는 솔루션 부재.
+
+### 1.2 Solution
+
+AI 기반 프리랜서 수익성 대시보드:
+- 자연어 타임로그 → 숨겨진 비용 반영 → 진짜 시급 계산 → 스코프 크립 감지 → 추가 청구 메시지 자동 생성
+
+### 1.3 Taglines
+
+- **EN**: "Your contract says $75/hr. Your bank account says $23. Find your real rate."
+- **KO**: "시급 $75라고 생각했는데 실제론 $23? 프리랜서의 숨겨진 손실을 AI가 찾아줍니다"
+
+### 1.4 Key Differentiators
+
+1. 자연어 → 구조화 입력 (NLP)
+2. 숨은 비용·비청구 시간 자동 반영
+3. 스코프 크립 실시간 경고 (규칙 기반)
+4. 추가 청구 메시지 자동 생성 (LLM)
+5. **ROI 증명**: "이 도구로 $500 추가 청구"
+
+### 1.5 Target Users
+
+- 글로벌 프리랜서 (Upwork, Fiverr, 크몽, 숨고 등 플랫폼 + 독립 프리랜서)
+- UI: 한국어/English (브라우저 Accept-Language 자동 감지, 수동 전환 가능)
+- 통화: KRW, USD, EUR, GBP, JPY (사용자 프로필 설정)
+
+### 1.6 UX Core Principle
+
+> **사용자가 반드시 입력해야 하는 건 minutes만. 나머지는 AI가 채우고, 못 채우면 그때만 개입.**
+
+---
+
+## 2. Tech Stack
+
+### 2.1 Core Stack
+
+| Layer | Tech | Notes |
+|-------|------|-------|
+| Framework | Next.js 15 (App Router) | TypeScript strict mode |
+| Styling | Tailwind CSS + shadcn/ui | Radix 기반, cn() 유틸 자동 포함 |
+| i18n | next-intl | `/[locale]/[feature]` URL prefix, 브라우저 자동 감지 |
+| DB | Supabase | PostgreSQL + Auth + RLS |
+| ORM | Drizzle ORM | snake_case DB ↔ camelCase DTO 변환 |
+| Validation | Zod | 폼 + API + LLM 스키마 통일 (Single Source of Truth) |
+| Forms | React Hook Form + Zod | shadcn 공식 지원 |
+| Charts | Recharts | Bar + Pie (P0) |
+| State | zustand | HITL 파싱 드래프트 전용 (범위 한정) |
+| Icons | lucide-react | shadcn 기본 |
+| Toast | sonner | shadcn 공식 권장 |
+| Date | date-fns | `lib/date/index.ts` 래퍼 통일 |
+| Clipboard | navigator.clipboard 래퍼 | `lib/utils/clipboard.ts` |
+| Temp IDs | nanoid | HITL 드래프트 아이템용 |
+| Deploy | Vercel | Next.js 최적화 |
+| Package | pnpm | 속도 + 디스크 효율 |
+
+### 2.2 LLM Strategy (OpenAI, Tiered)
+
+| Purpose | Model | Env Var | Cost |
+|---------|-------|---------|------|
+| 타임로그 파싱 (1차) | gpt-5-nano | `LLM_MODEL_PARSE` | $0.05/1M input |
+| 타임로그 파싱 (폴백) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` | $0.25/1M input |
+| 청구 메시지 생성 (기본) | gpt-5-mini | `LLM_MODEL_GENERATE` | $0.25/1M input |
+| 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | $1.75/1M input |
+
+**호출 방식**: OpenAI Structured Outputs (`json_schema`, `strict: true`)
+**LLM 역할 한정**: 텍스트에서 구조화만 수행. 매칭/검증/날짜 계산은 서버가 담당.
+
+### 2.3 Environment Variables
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL=
+OPENAI_API_KEY=
+LLM_MODEL_PARSE=gpt-5-nano
+LLM_MODEL_PARSE_FALLBACK=gpt-5-mini
+LLM_MODEL_GENERATE=gpt-5-mini
+LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
+```
+
+---
+
+## 3. Feature 1: NLP Time Log
+
+### 3.1 Input UI Layout (top → bottom)
+
+**A) Preferred Project (옵션)**
+- 라벨: "(선택) 주로 작업한 프로젝트"
+- 역할: LLM에게 힌트로만 전달 (`preferred_project_id`)
+- 선택해도 entry별 프로젝트는 따로 매칭됨 (멀티 프로젝트 입력 유지)
+
+**B) Chat-style Textarea**
+- placeholder (KO): "예: 어제 ABC 리브랜딩 기획 2시간, 미팅 30분, 이메일 20분"
+- placeholder (EN): "e.g., Yesterday ABC rebrand planning 2h, meeting 30m, emails 20m"
+- Enter = 줄바꿈, Ctrl/Cmd + Enter = Parse 실행
+
+**C) Quick Chips (텍스트 삽입 버튼)**
+- 오늘, 어제, 미팅, 이메일, 수정, 리서치
+- 클릭 시 커서 위치에 토큰 삽입
+
+**D) Primary CTA: Magic Parse**
+- 버튼 텍스트: "Magic Parse"
+- 아이콘: Sparkles (lucide)
+- 로딩: Textarea/버튼 disabled + Skeleton + "AI가 타임로그를 분석 중…"
+
+**E) "예시 채우기" 버튼 2개**
+- 클릭하면 Textarea에 샘플 문장 삽입 (데모 안정)
+
+**F) HITL Draft Cards → Save All**
+
+### 3.2 Categories (9개)
+
+`planning`, `design`, `development`, `meeting`, `revision`, `admin`, `email`, `research`, `other`
+
+### 3.3 LLM Output Schema (A-1: Raw)
+
+```typescript
+interface LLMParseResponse {
+  entries: LLMEntry[];
+}
+
+interface LLMEntry {
+  project_name_raw: string;                    // 사용자가 쓴 표현 그대로
+  task_description: string;                    // "기획서 작성", "로고 피드백"
+  date: string | null;                         // "YYYY-MM-DD" | null
+  duration_minutes: number | null;             // 1~1440 | null
+  duration_source: "explicit" | "ambiguous" | "missing"; // 서버 판별용 메타
+  category: Category;                          // 9개 enum
+  intent: "done" | "planned";                  // 기본 done, 미래만 planned
+}
+```
+
+**LLM date 규칙**:
+- 명확하면 "YYYY-MM-DD"
+- 상대 표현(오늘/어제/today/yesterday) 허용
+- 애매하면 `null`
+- 미래 표현(내일/tomorrow) → date 채우되 `intent=planned`
+
+### 3.4 Server Normalization (A-2: HITL에 전달)
+
+```typescript
+interface ParsedResponse {
+  entries: ParsedEntry[];
+  parse_summary: { total: number; blocking: number; };
+}
+
+interface ParsedEntry {
+  id: string;                                  // nanoid
+  project_name_raw: string;                    // LLM 원본
+  matched_project_id: string | null;           // 서버 fuzzy match
+  match_source: "alias" | "name" | "client" | "none";
+  task_description: string;
+  date: string;                                // YYYY-MM-DD (null → 오늘)
+  duration_minutes: number | null;             // null이면 DURATION_MISSING
+  category: Category;
+  intent: "done" | "planned";
+  issues: IssueCode[];
+  needs_user_action: boolean;                  // blocking issue ≥ 1
+  clarification_question: string | null;       // UI 고정 문구
+}
+
+type MatchSource = "alias" | "name" | "client" | "none";
+```
+
+### 3.5 Issue Codes
+
+**Blocking (빨간 강조, Save 비활성)**:
+
+| Code | Condition | HITL Action |
+|------|-----------|-------------|
+| `PROJECT_UNMATCHED` | 매칭 프로젝트 없음 | 프로젝트 드롭다운 선택 필수 |
+| `PROJECT_AMBIGUOUS` | 후보 2개 이상 | 올바른 프로젝트 선택 필수 |
+| `DURATION_MISSING` | `duration_source=missing` | 60분 프리필 + 사용자 확인/수정 필수 |
+
+**Warning (경고 배지만, 저장 가능)**:
+
+| Code | Condition | HITL Display |
+|------|-----------|-------------|
+| `DATE_AMBIGUOUS` | date가 null이었음 → 오늘로 채움 | "날짜 추정됨: 오늘" 배지 + DatePicker 제공 |
+| `DURATION_AMBIGUOUS` | `duration_source=ambiguous` → 60분 채움 | "시간 추정됨: 60분" 배지 |
+| `CATEGORY_AMBIGUOUS` | LLM 카테고리 불확실 | 배지만, LLM 선택 유지 |
+| `FUTURE_INTENT` | `intent=planned` | "예정" 배지 + "완료로 전환" 버튼 |
+
+### 3.6 Server Normalization Rules
+
+| Field | LLM Output | Server Processing |
+|-------|-----------|-------------------|
+| `date` | `null` | → 오늘(유저 TZ) + `DATE_AMBIGUOUS` |
+| `date` | valid YYYY-MM-DD | → 그대로 사용 |
+| `duration_minutes` | `null` + source=missing | → 60 프리필 + `DURATION_MISSING` (blocking) |
+| `duration_minutes` | value + source=ambiguous | → 60 기본값 + `DURATION_AMBIGUOUS` (warning) |
+| `intent` | `"planned"` | → `FUTURE_INTENT` 추가 |
+| `project_name_raw` | text | → active projects fuzzy match → `matched_project_id` |
+| match fail | — | → `PROJECT_UNMATCHED` (blocking) |
+| match 2+ candidates | — | → `PROJECT_AMBIGUOUS` + clarification_question |
+
+**Date handling**:
+- 저장 단위: 로컬 날짜 `YYYY-MM-DD` (DATE 타입)
+- 타임존: 유저 프로필 `timezone` 기준 (P0 기본: `Asia/Seoul`)
+- 지원(P0): 오늘/어제/그제, today/yesterday, YYYY-MM-DD, MM/DD
+- 미지원(P0): "지난주 내내", "주말에" → `DATE_AMBIGUOUS`
+
+**Project matching**:
+- LLM 컨텍스트에 active projects 제공 (30개 초과 시 최근 사용 상위 20개 + preferred project 힌트)
+- Aliases: 프로젝트 생성 시 자동 추출 (프로젝트명 핵심 토큰). 사용자는 선택적으로 수정.
+
+### 3.7 HITL UI Behavior
+
+**Card states**:
+- 🟢 정상: issues 없음, 모든 필드 pre-filled
+- 🔴 Blocking: 빨간 테두리, clarification_question 표시, 필수 입력
+- 🟡 Warning: 노란 배지, 수정 가능하지만 필수 아님
+- 🟣 Planned: "예정" 배지 + "완료로 전환" 버튼
+
+**Editable fields per card**:
+
+| Field | Component | Default |
+|-------|-----------|---------|
+| 프로젝트 | Select (active projects) | matched or empty |
+| 태스크 | Text input | LLM value |
+| 날짜 | DatePicker | normalized date |
+| 시간(분) | Number input (1~1440) | LLM value or 60 |
+| 카테고리 | Select (9개) | LLM value |
+| intent | 완료/예정 토글 | LLM value |
+
+**Save All condition**:
+```typescript
+const canSaveAll = entries.every(entry => {
+  const hasProject = entry.matched_project_id !== null;
+  const hasDuration = entry.duration_minutes !== null
+                      && entry.duration_minutes >= 1
+                      && entry.duration_minutes <= 1440;
+  return hasProject && hasDuration;
+});
+```
+
+**Interaction flow**:
+```
+[Input] → [Magic Parse click]
+  → textarea/button disabled
+  → skeleton + "AI가 타임로그를 분석 중…"
+
+[Parse success]
+  → Badge: "3개 항목으로 분해됨"
+  → blocking있으면: 첫 문제 카드로 스크롤/포커스
+  → blocking 없으면: Save All 활성
+
+[Parse fail (LLM error)]
+  → Error toast: "분석에 실패했습니다"
+  → "수동 입력" 버튼 → 수동 폼 전환
+
+[Save All click]
+  → POST /api/time/save (batch)
+  → Success toast: "3건 저장됨"
+  → textarea 초기화
+  → planned: "예정 1건 저장 (계산 제외)" 별도 안내
+```
+
+### 3.8 Fallback
+
+- LLM 파싱 실패 시: 즉시 수동 입력 폼으로 전환 (재시도 없음, P0 단순화)
+- 수동 폼: 프로젝트 선택 + 날짜 + 시간 + 카테고리 + 태스크 설명
+
+---
+
+## 4. Feature 2: Real Hourly Rate Calculator
+
+### 4.1 Calculation Logic
+
+```typescript
+function getProjectMetrics(project, sumMinutesDone, sumFixedCosts) {
+  const gross = project.expected_fee;
+  const platform_fee_amount = gross * project.platform_fee_rate;
+  const tax_amount = gross * project.tax_rate;
+  const direct_cost_fixed = sumFixedCosts;
+  const direct_cost = direct_cost_fixed + platform_fee_amount + tax_amount;
+  const net = gross - direct_cost;
+  const total_hours = sumMinutesDone / 60;
+
+  const nominal_hourly = project.expected_hours > 0
+    ? gross / project.expected_hours
+    : null;
+  const real_hourly = total_hours > 0
+    ? net / total_hours
+    : null;
+
+  const cost_breakdown = [
+    { type: 'platform_fee', amount: platform_fee_amount },
+    { type: 'tax', amount: tax_amount },
+    { type: 'fixed', amount: direct_cost_fixed },
+  ];
+
+  return { gross, net, total_hours, nominal_hourly, real_hourly, cost_breakdown };
+}
+```
+
+### 4.2 Cost Input UX
+
+**Project creation (Preset)**:
+- Platform fee: Select → None(0%) | Upwork(10%) | Fiverr(20%) | 크몽(20%) | Custom(% input)
+- Tax: Toggle + % input (기본 3.3%)
+- Fixed cost (옵션): amount input 1개 → cost_entries에 1 row 생성
+
+**Project detail (Edit)**:
+- `platform_fee_rate`, `tax_rate` 인라인 수정
+- cost_entries CRUD: add/edit/delete (tool/contractor/misc + notes)
+- 수정 직후 metrics 재계산 (이벤트 기반)
+
+**Percent costs storage**:
+- `projects.platform_fee_rate` (0~1), `projects.tax_rate` (0~1)
+- 퍼센트 비용은 cost_entries로 저장하지 않음 (계산 시 동적 반영)
+
+### 4.3 Calculation Trigger (Hybrid)
+
+- **페이지 로드 시**: `getProjectMetrics(projectId)` 서버 계산
+- **이벤트 후 즉시 재계산**:
+  - 타임로그 저장 성공 후
+  - 비용 추가/수정/삭제 성공 후
+  - expected_fee / expected_hours / fee_rate / tax_rate 수정 후
+- P0 구현: `router.refresh()` (P1에서 tag revalidate 전환)
+
+### 4.4 Visualization (P0)
+
+**A) Bar Chart**: 명목 시급 vs 실제 시급
+- 색상: 명목(blue), 실제(red) — 팩트 폭격 대비
+- "팩트 폭격 문구": 통화별 포매터 + 정수/소수1자리 반올림 → "$50 → $18" / "₩70,000 → ₩23,000"
+
+**B) Pie Chart**: 비용 분해
+- platform_fee_amount, tax_amount, fixed_cost
+- "왜 낮은지" 설명용
+
+**C) Line chart (Phase 2)**: 시간 추이
+
+### 4.5 Edge Cases
+
+| Case | Handling |
+|------|----------|
+| `total_hours == 0` | `real_hourly = null`, UI: "시간 로그가 없어서 계산할 수 없음" + CTA "타임로그 입력하기" |
+| `expected_hours == 0` | `nominal_hourly = null` |
+| `net < 0` | 음수 시급 표시 (적자 프로젝트) → "⚠️ 적자" 배지, 데모 임팩트 극대화 |
+
+---
+
+## 5. Feature 3: Scope Creep Detection + Billing Messages
+
+### 5.1 Detection Rules (checked in `getProjectMetrics`)
+
+| Rule | Condition | Meaning |
+|------|-----------|---------|
+| `scope_rule1` | `(total_hours / expected_hours) >= 0.8 AND progress_percent < 50` | 시간 소진 대비 진척 부족 |
+| `scope_rule2` | revision category time >= 40% of total time | 수정 작업 과다 |
+| `scope_rule3` | revision time_entries count >= 5 | 수정 이벤트 빈발 |
+
+### 5.2 Alert Lifecycle
+
+```
+getProjectMetrics 실행
+  → 규칙 체크
+  → 새 규칙 위반 감지 (기존 미해결 alert 없는 경우만)
+  → alerts 테이블 INSERT (metadata에 근거 수치 스냅샷)
+  → metrics 응답에 pendingAlert 포함
+
+프로젝트 상세 진입
+  → GET /api/projects/:id/metrics
+  → pendingAlert 존재 → 모달 자동 표시
+  → 모달: 위험 이유 + 근거 수치 + "청구 메시지 생성" 버튼
+
+"청구 메시지 생성" 클릭
+  → POST /api/messages/generate
+  → LLM 1회 호출 → 3개 톤 생성 (polite/neutral/firm)
+  → 같은 모달 내 탭 전환
+  → 각 탭: subject + body + 복사 버튼
+
+복사
+  → clipboard wrapper
+  → POST /api/messages/:id/copied (copied_at 기록)
+  → success toast
+
+모달 닫기
+  → POST /api/alerts/:id/dismiss (dismissed_at 기록)
+  → 다시 안 뜸
+```
+
+### 5.3 Message Generation (LLM)
+
+**Input context**:
+```json
+{
+  "client_name": "...",
+  "project_name": "...",
+  "expected_fee": 2000,
+  "expected_hours": 40,
+  "total_hours": 85,
+  "progress_percent": 40,
+  "triggered_rules": ["scope_rule1"],
+  "suggested_options": ["추가 비용", "일정 연장", "범위 조정"]
+}
+```
+
+**Output schema (JSON strict)**:
+```json
+{
+  "messages": [
+    { "tone": "polite", "subject": "...", "body": "..." },
+    { "tone": "neutral", "subject": "...", "body": "..." },
+    { "tone": "firm", "subject": "...", "body": "..." }
+  ]
+}
+```
+
+**Storage**: generated_messages 테이블에 3 rows 저장 (alert_id로 연결)
+
+### 5.4 Clarification Questions (UI Fixed)
+
+P0에서 `clarification_question`은 서버/LLM 생성 없이 UI 고정 문구:
+- `PROJECT_UNMATCHED`: "프로젝트를 선택해주세요"
+- `PROJECT_AMBIGUOUS`: "동명의 프로젝트가 있어요. 올바른 프로젝트를 선택해주세요"
+
+---
+
+## 6. Database Schema
+
+### 6.1 Common Conventions
+
+- **PK**: UUID (`gen_random_uuid()`)
+- **Timestamps**: `created_at timestamptz DEFAULT now()`, `updated_at timestamptz DEFAULT now()`
+- **Soft delete**: `deleted_at timestamptz` (all tables)
+- **RLS**: All tables scoped to `auth.uid()`
+- **Enum values**: lowercase (exception: currency = UPPERCASE ISO)
+
+### 6.2 Enums
+
+```sql
+CREATE TYPE project_currency AS ENUM ('USD', 'KRW', 'EUR', 'GBP', 'JPY');
+CREATE TYPE time_category AS ENUM ('planning', 'design', 'development', 'meeting', 'revision', 'admin', 'email', 'research', 'other');
+CREATE TYPE time_intent AS ENUM ('done', 'planned');
+CREATE TYPE cost_type AS ENUM ('platform_fee', 'tax', 'tool', 'contractor', 'misc');
+CREATE TYPE alert_type AS ENUM ('scope_rule1', 'scope_rule2', 'scope_rule3');
+CREATE TYPE message_tone AS ENUM ('polite', 'neutral', 'firm');
+```
+
+### 6.3 Tables
+
+#### profiles
+```sql
+CREATE TABLE profiles (
+  id uuid PRIMARY KEY REFERENCES auth.users(id),
+  default_currency project_currency NOT NULL DEFAULT 'USD',
+  timezone text NOT NULL DEFAULT 'Asia/Seoul',
+  locale text NOT NULL DEFAULT 'en',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+-- RLS: id = auth.uid()
+```
+
+#### clients
+```sql
+CREATE TABLE clients (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE UNIQUE INDEX idx_clients_user_name ON clients(user_id, name) WHERE deleted_at IS NULL;
+-- RLS: user_id = auth.uid()
+```
+
+#### projects
+```sql
+CREATE TABLE projects (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  client_id uuid REFERENCES clients(id),
+  name text NOT NULL,
+  aliases text[] NOT NULL DEFAULT '{}',
+  start_date date,
+  expected_hours numeric NOT NULL DEFAULT 0,
+  expected_fee numeric NOT NULL DEFAULT 0,
+  currency project_currency NOT NULL DEFAULT 'USD',
+  platform_fee_rate numeric NOT NULL DEFAULT 0 CHECK (platform_fee_rate BETWEEN 0 AND 1),
+  tax_rate numeric NOT NULL DEFAULT 0 CHECK (tax_rate BETWEEN 0 AND 1),
+  progress_percent int NOT NULL DEFAULT 0 CHECK (progress_percent BETWEEN 0 AND 100),
+  is_active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE INDEX idx_projects_user_active ON projects(user_id, is_active) WHERE deleted_at IS NULL;
+CREATE INDEX idx_projects_client ON projects(client_id) WHERE deleted_at IS NULL;
+-- RLS: user_id = auth.uid()
+```
+
+#### time_entries
+```sql
+CREATE TABLE time_entries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id),
+  date date NOT NULL,
+  minutes int NOT NULL CHECK (minutes BETWEEN 1 AND 1440),
+  category time_category NOT NULL,
+  intent time_intent NOT NULL DEFAULT 'done',
+  task_description text NOT NULL DEFAULT '',
+  source_text text,
+  issues text[] NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE INDEX idx_time_project_date ON time_entries(project_id, date) WHERE deleted_at IS NULL;
+CREATE INDEX idx_time_project_intent ON time_entries(project_id, intent) WHERE deleted_at IS NULL;
+CREATE INDEX idx_time_project_category ON time_entries(project_id, category) WHERE deleted_at IS NULL;
+-- RLS: via project.user_id = auth.uid()
+```
+
+#### cost_entries
+```sql
+CREATE TABLE cost_entries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id),
+  date date,
+  amount numeric NOT NULL CHECK (amount >= 0),
+  cost_type cost_type NOT NULL,
+  notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE INDEX idx_cost_project ON cost_entries(project_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_cost_project_type ON cost_entries(project_id, cost_type) WHERE deleted_at IS NULL;
+-- RLS: via project.user_id = auth.uid()
+```
+
+#### alerts
+```sql
+CREATE TABLE alerts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id),
+  alert_type alert_type NOT NULL,
+  triggered_at timestamptz NOT NULL DEFAULT now(),
+  dismissed_at timestamptz,
+  metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE INDEX idx_alerts_project ON alerts(project_id, alert_type, dismissed_at) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX idx_alerts_active ON alerts(project_id, alert_type) WHERE dismissed_at IS NULL AND deleted_at IS NULL;
+-- RLS: via project.user_id = auth.uid()
+```
+
+#### generated_messages
+```sql
+CREATE TABLE generated_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  alert_id uuid NOT NULL REFERENCES alerts(id),
+  tone message_tone NOT NULL,
+  subject text NOT NULL,
+  body text NOT NULL,
+  copied_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE INDEX idx_messages_alert ON generated_messages(alert_id, tone) WHERE deleted_at IS NULL;
+-- RLS: via alert → project.user_id = auth.uid()
+```
+
+### 6.4 Migration Checklist (P0)
+
+1. `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
+2. Enum 생성 (6개)
+3. profiles 테이블 (FK to auth.users)
+4. clients, projects 테이블
+5. time_entries, cost_entries 테이블
+6. alerts, generated_messages 테이블
+7. 인덱스 + CHECK 제약
+8. alerts partial unique index
+9. RLS 정책 설정
+
+---
+
+## 7. API Endpoints
+
+### 7.1 Common
+
+- **Auth**: Supabase session 필수 (미인증 → 401)
+- **Content-Type**: JSON only
+- **Soft delete**: 기본 조회 `deleted_at IS NULL`
+- **API versioning**: 없음 (P0)
+- **Request/Response**: camelCase
+- **Error shape**: `{ "error": { "code": "SOME_CODE", "message": "...", "details": {} } }`
+
+### 7.2 Route Handler Pattern
+
+```typescript
+export async function POST(req: Request) {
+  const user = await requireUser();                    // 401 if unauthenticated
+  const body = SomeSchema.parse(await req.json());     // 422 if invalid
+  const result = await someServiceFn(user.id, body);   // business logic
+  return NextResponse.json({ data: result }, { status: 201 });
+}
+```
+
+### 7.3 Endpoints
+
+#### Health
+| Method | Path | Response |
+|--------|------|----------|
+| GET | `/api/health` | `{ data: { ok: true } }` |
+
+#### Clients (CRUD)
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| GET | `/api/clients` | — | `{ data: Client[] }` |
+| POST | `/api/clients` | `{ name }` | 201 `{ data: Client }` |
+| PATCH | `/api/clients/:clientId` | `{ name? }` | `{ data: Client }` |
+| DELETE | `/api/clients/:clientId` | — | 204 |
+
+#### Projects (CRUD + Preset)
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| GET | `/api/projects?active=true` | — | `{ data: Project[] }` |
+| POST | `/api/projects` | `{ clientId?, name, aliases?, expectedFee, expectedHours, currency, platformFeePreset, platformFeeRate?, taxEnabled, taxRate?, fixedCostAmount?, fixedCostType? }` | 201 `{ data: Project }` |
+| GET | `/api/projects/:projectId` | — | `{ data: Project }` |
+| PATCH | `/api/projects/:projectId` | `{ name?, aliases?, expectedFee?, expectedHours?, currency?, platformFeeRate?, taxRate?, progressPercent?, isActive? }` | `{ data: Project }` |
+| DELETE | `/api/projects/:projectId` | — | 204 |
+
+#### Time (Actions)
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/time/parse` | `{ input, userTimezone? }` | `{ data: ParsedResponse }` |
+| POST | `/api/time/save` | `{ entries: ParsedEntry[] }` | `{ data: { inserted: number } }` |
+
+Errors: 422 `INVALID_INPUT`, 502 `LLM_PARSE_FAILED`, 409 `PROJECT_REQUIRED`
+
+#### Metrics
+| Method | Path | Response |
+|--------|------|----------|
+| GET | `/api/projects/:projectId/metrics` | `{ data: { metrics: ProjectMetricsDTO, pendingAlert: Alert | null } }` |
+
+#### Costs (CRUD)
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/projects/:projectId/cost-entries` | `{ amount, costType, date?, notes? }` | 201 `{ data: CostEntry }` |
+| PATCH | `/api/cost-entries/:costEntryId` | `{ amount?, costType?, date?, notes? }` | `{ data: CostEntry }` |
+| DELETE | `/api/cost-entries/:costEntryId` | — | 204 |
+
+#### Alerts + Messages (Actions)
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/alerts/:alertId/dismiss` | — | `{ data: { dismissedAt: string } }` |
+| POST | `/api/messages/generate` | `{ projectId, alertId, tones: ["polite","neutral","firm"] }` | `{ data: { messages: [{ tone, subject, body }] } }` |
+| POST | `/api/messages/:messageId/copied` | — | `{ data: { copiedAt: string } }` |
+
+### 7.4 Validation Schema Location
+
+| Domain | File |
+|--------|------|
+| Projects | `lib/validators/projects.ts` — `CreateProjectSchema`, `UpdateProjectSchema` |
+| Time | `lib/validators/time.ts` — `ParseTimeSchema`, `SaveTimeSchema` |
+| Messages | `lib/validators/messages.ts` — `GenerateMessagesSchema`, `MarkCopiedSchema` |
+| Costs | `lib/validators/costs.ts` |
+| Clients | `lib/validators/clients.ts` |
+| LLM Parse | `lib/ai/time-log-schema.ts` |
+| LLM Message | `lib/ai/message-schema.ts` |
+
+---
+
+## 8. Coding Conventions
+
+### 8.1 Naming
+
+| Type | Convention | Example |
+|------|-----------|---------|
+| React component | PascalCase | `TimeLogInterface.tsx` |
+| Hook/store | useXxx | `useDraftStore.ts` |
+| Server logic/util | kebab-case | `get-project-metrics.ts` |
+| Zod schema | SomethingSchema | `CreateProjectSchema` |
+| Enum values | lowercase | `done`, `planned`, `polite` |
+| Currency | UPPERCASE ISO | `USD`, `KRW` (only exception) |
+
+### 8.2 Import Alias
+
+`@/*` = `src/*`
+
+```typescript
+import { getProjectMetrics } from '@/lib/metrics/get-project-metrics';
+import { Button } from '@/components/ui/button';
+import { projects } from '@/db/schema/projects';
+```
+
+### 8.3 Key Rules
+
+1. **Zod = Single Source of Truth** — 폼, API, LLM 스키마 모두 Zod 기반
+2. **Route Handler 진입 검증** — Schema.parse() 후에만 로직 실행
+3. **server-only** — `lib/metrics`, `lib/ai`는 서버 전용. 클라이언트 import 금지.
+4. **Soft delete** — 모든 조회 `WHERE deleted_at IS NULL`. `db/queries/*`에서만 SQL 접근.
+5. **Date wrapper** — 모든 날짜 연산은 `lib/date/index.ts` 경유. 직접 format() 금지.
+6. **Clipboard wrapper** — 모든 복사 연산은 `lib/utils/clipboard.ts` 경유.
+7. **P0: Route Handlers only** — Server Actions 미사용 (디버깅 용이)
+8. **camelCase API ↔ snake_case DB** — DTO 변환 함수로 명시적 매핑
+
+---
+
+## 9. Directory Structure
+
+```
+.
+├─ src/
+│  ├─ app/
+│  │  ├─ (auth)/
+│  │  ├─ (dashboard)/
+│  │  │  ├─ projects/
+│  │  │  │  ├─ page.tsx                        # Projects list
+│  │  │  │  └─ [projectId]/
+│  │  │  │     └─ page.tsx                     # Project Detail
+│  │  │  ├─ time-log/
+│  │  │  │  └─ page.tsx                        # Feature 1 input
+│  │  │  └─ layout.tsx
+│  │  ├─ api/
+│  │  │  ├─ health/route.ts
+│  │  │  ├─ clients/route.ts
+│  │  │  ├─ clients/[clientId]/route.ts
+│  │  │  ├─ projects/route.ts
+│  │  │  ├─ projects/[projectId]/route.ts
+│  │  │  ├─ projects/[projectId]/metrics/route.ts
+│  │  │  ├─ projects/[projectId]/cost-entries/route.ts
+│  │  │  ├─ cost-entries/[costEntryId]/route.ts
+│  │  │  ├─ time/parse/route.ts
+│  │  │  ├─ time/save/route.ts
+│  │  │  ├─ alerts/[alertId]/dismiss/route.ts
+│  │  │  ├─ messages/generate/route.ts
+│  │  │  └─ messages/[messageId]/copied/route.ts
+│  │  ├─ globals.css
+│  │  └─ middleware.ts                         # next-intl locale routing
+│  ├─ components/
+│  │  ├─ ui/                                   # shadcn/ui generated
+│  │  ├─ time-log/                             # domain UI
+│  │  ├─ projects/
+│  │  ├─ alerts/
+│  │  └─ charts/
+│  ├─ lib/
+│  │  ├─ ai/
+│  │  │  ├─ time-log-schema.ts
+│  │  │  └─ message-schema.ts
+│  │  ├─ metrics/
+│  │  │  ├─ get-project-metrics.ts
+│  │  │  └─ scope-rules.ts
+│  │  ├─ money/
+│  │  │  ├─ currency.ts
+│  │  │  └─ format.ts
+│  │  ├─ date/index.ts                         # date-fns wrapper
+│  │  ├─ auth/server.ts
+│  │  ├─ supabase/
+│  │  │  ├─ server.ts
+│  │  │  └─ client.ts
+│  │  ├─ validators/
+│  │  │  ├─ projects.ts
+│  │  │  ├─ time.ts
+│  │  │  ├─ messages.ts
+│  │  │  ├─ costs.ts
+│  │  │  └─ clients.ts
+│  │  └─ utils/
+│  │     ├─ cn.ts
+│  │     ├─ nanoid.ts
+│  │     └─ clipboard.ts
+│  ├─ db/
+│  │  ├─ schema/
+│  │  ├─ queries/
+│  │  └─ index.ts
+│  ├─ store/
+│  │  └─ use-draft-store.ts                    # zustand (HITL only)
+│  ├─ types/index.ts
+│  └─ env.ts                                   # env validation (Zod)
+├─ drizzle/                                    # migrations output
+├─ drizzle.config.ts
+├─ next.config.ts
+├─ tailwind.config.ts
+├─ tsconfig.json
+└─ package.json
+```
+
+---
+
+## 10. Demo Scenario (2 minutes)
+
+### Flow
+
+**[0:00] 문제 제기**
+> "프리랜서 대다수가 진짜 시급을 모릅니다"
+
+**[0:20] 자연어 입력** (Feature 1)
+- "예시 채우기" 버튼 클릭 or 직접 입력
+- "어제 ABC 리브랜딩 디자인 3시간, 미팅 1시간, 이메일 20분"
+- Magic Parse → AI 파싱 → HITL 카드 확인 → Save All
+
+**[0:50] 팩트 폭격** (Feature 2)
+- Project Detail 진입
+- 바 차트: "명목 시급 $50 → 실제 $15.88" (빨간 바)
+- 파이 차트: 수수료 $400 + 세금 $200 + 툴비 $50
+- "적자까지는 아니지만, 생각보다 훨씬 낮죠?"
+
+**[1:20] 스코프 경고** (Feature 3)
+- 모달 자동 표시: "예상 시간의 80% 소진, 진척도 40%"
+- "청구 메시지 생성" 클릭
+
+**[1:40] 청구 메시지**
+- 3개 톤 탭 전환 (polite → neutral → firm)
+- 복사 버튼 클릭 → "클립보드에 복사됨"
+- "$500 추가 청구 가능"
+
+**[2:00] 마무리**
+> "RealHourly — 프리랜서의 돈을 지켜줍니다"
+> ROI: "이 도구 하나로 $500 더 벌었다"
+
+---
+
+## 11. Seed Data
+
+### Demo Project
+
+```json
+{
+  "project": {
+    "name": "ABC 리브랜딩",
+    "client": "ABC Corp",
+    "expected_fee": 2000,
+    "expected_hours": 40,
+    "currency": "USD",
+    "platform_fee_rate": 0.20,
+    "tax_rate": 0.10,
+    "progress_percent": 40,
+    "start_date": "2026-01-15"
+  },
+  "cost_entries": [
+    { "cost_type": "tool", "amount": 50, "notes": "Figma Pro" }
+  ],
+  "time_entries": [
+    { "date": "2026-01-15", "minutes": 180, "category": "planning", "task_description": "프로젝트 킥오프 미팅 + 브리프 정리" },
+    { "date": "2026-01-16", "minutes": 240, "category": "design", "task_description": "로고 컨셉 A/B/C 작업" },
+    { "date": "2026-01-17", "minutes": 120, "category": "meeting", "task_description": "클라이언트 피드백 미팅" },
+    { "date": "2026-01-17", "minutes": 60, "category": "email", "task_description": "피드백 정리 메일" },
+    { "date": "2026-01-20", "minutes": 300, "category": "design", "task_description": "로고 B안 디테일 작업" },
+    { "date": "2026-01-21", "minutes": 180, "category": "revision", "task_description": "1차 수정: 컬러 변경 요청" },
+    { "date": "2026-01-22", "minutes": 240, "category": "revision", "task_description": "2차 수정: 폰트 + 레이아웃" },
+    { "date": "2026-01-23", "minutes": 120, "category": "meeting", "task_description": "수정사항 확인 미팅" },
+    { "date": "2026-01-23", "minutes": 60, "category": "admin", "task_description": "인보이스 작성" },
+    { "date": "2026-01-24", "minutes": 180, "category": "revision", "task_description": "3차 수정: 최종 컬러 조정" },
+    { "date": "2026-01-27", "minutes": 240, "category": "design", "task_description": "브랜드 가이드 문서 작성" },
+    { "date": "2026-01-28", "minutes": 180, "category": "revision", "task_description": "4차 수정: 가이드 피드백 반영" },
+    { "date": "2026-01-29", "minutes": 120, "category": "revision", "task_description": "5차 수정: 최종 승인전 미세 조정" },
+    { "date": "2026-01-30", "minutes": 60, "category": "meeting", "task_description": "최종 리뷰 미팅" },
+    { "date": "2026-01-30", "minutes": 60, "category": "email", "task_description": "최종 파일 전달 + 감사 메일" },
+    { "date": "2026-02-03", "minutes": 180, "category": "revision", "task_description": "추가 수정: 명함 디자인 요청 (scope creep)" },
+    { "date": "2026-02-04", "minutes": 120, "category": "design", "task_description": "명함 디자인 작업" },
+    { "date": "2026-02-05", "minutes": 60, "category": "revision", "task_description": "명함 수정" },
+    { "date": "2026-02-05", "minutes": 120, "category": "research", "task_description": "경쟁사 브랜드 리서치" }
+  ]
+}
+```
+
+### Expected Calculation Result
+
+```
+총 투입 시간: 3,120분 = 52시간
+(revision만: 1,080분 = 18시간, 34.6% — Rule 2 근접)
+(revision 이벤트: 7건 — Rule 3 트리거!)
+
+gross = $2,000
+platform_fee = $2,000 × 0.20 = $400
+tax = $2,000 × 0.10 = $200
+fixed_cost = $50
+direct_cost = $400 + $200 + $50 = $650
+net = $2,000 - $650 = $1,350
+total_hours = 52
+nominal_hourly = $2,000 / 40 = $50.00
+real_hourly = $1,350 / 52 = $25.96
+
+시간 소진율: 52/40 = 130% → Rule 1 (>= 0.8 AND progress 40% < 50%) ✅
+revision 비율: 34.6% → Rule 2 (< 40%) ❌ (근접하지만 미트리거)
+revision 이벤트: 7건 → Rule 3 (>= 5) ✅
+
+팩트 폭격: "$50 → $25.96" (48% 감소!)
+```
+
+---
+
+## Appendix: Judge Q&A Prep
+
+| Question | Answer |
+|----------|--------|
+| Toggl과 차이? | 시간 추적만 vs 수익성 분석 + 행동 유도 (청구 메시지까지) |
+| ChatGPT로 직접? | 개인 데이터 누적 분석 + 실시간 스코프 감지 불가 |
+| 수익 모델? | 월 $19~$39 구독, 500명 시 $10K MRR |
+| 시장 규모? | 자영·독립 노동자 15억+, 연 15% 성장 |
+| 기술 차별점? | NLP 입력 + LLM 메시지 + 규칙 감지 조합 |
+| 경쟁 우위? | ROI 증명 — "이 도구로 $500 더 벌었다" |
