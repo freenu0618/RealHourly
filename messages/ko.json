@@ -140,7 +140,8 @@
     "categoryAdmin": "관리",
     "categoryEmail": "이메일",
     "categoryResearch": "리서치",
-    "categoryOther": "기타"
+    "categoryOther": "기타",
+    "removeEntry": "항목 삭제"
   },
   "alerts": {
     "title": "알림",
@@ -151,7 +152,11 @@
     "scopeCreepDetected": "스코프 크립 감지",
     "scopeWarningActive": "스코프 경고 활성",
     "details": "자세히",
-    "generateError": "메시지 생성 중 오류가 발생했습니다"
+    "generateError": "메시지 생성 중 오류가 발생했습니다",
+    "ruleExplanation1": "예상 시간의 {ratio}% 소진, 진척도 {progress}%",
+    "ruleExplanation2": "수정 작업이 전체의 {ratio}%를 차지",
+    "ruleExplanation3": "수정 작업 {count}회 발생",
+    "ruleDefault": "스코프 크립이 감지되었습니다"
   },
   "messages": {
     "title": "생성된 메시지",

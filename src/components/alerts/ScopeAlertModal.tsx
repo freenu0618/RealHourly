@@ -42,12 +42,12 @@ export function ScopeAlertModal({
   projectName,
   onDismiss,
 }: ScopeAlertModalProps) {
-  const t = useTranslations();
+  const tAlerts = useTranslations("alerts");
+  const tMessages = useTranslations("messages");
   const [phase, setPhase] = useState<Phase>("alert");
   const [messages, setMessages] = useState<GeneratedMessage[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Generate rule explanation based on alert type
   const getRuleExplanation = (): string => {
     const { alertType, metadata } = alert;
     const ruleKey = alertType.replace("scope_", "");
@@ -56,23 +56,25 @@ export function ScopeAlertModal({
     if (alertType === "scope_rule1") {
       const timeRatio = ((ruleData.timeRatio as number) ?? 0) * 100;
       const progressPercent = (ruleData.progressPercent as number) ?? 0;
-      return `예상 시간의 ${timeRatio.toFixed(0)}% 소진, 진척도 ${progressPercent}%`;
+      return tAlerts("ruleExplanation1", {
+        ratio: timeRatio.toFixed(0),
+        progress: String(progressPercent),
+      });
     }
 
     if (alertType === "scope_rule2") {
       const revisionRatio = ((ruleData.revisionRatio as number) ?? 0) * 100;
-      return `수정 작업이 전체의 ${revisionRatio.toFixed(0)}%를 차지`;
+      return tAlerts("ruleExplanation2", { ratio: revisionRatio.toFixed(0) });
     }
 
     if (alertType === "scope_rule3") {
       const revisionCount = (ruleData.revisionCount as number) ?? 0;
-      return `수정 작업 ${revisionCount}회 발생`;
+      return tAlerts("ruleExplanation3", { count: String(revisionCount) });
     }
 
-    return "스코프 크립이 감지되었습니다";
+    return tAlerts("ruleDefault");
   };
 
-  // Handle message generation
   const handleGenerateMessages = async () => {
     setPhase("loading");
 
@@ -89,31 +91,27 @@ export function ScopeAlertModal({
       setMessages(data.messages ?? []);
       setPhase("messages");
     } catch {
-      toast.error("메시지 생성 중 오류가 발생했습니다");
+      toast.error(tAlerts("generateError"));
       setPhase("alert");
     }
   };
 
-  // Handle copy to clipboard
   const handleCopy = async (message: GeneratedMessage) => {
     const fullText = `${message.subject}\n\n${message.body}`;
     const success = await copyToClipboard(fullText);
 
     if (success) {
       setCopiedId(message.id);
-      toast.success(t("messages.copied") || "클립보드에 복사됨");
+      toast.success(tMessages("copied"));
 
-      // Track copy event
       fetch(`/api/messages/${message.id}/copied`, { method: "POST" }).catch(
         () => {}
       );
 
-      // Reset copied state after 2 seconds
       setTimeout(() => setCopiedId(null), 2000);
     }
   };
 
-  // Handle dismiss
   const handleDismiss = async () => {
     try {
       await fetch(`/api/alerts/${alert.id}/dismiss`, { method: "POST" });
@@ -130,11 +128,10 @@ export function ScopeAlertModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-yellow-600" />
-            스코프 크립 감지
+            {tAlerts("scopeCreepDetected")}
           </DialogTitle>
         </DialogHeader>
 
-        {/* Phase 1: Alert Info */}
         {phase === "alert" && (
           <>
             <div className="space-y-4">
@@ -148,35 +145,33 @@ export function ScopeAlertModal({
             </div>
             <DialogFooter className="gap-2">
               <Button variant="outline" onClick={handleDismiss}>
-                {t("alerts.dismiss") || "닫기"}
+                {tAlerts("dismiss")}
               </Button>
               <Button onClick={handleGenerateMessages}>
-                {t("alerts.generateMessage") || "청구 메시지 생성"}
+                {tAlerts("generateMessage")}
               </Button>
             </DialogFooter>
           </>
         )}
 
-        {/* Phase 2: Loading */}
         {phase === "loading" && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         )}
 
-        {/* Phase 3: Messages */}
         {phase === "messages" && (
           <>
             <Tabs defaultValue="polite" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="polite">
-                  {t("messages.polite") || "공손"}
+                  {tMessages("polite")}
                 </TabsTrigger>
                 <TabsTrigger value="neutral">
-                  {t("messages.neutral") || "중립"}
+                  {tMessages("neutral")}
                 </TabsTrigger>
                 <TabsTrigger value="firm">
-                  {t("messages.firm") || "단호"}
+                  {tMessages("firm")}
                 </TabsTrigger>
               </TabsList>
 
@@ -199,12 +194,12 @@ export function ScopeAlertModal({
                       {copiedId === message.id ? (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          {t("messages.copied") || "복사됨"}
+                          {tMessages("copied")}
                         </>
                       ) : (
                         <>
                           <Copy className="mr-2 h-4 w-4" />
-                          {t("messages.copy") || "복사"}
+                          {tMessages("copy")}
                         </>
                       )}
                     </Button>
@@ -214,7 +209,7 @@ export function ScopeAlertModal({
             </Tabs>
             <DialogFooter>
               <Button variant="outline" onClick={handleDismiss}>
-                {t("alerts.dismiss") || "닫기"}
+                {tAlerts("dismiss")}
               </Button>
             </DialogFooter>
           </>

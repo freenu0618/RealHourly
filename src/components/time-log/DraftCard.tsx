@@ -108,6 +108,7 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
             size="icon"
             className="size-7 shrink-0"
             onClick={() => removeEntry(entry.id)}
+            aria-label={t("removeEntry")}
           >
             <X className="size-4" />
           </Button>

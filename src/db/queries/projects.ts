@@ -1,4 +1,4 @@
-import { eq, and, isNull, sql } from "drizzle-orm";
+import { eq, and, isNull, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { projects, clients, costEntries } from "@/db/schema";
 import { projectToDTO } from "./dto";
@@ -135,7 +135,10 @@ export async function getActiveProjectsForMatching(
       clientName: clients.name,
     })
     .from(projects)
-    .leftJoin(clients, eq(projects.clientId, clients.id))
+    .leftJoin(
+      clients,
+      and(eq(projects.clientId, clients.id), isNull(clients.deletedAt)),
+    )
     .where(
       and(
         eq(projects.userId, userId),

@@ -140,7 +140,8 @@
     "categoryAdmin": "Admin",
     "categoryEmail": "Email",
     "categoryResearch": "Research",
-    "categoryOther": "Other"
+    "categoryOther": "Other",
+    "removeEntry": "Remove entry"
   },
   "alerts": {
     "title": "Alerts",
@@ -151,7 +152,11 @@
     "scopeCreepDetected": "Scope Creep Detected",
     "scopeWarningActive": "Scope Warning Active",
     "details": "Details",
-    "generateError": "Error generating messages"
+    "generateError": "Error generating messages",
+    "ruleExplanation1": "{ratio}% of estimated hours used, progress at {progress}%",
+    "ruleExplanation2": "Revision work accounts for {ratio}% of total",
+    "ruleExplanation3": "{count} revision entries recorded",
+    "ruleDefault": "Scope creep has been detected"
   },
   "messages": {
     "title": "Generated Messages",
