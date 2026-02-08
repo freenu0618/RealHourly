@@ -2,13 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { HourlyRateBar } from "@/components/charts/HourlyRateBar";
 import { CostBreakdownPie } from "@/components/charts/CostBreakdownPie";
+import { ScopeAlertModal } from "@/components/alerts/ScopeAlertModal";
 import { formatCurrency } from "@/lib/money/currency";
-import { formatHours } from "@/lib/money/format";
 import type { ProjectMetricsDTO } from "@/lib/metrics/get-project-metrics";
+
+interface AlertDTO {
+  id: string;
+  alertType: string;
+  metadata: Record<string, unknown>;
+}
 
 interface ProjectDetailClientProps {
   projectId: string;
@@ -28,7 +36,10 @@ export function ProjectDetailClient({
   project,
 }: ProjectDetailClientProps) {
   const t = useTranslations("metrics");
+  const tAlerts = useTranslations("alerts");
   const [metrics, setMetrics] = useState<ProjectMetricsDTO | null>(null);
+  const [pendingAlert, setPendingAlert] = useState<AlertDTO | null>(null);
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,6 +49,10 @@ export function ProjectDetailClient({
         if (!res.ok) throw new Error();
         const { data } = await res.json();
         setMetrics(data.metrics);
+        if (data.pendingAlert) {
+          setPendingAlert(data.pendingAlert);
+          setShowAlertModal(true);
+        }
       } catch {
         // silent fail
       } finally {
@@ -48,12 +63,16 @@ export function ProjectDetailClient({
   }, [projectId]);
 
   if (loading) {
-    return <div className="animate-pulse space-y-4">
-      <div className="h-8 w-48 rounded bg-muted" />
-      <div className="grid grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => <div key={i} className="h-24 rounded-lg bg-muted" />)}
+    return (
+      <div className="animate-pulse space-y-4">
+        <div className="h-8 w-48 rounded bg-muted" />
+        <div className="grid grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 rounded-lg bg-muted" />
+          ))}
+        </div>
       </div>
-    </div>;
+    );
   }
 
   if (!metrics) return null;
@@ -62,6 +81,36 @@ export function ProjectDetailClient({
 
   return (
     <div className="space-y-6">
+      {/* Scope Alert Banner */}
+      {pendingAlert && !showAlertModal && (
+        <div className="flex items-center justify-between rounded-lg border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-950">
+          <div className="flex items-center gap-2 text-sm font-medium text-yellow-800 dark:text-yellow-200">
+            <AlertTriangle className="size-4" />
+            {tAlerts("underpaid")}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowAlertModal(true)}
+          >
+            {tAlerts("details")}
+          </Button>
+        </div>
+      )}
+
+      {/* Scope Alert Modal */}
+      {pendingAlert && showAlertModal && (
+        <ScopeAlertModal
+          projectId={projectId}
+          alert={pendingAlert}
+          projectName={project.name}
+          onDismiss={() => {
+            setShowAlertModal(false);
+            setPendingAlert(null);
+          }}
+        />
+      )}
+
       {/* Header */}
       <div className="flex items-center gap-3">
         <h1 className="text-2xl font-bold">{project.name}</h1>
@@ -74,12 +123,24 @@ export function ProjectDetailClient({
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KPICard
           title={t("nominalHourly")}
-          value={metrics.nominalHourly !== null ? formatCurrency(metrics.nominalHourly, currency) : "—"}
+          value={
+            metrics.nominalHourly !== null
+              ? formatCurrency(metrics.nominalHourly, currency)
+              : "—"
+          }
         />
         <KPICard
           title={t("realHourly")}
-          value={metrics.realHourly !== null ? formatCurrency(metrics.realHourly, currency) : "—"}
-          highlight={metrics.realHourly !== null && metrics.nominalHourly !== null && metrics.realHourly < metrics.nominalHourly}
+          value={
+            metrics.realHourly !== null
+              ? formatCurrency(metrics.realHourly, currency)
+              : "—"
+          }
+          highlight={
+            metrics.realHourly !== null &&
+            metrics.nominalHourly !== null &&
+            metrics.realHourly < metrics.nominalHourly
+          }
         />
         <KPICard
           title={t("totalHours")}
@@ -110,7 +171,9 @@ export function ProjectDetailClient({
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{t("hourlyComparison")}</CardTitle>
+            <CardTitle className="text-base">
+              {t("hourlyComparison")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <HourlyRateBar

@@ -147,7 +147,11 @@
     "dismiss": "Dismiss",
     "generateMessage": "Generate Message",
     "underpaid": "Underpaid Alert",
-    "overdue": "Overdue Alert"
+    "overdue": "Overdue Alert",
+    "scopeCreepDetected": "Scope Creep Detected",
+    "scopeWarningActive": "Scope Warning Active",
+    "details": "Details",
+    "generateError": "Error generating messages"
   },
   "messages": {
     "title": "Generated Messages",

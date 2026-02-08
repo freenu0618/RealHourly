@@ -147,7 +147,11 @@
     "dismiss": "닫기",
     "generateMessage": "메시지 생성",
     "underpaid": "저가 경고",
-    "overdue": "지연 경고"
+    "overdue": "지연 경고",
+    "scopeCreepDetected": "스코프 크립 감지",
+    "scopeWarningActive": "스코프 경고 활성",
+    "details": "자세히",
+    "generateError": "메시지 생성 중 오류가 발생했습니다"
   },
   "messages": {
     "title": "생성된 메시지",
