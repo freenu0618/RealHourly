@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const llmResponse = await parseTimeLog(
       body.input,
       activeProjects,
-      undefined, // preferredProjectId — will be passed from frontend in future
+      body.preferredProjectId,
       body.userTimezone,
     );
 

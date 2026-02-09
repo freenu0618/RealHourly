@@ -82,15 +82,28 @@ AI 기반 프리랜서 수익성 대시보드:
 
 ### 2.2 LLM Strategy (OpenAI, Tiered)
 
-| Purpose | Model | Env Var | Cost |
-|---------|-------|---------|------|
-| 타임로그 파싱 (1차) | gpt-5-nano | `LLM_MODEL_PARSE` | $0.05/1M input |
-| 타임로그 파싱 (폴백) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` | $0.25/1M input |
-| 청구 메시지 생성 (기본) | gpt-5-mini | `LLM_MODEL_GENERATE` | $0.25/1M input |
-| 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | $1.75/1M input |
+| 용도 | 모델 | 환경변수 | 상태 |
+|------|------|----------|------|
+| 타임로그 파싱 (Primary) | gpt-5-mini | `LLM_MODEL_PARSE` | ✅ 정상 동작 |
+| 타임로그 파싱 (Fallback) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` | ✅ 정상 동작 |
+| 청구 메시지 생성 (기본) | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | 🔲 미사용 (P0) |
+
+> ⚠️ 초기 계획의 `gpt-5-nano`는 Structured Outputs 호환 이슈로 `gpt-5-mini`로 통일.
 
 **호출 방식**: OpenAI Structured Outputs (`json_schema`, `strict: true`)
 **LLM 역할 한정**: 텍스트에서 구조화만 수행. 매칭/검증/날짜 계산은 서버가 담당.
+
+#### gpt-5 계열 모델 주의사항
+
+gpt-5 계열 모델은 이전 gpt-4o 계열과 API 파라미터가 다릅니다:
+
+| 파라미터 | gpt-4o 계열 | gpt-5 계열 |
+|----------|-------------|------------|
+| 토큰 제한 | `max_tokens` | `max_completion_tokens` (필수) |
+| 온도 | `temperature: 0~2` | 기본값(1)만 지원, 커스텀 불가 |
+
+⚠️ `max_tokens`를 사용하면 `400 Unsupported parameter` 에러 발생. 반드시 `max_completion_tokens` 사용.
 
 ### 2.3 Environment Variables
 
@@ -100,7 +113,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 OPENAI_API_KEY=
-LLM_MODEL_PARSE=gpt-5-nano
+LLM_MODEL_PARSE=gpt-5-mini
 LLM_MODEL_PARSE_FALLBACK=gpt-5-mini
 LLM_MODEL_GENERATE=gpt-5-mini
 LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
@@ -157,6 +170,48 @@ interface LLMEntry {
   intent: "done" | "planned";                  // 기본 done, 미래만 planned
 }
 ```
+
+#### OpenAI Structured Outputs JSON Schema
+
+실제 OpenAI API에 전달하는 `response_format` 스키마:
+
+```json
+{
+  "name": "time_log_parse",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "required": ["entries"],
+    "additionalProperties": false,
+    "properties": {
+      "entries": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["project_name_raw", "task_description", "date", "duration_minutes", "duration_source", "category", "intent"],
+          "additionalProperties": false,
+          "properties": {
+            "project_name_raw": { "type": "string" },
+            "task_description": { "type": "string" },
+            "date": { "type": ["string", "null"] },
+            "duration_minutes": { "type": ["integer", "null"] },
+            "duration_source": { "type": "string", "enum": ["explicit", "ambiguous", "missing"] },
+            "category": { "type": "string", "enum": ["planning", "design", "development", "meeting", "revision", "admin", "email", "research", "other"] },
+            "intent": { "type": "string", "enum": ["done", "planned"] }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Structured Outputs strict 모드 필수 규칙
+
+- **Nullable 필드**: `"type": ["string", "null"]` 배열 형식 사용 (OpenAI 공식 권장)
+- **`additionalProperties: false`**: strict 모드에서 필수 — 모든 object에 명시
+- **`required`**: 모든 필드를 required에 포함 필수 (nullable이어도 required에 포함)
+- **enum 필드**: `"type": "string"` + `"enum": [...]` 형태로 명시
 
 **LLM date 규칙**:
 - 명확하면 "YYYY-MM-DD"

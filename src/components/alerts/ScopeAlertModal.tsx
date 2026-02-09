@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { StepLoader } from "@/components/ui/step-loader";
-import { useStepLoader } from "@/lib/hooks/use-step-loader";
+import { ThinkingLog } from "@/components/ui/ThinkingLog";
+import { useThinkingLog, sleep } from "@/lib/hooks/use-thinking-log";
 import {
   Dialog,
   DialogContent,
@@ -35,13 +35,7 @@ interface GeneratedMessage {
   body: string;
 }
 
-type Phase = "alert" | "loading" | "messages";
-
-const GENERATE_STEPS = [
-  { key: "genStep1", emoji: "\uD83D\uDD0D", duration: 2000 },
-  { key: "genStep2", emoji: "\u270D\uFE0F", duration: 2500 },
-  { key: "genStep3", emoji: "\uD83D\uDC8E", duration: 2000 },
-];
+type Phase = "alert" | "thinking" | "messages";
 
 export function ScopeAlertModal({
   projectId,
@@ -51,6 +45,7 @@ export function ScopeAlertModal({
 }: ScopeAlertModalProps) {
   const tAlerts = useTranslations("alerts");
   const tMessages = useTranslations("messages");
+  const tAi = useTranslations("ai");
   const locale = useLocale();
   const [phase, setPhase] = useState<Phase>("alert");
   const [messages, setMessages] = useState<GeneratedMessage[]>([]);
@@ -59,7 +54,7 @@ export function ScopeAlertModal({
     locale === "ko" ? "ko" : "en"
   );
 
-  const stepLoader = useStepLoader(GENERATE_STEPS);
+  const thinking = useThinkingLog();
 
   const getRuleExplanation = (): string => {
     const { alertType, metadata } = alert;
@@ -89,8 +84,49 @@ export function ScopeAlertModal({
   };
 
   const handleGenerateMessages = async () => {
-    setPhase("loading");
-    stepLoader.start();
+    setPhase("thinking");
+    thinking.reset();
+
+    // Step 1: Analyzing project data
+    const { alertType, metadata } = alert;
+    const ruleKey = alertType.replace("scope_", "");
+    const ruleData = (metadata[ruleKey] ?? metadata) as Record<string, unknown>;
+
+    const s1 = thinking.addStep("\uD83D\uDCCA", tAi("analyzingProject"));
+
+    if (alertType === "scope_rule1") {
+      const timeRatio = Math.round(((ruleData.timeRatio as number) ?? 0) * 100);
+      const progressPercent = (ruleData.progressPercent as number) ?? 0;
+      thinking.addDetail(
+        s1,
+        tAi("hoursUsed", {
+          ratio: String(timeRatio),
+          progress: String(progressPercent),
+        })
+      );
+    }
+    if (alertType === "scope_rule2") {
+      const revisionRatio = Math.round(
+        ((ruleData.revisionRatio as number) ?? 0) * 100
+      );
+      thinking.addDetail(
+        s1,
+        tAi("revisionRatioHigh", { ratio: String(revisionRatio) })
+      );
+    }
+    if (alertType === "scope_rule3") {
+      const revisionCount = (ruleData.revisionCount as number) ?? 0;
+      thinking.addDetail(
+        s1,
+        tAi("revisionsDetected", { count: String(revisionCount) })
+      );
+    }
+
+    await sleep(800);
+
+    // Step 2: AI writing messages
+    thinking.completeStep(s1);
+    const s2 = thinking.addStep("\u270D\uFE0F", tAi("writingMessages"));
 
     try {
       const response = await fetch("/api/messages/generate", {
@@ -102,13 +138,32 @@ export function ScopeAlertModal({
       if (!response.ok) throw new Error("Failed to generate messages");
 
       const { data } = await response.json();
+
+      // Step 3: Refining tones
+      thinking.completeStep(s2);
+      const s3 = thinking.addStep("\uD83C\uDFA8", tAi("refiningTones"));
+
+      for (const tone of ["polite", "neutral", "firm"] as const) {
+        await sleep(400);
+        thinking.addDetail(
+          s3,
+          tAi("toneReady", { tone: tMessages(tone) })
+        );
+      }
+
+      // Complete
+      thinking.completeStep(s3);
+      await sleep(500);
+      thinking.complete(tAi("messagesReady"));
+
+      // Wait, then transition
+      await sleep(1000);
       setMessages(data.messages ?? []);
       setPhase("messages");
     } catch {
       toast.error(tAlerts("generateError"));
+      thinking.reset();
       setPhase("alert");
-    } finally {
-      stepLoader.complete();
     }
   };
 
@@ -211,12 +266,12 @@ export function ScopeAlertModal({
             </>
           )}
 
-          {phase === "loading" && (
-            <StepLoader
-              currentStep={stepLoader.currentStep}
-              currentIndex={stepLoader.currentIndex}
-              progress={stepLoader.progress}
-              namespace="ai"
+          {phase === "thinking" && (
+            <ThinkingLog
+              title={tAi("thinkingTitleMessage")}
+              steps={thinking.steps}
+              isComplete={thinking.isComplete}
+              completionText={thinking.completionText}
             />
           )}
 

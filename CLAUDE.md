@@ -40,17 +40,32 @@
 
 ### LLM Strategy (OpenAI, Tiered)
 
-| Purpose | Model | Env Var |
-|---------|-------|---------|
-| Time log parsing (1st) | gpt-5-mini | `LLM_MODEL_PARSE` |
-| Time log parsing (fallback) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` |
-| Message generation (default) | gpt-5-mini | `LLM_MODEL_GENERATE` |
-| Message generation (premium) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` |
+| Purpose | Model | Env Var | Status |
+|---------|-------|---------|--------|
+| Time log parsing (Primary) | gpt-5-mini | `LLM_MODEL_PARSE` | ✅ Working |
+| Time log parsing (Fallback) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` | ✅ Working |
+| Message generation (default) | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ Working |
+| Message generation (premium) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | 🔲 Not used (P0) |
+
+> ⚠️ Original plan had `gpt-5-nano` but unified to `gpt-5-mini` due to Structured Outputs compatibility.
 
 - All LLM calls use **OpenAI Structured Outputs** (`json_schema`, `strict: true`)
 - LLM role is minimal: extract/structure only. Server handles validation/matching/normalization.
-- **gpt-5 계열 모델 제약사항**: `max_tokens` 대신 `max_completion_tokens` 사용 필수, 커스텀 `temperature` 미지원 (기본값 1만 허용)
-- Primary model 실패 시 fallback model로 자동 재시도 (parse-time-log.ts)
+
+#### GPT-5 Model API Rules
+
+| Parameter | gpt-4o family | gpt-5 family |
+|-----------|---------------|--------------|
+| Token limit | `max_tokens` | `max_completion_tokens` (required) |
+| Temperature | `temperature: 0~2` | default(1) only, custom not supported |
+
+⚠️ Using `max_tokens` will cause `400 Unsupported parameter` error. Must use `max_completion_tokens`.
+
+#### Structured Outputs Strict Mode Rules
+- Nullable fields: use `"type": ["string", "null"]` array format (OpenAI official)
+- `additionalProperties: false` required on ALL objects
+- ALL fields must be in `required` array (even nullable ones)
+- Enum fields: `"type": "string"` + `"enum": [...]` format
 
 ## Directory Structure
 

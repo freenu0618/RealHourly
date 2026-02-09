@@ -5,7 +5,7 @@
  * Prerequisites:
  *   - .env.local with DATABASE_URL
  *   - Database tables already created (via Drizzle migrations or setup-db.sql)
- *   - A Supabase auth user exists (set DEMO_USER_ID in .env.local or below)
+ *   - At least one Supabase auth user exists (sign up first)
  */
 
 import { config } from "dotenv";
@@ -13,101 +13,104 @@ config({ path: ".env.local" });
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, and, isNull } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
-// --- Schema imports (inline to avoid @/ alias issues in scripts) ---
 import { profiles } from "../src/db/schema/profiles";
 import { clients } from "../src/db/schema/clients";
 import { projects } from "../src/db/schema/projects";
 import { timeEntries } from "../src/db/schema/time-entries";
 import { costEntries } from "../src/db/schema/cost-entries";
 import { alerts } from "../src/db/schema/alerts";
+import { generatedMessages } from "../src/db/schema/generated-messages";
 
+// ─── Database connection ───
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) {
-  console.error("DATABASE_URL not found in .env.local");
+  console.error("❌ DATABASE_URL not found in .env.local");
   process.exit(1);
 }
-
-const DEMO_USER_ID =
-  process.env.DEMO_USER_ID || "00000000-0000-0000-0000-000000000001";
 
 const client = postgres(DATABASE_URL, { prepare: false });
 const db = drizzle(client);
 
-async function cleanExistingData() {
-  console.log("Cleaning existing demo data...");
+// ─── Lookup first user from Supabase auth.users ───
+async function getFirstUserId(): Promise<string> {
+  const rows = await db.execute(
+    sql`SELECT id FROM auth.users ORDER BY created_at ASC LIMIT 1`,
+  );
+  if (!rows.length) {
+    console.error(
+      "❌ 유저가 없습니다. 먼저 회원가입하세요.\n" +
+        "   → 앱에서 이메일 로그인 후 다시 실행해주세요.",
+    );
+    process.exit(1);
+  }
+  return String(rows[0].id);
+}
 
-  // Delete in reverse dependency order
+// ─── Clean existing demo data (idempotent) ───
+async function cleanExistingData(userId: string) {
+  console.log("🧹 기존 데이터 정리 중...");
+
   const userProjects = await db
     .select({ id: projects.id })
     .from(projects)
-    .where(eq(projects.userId, DEMO_USER_ID));
+    .where(eq(projects.userId, userId));
 
   const projectIds = userProjects.map((p) => p.id);
 
   if (projectIds.length > 0) {
     for (const pid of projectIds) {
-      // Delete alerts for this project
+      // Delete generated messages via alerts
+      const projectAlerts = await db
+        .select({ id: alerts.id })
+        .from(alerts)
+        .where(eq(alerts.projectId, pid));
+      for (const alert of projectAlerts) {
+        await db
+          .delete(generatedMessages)
+          .where(eq(generatedMessages.alertId, alert.id));
+      }
       await db.delete(alerts).where(eq(alerts.projectId, pid));
-      // Delete time entries
       await db.delete(timeEntries).where(eq(timeEntries.projectId, pid));
-      // Delete cost entries
       await db.delete(costEntries).where(eq(costEntries.projectId, pid));
     }
-    // Delete projects
-    await db.delete(projects).where(eq(projects.userId, DEMO_USER_ID));
+    await db.delete(projects).where(eq(projects.userId, userId));
   }
 
-  // Delete clients
-  await db.delete(clients).where(eq(clients.userId, DEMO_USER_ID));
-
-  // Delete profile
-  await db.delete(profiles).where(eq(profiles.id, DEMO_USER_ID));
-
-  console.log("  Cleaned.");
+  await db.delete(clients).where(eq(clients.userId, userId));
+  console.log("  ✅ 정리 완료");
 }
 
-async function seedProfile() {
-  console.log("Seeding profile...");
-
+// ─── Ensure profile exists ───
+async function ensureProfile(userId: string) {
   await db
     .insert(profiles)
     .values({
-      id: DEMO_USER_ID,
+      id: userId,
       defaultCurrency: "USD",
       timezone: "Asia/Seoul",
       locale: "ko",
     })
     .onConflictDoNothing();
-
-  console.log("  Profile created.");
 }
 
-async function seedClient(): Promise<string> {
-  console.log("Seeding client: ABC Corp...");
-
-  const [row] = await db
+// ─── Seed data ───
+async function seedData(userId: string) {
+  // ── Client 1: ABC Corp ──
+  console.log("\n📁 클라이언트 생성: ABC Corp");
+  const [abcClient] = await db
     .insert(clients)
-    .values({
-      userId: DEMO_USER_ID,
-      name: "ABC Corp",
-    })
+    .values({ userId, name: "ABC Corp" })
     .returning();
 
-  console.log(`  Client created: ${row.id}`);
-  return row.id;
-}
-
-async function seedProject1(clientId: string): Promise<string> {
-  console.log('Seeding project: ABC 리브랜딩...');
-
-  const [row] = await db
+  // ── Project 1: ABC 리브랜딩 (Scope Creep Demo) ──
+  console.log("📊 프로젝트 생성: ABC 리브랜딩");
+  const [project1] = await db
     .insert(projects)
     .values({
-      userId: DEMO_USER_ID,
-      clientId,
+      userId,
+      clientId: abcClient.id,
       name: "ABC 리브랜딩",
       aliases: ["ABC", "리브랜딩", "rebrand"],
       startDate: "2026-01-15",
@@ -121,19 +124,16 @@ async function seedProject1(clientId: string): Promise<string> {
     })
     .returning();
 
-  console.log(`  Project created: ${row.id}`);
-
-  // Cost entry: Figma Pro
+  // Cost entry
   await db.insert(costEntries).values({
-    projectId: row.id,
+    projectId: project1.id,
     amount: "50",
     costType: "tool",
     notes: "Figma Pro",
   });
-  console.log("  Cost entry added: Figma Pro $50");
 
-  // 19 time entries from PRD Section 11
-  const entries = [
+  // 19 time entries
+  const p1Entries = [
     { date: "2026-01-15", minutes: 180, category: "planning" as const, taskDescription: "프로젝트 킥오프 미팅 + 브리프 정리" },
     { date: "2026-01-16", minutes: 240, category: "design" as const, taskDescription: "로고 컨셉 A/B/C 작업" },
     { date: "2026-01-17", minutes: 120, category: "meeting" as const, taskDescription: "클라이언트 피드백 미팅" },
@@ -156,8 +156,8 @@ async function seedProject1(clientId: string): Promise<string> {
   ];
 
   await db.insert(timeEntries).values(
-    entries.map((e) => ({
-      projectId: row.id,
+    p1Entries.map((e) => ({
+      projectId: project1.id,
       date: e.date,
       minutes: e.minutes,
       category: e.category,
@@ -165,107 +165,81 @@ async function seedProject1(clientId: string): Promise<string> {
       taskDescription: e.taskDescription,
     })),
   );
-  console.log(`  ${entries.length} time entries added (total: 3,120 min = 52h)`);
+  console.log(`  ⏱️  타임 엔트리 ${p1Entries.length}건 삽입`);
 
-  // Pre-trigger alerts based on the data
-  // Rule 1: time ratio = 52/40 = 1.3 (>=0.8) AND progress = 40% (<50%)
+  // Pre-create alerts for demo
+  // Actual totals: 2820 min = 47h, revision = 1140/2820 = 40.4%
   await db.insert(alerts).values({
-    projectId: row.id,
+    projectId: project1.id,
     alertType: "scope_rule1",
     metadata: {
-      rule1: {
-        timeRatio: 1.3,
-        threshold: 0.8,
-        progressPercent: 40,
-        totalHours: 52,
-        expectedHours: 40,
-      },
+      rule1: { timeRatio: 1.18, threshold: 0.8, progressPercent: 40, totalHours: 47, expectedHours: 40 },
     },
   });
-  console.log("  Alert scope_rule1 created (time overrun)");
-
-  // Rule 3: revision entries = 7 (>=5)
   await db.insert(alerts).values({
-    projectId: row.id,
+    projectId: project1.id,
+    alertType: "scope_rule2",
+    metadata: {
+      rule2: { revisionRatio: 0.40, threshold: 0.4, revisionMinutes: 1140, totalMinutes: 2820 },
+    },
+  });
+  await db.insert(alerts).values({
+    projectId: project1.id,
     alertType: "scope_rule3",
     metadata: {
-      rule3: {
-        revisionCount: 7,
-        threshold: 5,
-      },
+      rule3: { revisionCount: 7, threshold: 5 },
     },
   });
-  console.log("  Alert scope_rule3 created (revision count)");
+  console.log("  🚨 스코프 크립 알림 3건 생성 (Rule 1, Rule 2, Rule 3)");
 
-  return row.id;
-}
-
-async function seedProject2(clientId: string): Promise<string> {
-  console.log('Seeding project: XYZ 웹사이트 리디자인...');
-
-  // Create a second client for variety
+  // ── Client 2: XYZ Studio ──
+  console.log("\n📁 클라이언트 생성: XYZ Studio");
   const [xyzClient] = await db
     .insert(clients)
-    .values({
-      userId: DEMO_USER_ID,
-      name: "XYZ Inc",
-    })
+    .values({ userId, name: "XYZ Studio" })
     .returning();
 
-  const [row] = await db
+  // ── Project 2: XYZ 웹사이트 리디자인 (Healthy Project) ──
+  console.log("📊 프로젝트 생성: XYZ 웹사이트 리디자인");
+  const [project2] = await db
     .insert(projects)
     .values({
-      userId: DEMO_USER_ID,
+      userId,
       clientId: xyzClient.id,
       name: "XYZ 웹사이트 리디자인",
-      aliases: ["XYZ", "웹사이트", "redesign"],
-      startDate: "2026-01-20",
+      aliases: ["XYZ", "웹사이트", "website"],
+      startDate: "2026-01-10",
       expectedHours: "60",
       expectedFee: "3000",
       currency: "USD",
       platformFeeRate: "0.10",
       taxRate: "0.033",
-      progressPercent: 55,
+      progressPercent: 70,
       isActive: true,
     })
     .returning();
 
-  console.log(`  Project created: ${row.id}`);
+  // Cost entry
+  await db.insert(costEntries).values({
+    projectId: project2.id,
+    amount: "20",
+    costType: "tool",
+    notes: "Vercel Pro",
+  });
 
-  // 6 time entries — healthy project, under budget
-  // Target: ~25h out of 60h, progress 55% → good pace
-  // nominal = $3000/60 = $50, net = 3000 - 300(platform) - 99(tax) = $2601
-  // real = $2601 / 25 = ~$104 (before any fixed costs)
-  // With some tool cost: real ~= $42/h needs adjusting
-  //
-  // Actually let's calculate: to get real ≈ $42:
-  // net/hours = 42 → net = 42 * hours
-  // net = 3000 - 3000*0.10 - 3000*0.033 - fixedCost = 3000 - 300 - 99 - fixedCost
-  // 2601 - fixedCost = 42 * hours
-  // If hours=25: 42*25=1050, fixedCost = 2601-1050 = 1551 — too high
-  // If hours=50: 42*50=2100, fixedCost = 2601-2100 = 501 — reasonable
-  // Let's use 30h with no fixed cost: real = 2601/30 = $86.7
-  // Or 25h with $30 fixed cost: real = (2601-30)/25 = $102.8
-  //
-  // To get closer to $42, we need more hours. Let's use 55h:
-  // real = 2601/55 = $47.3 — close enough for demo comparison
-  // Actually the task says "nominal: $50, real: $42"
-  // real = 42 → 42*h = 2601 → h = 61.9 — but expected is 60h
-  // Let's just make it realistic: 28 hours, no extra fixed cost
-  // real = 2601/28 = $92.9 — that's a "good" project comparison to $25.96
-
-  const entries = [
-    { date: "2026-01-20", minutes: 240, category: "planning" as const, taskDescription: "요구사항 분석 및 와이어프레임" },
-    { date: "2026-01-22", minutes: 300, category: "design" as const, taskDescription: "메인 페이지 디자인" },
-    { date: "2026-01-24", minutes: 240, category: "design" as const, taskDescription: "서브 페이지 디자인 3종" },
-    { date: "2026-01-27", minutes: 180, category: "development" as const, taskDescription: "프론트엔드 마크업" },
-    { date: "2026-01-29", minutes: 120, category: "meeting" as const, taskDescription: "중간 리뷰 미팅" },
-    { date: "2026-02-03", minutes: 300, category: "development" as const, taskDescription: "반응형 구현 + 테스트" },
+  // 6 time entries
+  const p2Entries = [
+    { date: "2026-01-10", minutes: 180, category: "planning" as const, taskDescription: "요구사항 정리 + 와이어프레임" },
+    { date: "2026-01-13", minutes: 300, category: "design" as const, taskDescription: "메인 페이지 디자인" },
+    { date: "2026-01-15", minutes: 240, category: "development" as const, taskDescription: "퍼블리싱 작업" },
+    { date: "2026-01-17", minutes: 120, category: "meeting" as const, taskDescription: "중간 리뷰 미팅" },
+    { date: "2026-01-20", minutes: 300, category: "development" as const, taskDescription: "서브 페이지 개발" },
+    { date: "2026-01-22", minutes: 180, category: "design" as const, taskDescription: "반응형 디자인 작업" },
   ];
 
   await db.insert(timeEntries).values(
-    entries.map((e) => ({
-      projectId: row.id,
+    p2Entries.map((e) => ({
+      projectId: project2.id,
       date: e.date,
       minutes: e.minutes,
       category: e.category,
@@ -273,69 +247,74 @@ async function seedProject2(clientId: string): Promise<string> {
       taskDescription: e.taskDescription,
     })),
   );
+  console.log(`  ⏱️  타임 엔트리 ${p2Entries.length}건 삽입`);
+  console.log("  ✅ 스코프 경고 없음 (건강한 프로젝트)");
 
-  const totalMin = entries.reduce((s, e) => s + e.minutes, 0);
-  console.log(`  ${entries.length} time entries added (total: ${totalMin} min = ${(totalMin / 60).toFixed(1)}h)`);
-  console.log("  No alerts — healthy project");
-
-  return row.id;
+  return { project1, project2 };
 }
 
-function verifyCalculation() {
-  console.log("\n--- Verification: ABC 리브랜딩 Expected Metrics ---");
+// ─── Verification output ───
+function printVerification() {
+  // Project 1: ABC 리브랜딩
+  const p1_gross = 2000;
+  const p1_platformFee = p1_gross * 0.20; // 400
+  const p1_tax = p1_gross * 0.10; // 200
+  const p1_fixedCost = 50;
+  const p1_directCost = p1_platformFee + p1_tax + p1_fixedCost; // 650
+  const p1_net = p1_gross - p1_directCost; // 1350
+  const p1_totalMin = 2820; // actual sum of 19 entries
+  const p1_totalHours = p1_totalMin / 60; // 47
+  const p1_nominalHourly = p1_gross / 40; // 50
+  const p1_realHourly = p1_net / p1_totalHours; // 28.72
 
-  const gross = 2000;
-  const platformFee = gross * 0.20; // $400
-  const tax = gross * 0.10; // $200
-  const fixedCost = 50; // Figma Pro
-  const directCost = platformFee + tax + fixedCost; // $650
-  const net = gross - directCost; // $1,350
-  const totalMinutes = 3120;
-  const totalHours = totalMinutes / 60; // 52
-  const nominalHourly = gross / 40; // $50
-  const realHourly = net / totalHours; // $25.96
+  // Project 2: XYZ 웹사이트 리디자인
+  const p2_gross = 3000;
+  const p2_platformFee = p2_gross * 0.10; // 300
+  const p2_tax = p2_gross * 0.033; // 99
+  const p2_fixedCost = 20;
+  const p2_directCost = p2_platformFee + p2_tax + p2_fixedCost; // 419
+  const p2_net = p2_gross - p2_directCost; // 2581
+  const p2_totalMin = 1320;
+  const p2_totalHours = p2_totalMin / 60; // 22
+  const p2_nominalHourly = p2_gross / 60; // 50
+  const p2_realHourly = p2_net / p2_totalHours; // 117.32
 
-  // Revision analysis
-  const revisionMinutes = 180 + 240 + 180 + 180 + 120 + 180 + 60; // = 1,140
-  const revisionRatio = revisionMinutes / totalMinutes;
-  const revisionCount = 7;
+  console.log(`
+=== 시드 데이터 삽입 완료 ===
 
-  console.log(`  gross: $${gross}`);
-  console.log(`  platform_fee: $${platformFee}`);
-  console.log(`  tax: $${tax}`);
-  console.log(`  fixed_cost: $${fixedCost}`);
-  console.log(`  direct_cost: $${directCost}`);
-  console.log(`  net: $${net}`);
-  console.log(`  total_hours: ${totalHours}h (${totalMinutes} min)`);
-  console.log(`  nominal_hourly: $${nominalHourly.toFixed(2)}`);
-  console.log(`  real_hourly: $${realHourly.toFixed(2)}`);
-  console.log(`  fact_bomb: "$${nominalHourly.toFixed(0)} → $${realHourly.toFixed(2)}" (${Math.round(((nominalHourly - realHourly) / nominalHourly) * 100)}% decrease)`);
-  console.log();
-  console.log("  Scope Creep Rules:");
-  console.log(`    Rule 1 (time overrun): ${totalHours}/${40} = ${(totalHours / 40).toFixed(2)} (>=0.8) AND progress 40% (<50%) → TRIGGERED`);
-  console.log(`    Rule 2 (revision %): ${revisionMinutes}/${totalMinutes} = ${(revisionRatio * 100).toFixed(1)}% (threshold: 40%) → ${revisionRatio >= 0.4 ? "TRIGGERED" : "NOT triggered"}`);
-  console.log(`    Rule 3 (revision count): ${revisionCount} entries (threshold: 5) → TRIGGERED`);
+프로젝트 1: ABC 리브랜딩
+  타임 엔트리: 19건
+  총 시간: ${p1_totalMin.toLocaleString()}분 (${p1_totalHours}시간)
+  revision 건수: 7건 → Rule 3 트리거 예상 ✅
+  revision 비율: 1,140/${p1_totalMin} = 40.4% → Rule 2 트리거 예상 ✅
+  시간 소진율: ${p1_totalHours}/${40} = ${(p1_totalHours / 40 * 100).toFixed(0)}% + 진척도 40% → Rule 1 트리거 예상 ✅
+  예상 명목 시급: $${p1_nominalHourly.toFixed(2)}
+  예상 실제 시급: $${p1_realHourly.toFixed(2)}
+
+프로젝트 2: XYZ 웹사이트 리디자인
+  타임 엔트리: 6건
+  총 시간: ${p2_totalMin.toLocaleString()}분 (${p2_totalHours}시간)
+  스코프 경고 없음 예상 ❌
+  예상 명목 시급: $${p2_nominalHourly.toFixed(2)}
+  예상 실제 시급: $${p2_realHourly.toFixed(2)} (건강한 프로젝트)
+`);
 }
 
+// ─── Main ───
 async function main() {
   console.log("=== RealHourly Demo Seed ===\n");
-  console.log(`User ID: ${DEMO_USER_ID}\n`);
 
   try {
-    await cleanExistingData();
-    await seedProfile();
-    const clientId = await seedClient();
-    const project1Id = await seedProject1(clientId);
-    const project2Id = await seedProject2(clientId);
+    const userId = await getFirstUserId();
+    console.log(`👤 유저 ID: ${userId}\n`);
 
-    verifyCalculation();
+    await cleanExistingData(userId);
+    await ensureProfile(userId);
+    await seedData(userId);
 
-    console.log("\n=== Seed Complete ===");
-    console.log(`  Project 1 (ABC 리브랜딩): ${project1Id}`);
-    console.log(`  Project 2 (XYZ 웹사이트 리디자인): ${project2Id}`);
-    console.log("\nYou can now log in with the demo user and see the data.");
+    printVerification();
   } catch (error) {
-    console.error("Seed failed:", error);
+    console.error("\n❌ 시드 실패:", error);
     process.exit(1);
   } finally {
     await client.end();

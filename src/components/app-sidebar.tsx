@@ -9,6 +9,7 @@ import {
   Moon,
   Sun,
   Home,
+  BarChart3,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -37,6 +38,7 @@ export function AppSidebar() {
     { href: "/projects", label: t("projects"), icon: FolderKanban, emoji: "\uD83D\uDCCA" },
     { href: "/time-log", label: t("newEntry"), icon: Clock, emoji: "\u270D\uFE0F", exact: true },
     { href: "/time-log/history", label: t("history"), icon: ClipboardList, emoji: "\uD83D\uDCCB" },
+    { href: "/analytics", label: t("analytics"), icon: BarChart3, emoji: "\uD83D\uDCC8" },
     { href: "/settings", label: t("settings"), icon: Settings, emoji: "\u2699\uFE0F" },
   ];
 
