@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import { ClipboardList } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { TimeLogInterface } from "@/components/time-log/TimeLogInterface";
 import { getUser } from "@/lib/auth/server";
 import { getProjectsByUserId } from "@/db/queries/projects";
@@ -36,7 +38,16 @@ function TimeLogContent({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <Link
+          href="/time-log/history"
+          className="flex items-center gap-1.5 rounded-xl bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+        >
+          <ClipboardList className="size-4" />
+          {t("viewHistory")}
+        </Link>
+      </div>
       <TimeLogInterface projects={projects} />
     </div>
   );

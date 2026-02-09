@@ -3,6 +3,7 @@
 import {
   FolderKanban,
   Clock,
+  ClipboardList,
   Settings,
   LogOut,
   Moon,
@@ -33,7 +34,8 @@ export function AppSidebar() {
   const navItems = [
     { href: "/dashboard", label: t("dashboard"), icon: Home, emoji: "\uD83C\uDFE0" },
     { href: "/projects", label: t("projects"), icon: FolderKanban, emoji: "\uD83D\uDCCA" },
-    { href: "/time-log", label: t("timeLog"), icon: Clock, emoji: "\u270D\uFE0F" },
+    { href: "/time-log", label: t("newEntry"), icon: Clock, emoji: "\u270D\uFE0F", exact: true },
+    { href: "/time-log/history", label: t("history"), icon: ClipboardList, emoji: "\uD83D\uDCCB" },
     { href: "/settings", label: t("settings"), icon: Settings, emoji: "\u2699\uFE0F" },
   ];
 
@@ -55,7 +57,11 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname.startsWith(item.href)}
+                    isActive={
+                      "exact" in item && item.exact
+                        ? pathname === item.href
+                        : pathname.startsWith(item.href)
+                    }
                     className="rounded-xl px-3 py-3 text-sm font-medium transition-colors"
                   >
                     <Link href={item.href}>

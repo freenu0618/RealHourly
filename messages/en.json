@@ -58,6 +58,8 @@
     "dashboard": "Dashboard",
     "projects": "Projects",
     "timeLog": "Time Log",
+    "newEntry": "New Entry",
+    "history": "History",
     "settings": "Settings",
     "clients": "Clients"
   },
@@ -185,7 +187,31 @@
     "removeEntry": "Remove entry",
     "emptyState": "Describe your work and let AI sort it out",
     "reviewEntries": "Review Parsed Entries",
-    "entriesFound": "entries found"
+    "entriesFound": "entries found",
+    "viewHistory": "View History"
+  },
+  "history": {
+    "title": "Time History",
+    "calendarTab": "Calendar",
+    "listTab": "List",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "selectedEntries": "entries",
+    "totalTime": "Total Time",
+    "totalEntries": "Total Entries",
+    "categoryBreakdown": "By Category",
+    "noData": "No data",
+    "noEntries": "No time entries found",
+    "filterProject": "Filter by project",
+    "filterCategory": "Filter by category",
+    "allProjects": "All Projects",
+    "allCategories": "All Categories",
+    "loading": "Loading...",
+    "fetchError": "Failed to load history",
+    "editSuccess": "Entry updated",
+    "editError": "Failed to update entry",
+    "deleteSuccess": "Entry deleted",
+    "deleteError": "Failed to delete entry"
   },
   "alerts": {
     "title": "Alerts",

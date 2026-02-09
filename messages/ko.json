@@ -58,6 +58,8 @@
     "dashboard": "대시보드",
     "projects": "프로젝트",
     "timeLog": "시간 기록",
+    "newEntry": "새 기록",
+    "history": "기록 보기",
     "settings": "설정",
     "clients": "클라이언트"
   },
@@ -185,7 +187,31 @@
     "removeEntry": "항목 삭제",
     "emptyState": "작업 내용을 자유롭게 적어주세요. AI가 정리해드릴게요",
     "reviewEntries": "파싱 결과 확인",
-    "entriesFound": "개 항목"
+    "entriesFound": "개 항목",
+    "viewHistory": "기록 보기"
+  },
+  "history": {
+    "title": "시간 기록 히스토리",
+    "calendarTab": "캘린더",
+    "listTab": "리스트",
+    "prevMonth": "이전 달",
+    "nextMonth": "다음 달",
+    "selectedEntries": "의 기록",
+    "totalTime": "총 시간",
+    "totalEntries": "총 건수",
+    "categoryBreakdown": "카테고리 분포",
+    "noData": "데이터 없음",
+    "noEntries": "기록된 시간이 없습니다",
+    "filterProject": "프로젝트 필터",
+    "filterCategory": "카테고리 필터",
+    "allProjects": "전체 프로젝트",
+    "allCategories": "전체 카테고리",
+    "loading": "불러오는 중...",
+    "fetchError": "기록을 불러오지 못했어요",
+    "editSuccess": "기록이 수정됐어요",
+    "editError": "기록 수정에 실패했어요",
+    "deleteSuccess": "기록이 삭제됐어요",
+    "deleteError": "기록 삭제에 실패했어요"
   },
   "alerts": {
     "title": "알림",
