@@ -219,14 +219,21 @@
     "generateMessage": "Generate Message",
     "underpaid": "Underpaid Alert",
     "overdue": "Overdue Alert",
-    "scopeCreepDetected": "Scope Creep Detected",
-    "scopeWarningActive": "Scope Warning Active",
+    "scopeCreepDetected": "Let's check on your project",
+    "scopeWarningActive": "Project Alert",
+    "needsAttention": "Needs attention",
     "details": "Details",
     "generateError": "Error generating messages",
-    "ruleExplanation1": "{ratio}% of estimated hours used, progress at {progress}%",
-    "ruleExplanation2": "Revision work accounts for {ratio}% of total",
-    "ruleExplanation3": "{count} revision entries recorded",
-    "ruleDefault": "Scope creep has been detected"
+    "modalDescription": "Work is exceeding the original plan. Consider discussing this with your client.",
+    "ruleExplanation1": "Work hours are being used faster than expected \u23F0\n{ratio}% of estimated hours used, but progress is at {progress}%",
+    "ruleExplanation2": "Revision work is taking up a large portion \uD83D\uDD04\n{ratio}% of total work time is revisions",
+    "ruleExplanation3": "Revision requests keep adding up \uD83D\uDCDD\n{count} revision entries so far",
+    "ruleDefault": "Your project needs attention",
+    "messageLang": "Message language",
+    "langKo": "\uD83C\uDDF0\uD83C\uDDF7 한국어",
+    "langEn": "\uD83C\uDDFA\uD83C\uDDF8 English",
+    "writtenInKo": "\uD83C\uDDF0\uD83C\uDDF7 Written in Korean",
+    "writtenInEn": "\uD83C\uDDFA\uD83C\uDDF8 Written in English"
   },
   "messages": {
     "title": "Generated Messages",
@@ -244,5 +251,15 @@
     "defaultCurrency": "Default Currency",
     "timezone": "Timezone",
     "language": "Language"
+  },
+  "ai": {
+    "parseStep1": "Reading your input...",
+    "parseStep2": "Understanding context...",
+    "parseStep3": "Structuring time entries...",
+    "parseStep4": "Matching projects...",
+    "parseStep5": "Almost done!",
+    "genStep1": "Analyzing the situation...",
+    "genStep2": "Composing messages...",
+    "genStep3": "Polishing the tone..."
   }
 }

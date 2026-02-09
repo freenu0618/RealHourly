@@ -4,6 +4,7 @@ import { handleApiError } from "@/lib/api/handler";
 import { GenerateMessagesSchema } from "@/lib/validators/messages";
 import { createMessages } from "@/db/queries/generated-messages";
 import { getProjectById } from "@/db/queries/projects";
+import { getClientsByUserId } from "@/db/queries/clients";
 import { getActiveAlertByProject } from "@/db/queries/alerts";
 import { getSumMinutesByProject } from "@/db/queries/time-entries";
 import { generateMessages } from "@/lib/ai/generate-messages";
@@ -22,20 +23,27 @@ export async function POST(req: Request) {
       throw new ApiError("NOT_FOUND", 404, "Alert not found");
     }
 
-    const totalMinutes = await getSumMinutesByProject(body.projectId, "done");
+    const [totalMinutes, userClients] = await Promise.all([
+      getSumMinutesByProject(body.projectId, "done"),
+      project.clientId ? getClientsByUserId(user.id) : Promise.resolve([]),
+    ]);
     const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
+    const clientName = userClients.find((c) => c.id === project.clientId)?.name ?? "";
 
-    const messages = await generateMessages({
-      clientName: "",
-      projectName: project.name,
-      expectedFee: project.expectedFee ?? 0,
-      expectedHours: project.expectedHours ?? 0,
-      totalHours,
-      progressPercent: project.progressPercent,
-      triggeredRules: [alert.alertType],
-      metadata: alert.metadata,
-      currency: project.currency,
-    });
+    const messages = await generateMessages(
+      {
+        clientName,
+        projectName: project.name,
+        expectedFee: project.expectedFee ?? 0,
+        expectedHours: project.expectedHours ?? 0,
+        totalHours,
+        progressPercent: project.progressPercent,
+        triggeredRules: [alert.alertType],
+        metadata: alert.metadata,
+        currency: project.currency,
+      },
+      body.messageLang,
+    );
 
     const data = await createMessages(body.alertId, messages);
     return NextResponse.json({ data: { messages: data } });

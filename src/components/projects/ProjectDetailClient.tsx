@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { AlertTriangle } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -81,12 +81,12 @@ export function ProjectDetailClient({
 
   return (
     <div className="space-y-6">
-      {/* Scope Alert Banner */}
+      {/* Project Alert Banner */}
       {pendingAlert && !showAlertModal && (
-        <div className="flex items-center justify-between rounded-lg border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-700 dark:bg-yellow-950">
-          <div className="flex items-center gap-2 text-sm font-medium text-yellow-800 dark:text-yellow-200">
-            <AlertTriangle className="size-4" />
-            {tAlerts("underpaid")}
+        <div className="flex items-center justify-between rounded-lg border border-amber-300 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-950">
+          <div className="flex items-center gap-2 text-sm font-medium text-amber-800 dark:text-amber-200">
+            <Lightbulb className="size-4" />
+            {tAlerts("needsAttention")}
           </div>
           <Button
             variant="ghost"

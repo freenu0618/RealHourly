@@ -23,10 +23,11 @@ export interface GeneratedMessage {
  */
 export async function generateMessages(
   ctx: MessageContext,
+  messageLang?: "ko" | "en",
 ): Promise<GeneratedMessage[]> {
   try {
     const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
-    const systemPrompt = buildMessagePrompt(ctx);
+    const systemPrompt = buildMessagePrompt(ctx, messageLang);
 
     const completion = await getOpenAI().chat.completions.create({
       model,
@@ -60,12 +61,12 @@ export async function generateMessages(
     }));
   } catch (error) {
     console.error("Message generation LLM error, using fallback:", error);
-    return getFallbackMessages(ctx);
+    return getFallbackMessages(ctx, messageLang);
   }
 }
 
-function getFallbackMessages(ctx: MessageContext): GeneratedMessage[] {
-  const hasKorean = /[가-힣]/.test(ctx.projectName);
+function getFallbackMessages(ctx: MessageContext, messageLang?: "ko" | "en"): GeneratedMessage[] {
+  const hasKorean = messageLang ? messageLang === "ko" : /[가-힣]/.test(ctx.projectName);
   const overHours = Math.round(ctx.totalHours - ctx.expectedHours);
   const overPercent = Math.round(
     ((ctx.totalHours - ctx.expectedHours) / ctx.expectedHours) * 100,

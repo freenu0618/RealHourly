@@ -12,15 +12,17 @@ export interface MessageContext {
 
 /**
  * Build the system prompt for billing message generation.
- * Auto-detects language based on projectName characters.
+ * Uses explicit messageLang if provided, otherwise auto-detects from projectName.
  */
-export function buildMessagePrompt(ctx: MessageContext): string {
-  const hasKorean = /[가-힣]/.test(ctx.projectName);
-  const lang = hasKorean ? "Korean" : "English";
+export function buildMessagePrompt(ctx: MessageContext, messageLang?: "ko" | "en"): string {
+  const lang = messageLang === "ko" ? "Korean"
+    : messageLang === "en" ? "English"
+    : /[가-힣]/.test(ctx.projectName) ? "Korean" : "English";
 
   const ruleExplanations = ctx.triggeredRules
     .map((rule) => {
-      const data = (ctx.metadata[rule] ?? {}) as Record<string, unknown>;
+      const ruleKey = rule.replace("scope_", "");
+      const data = (ctx.metadata[ruleKey] ?? ctx.metadata[rule] ?? {}) as Record<string, unknown>;
       switch (rule) {
         case "scope_rule1":
           return `- Time Overrun: ${data.totalHours ?? "?"}h used out of ${data.expectedHours ?? "?"}h expected (${Math.round(((data.timeRatio as number) ?? 0) * 100)}%), but project progress is only ${data.progressPercent ?? "?"}%`;
@@ -57,8 +59,17 @@ ${ruleExplanations}
    - Additional fee (추가 비용)
    - Timeline extension (일정 연장)
    - Scope reduction (범위 조정)
-5. Output in ${lang} — match the language of the project name
+5. Output in ${lang}
 6. Keep body under 300 words each
 7. Be empathetic in polite, balanced in neutral, assertive in firm
-8. Do NOT use placeholder brackets like [name] — use the actual values provided`;
+8. Do NOT use placeholder brackets like [name] — use the actual values provided
+${lang === "Korean" ? `
+## Tone Guide (Korean)
+- polite: 공손하고 조심스러운 톤. "혹시 괜찮으시다면...", "말씀드리기 조심스럽지만..."
+- neutral: 사실 중심, 전문적. "현재 상황을 공유드립니다.", "다음 단계를 논의하면 좋겠습니다."
+- firm: 명확하고 단호한. "추가 작업에 대한 비용 조정이 필요합니다.", "현재 범위를 재조정해야 합니다."` : `
+## Tone Guide (English)
+- polite: Gentle and considerate. "I wanted to kindly bring to your attention...", "If it's alright with you..."
+- neutral: Fact-based, professional. "I'd like to share a project status update.", "Let's discuss next steps."
+- firm: Clear and direct. "We need to adjust the fee for additional work.", "The current scope needs to be revised."`}`;
 }

@@ -3,8 +3,9 @@
 import { useRef, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { StepLoader } from "@/components/ui/step-loader";
+import { useStepLoader } from "@/lib/hooks/use-step-loader";
 import {
   Select,
   SelectContent,
@@ -25,6 +26,14 @@ interface TimeLogInterfaceProps {
   projects: { id: string; name: string }[];
 }
 
+const PARSE_STEPS = [
+  { key: "parseStep1", emoji: "\uD83D\uDCE8", duration: 1500 },
+  { key: "parseStep2", emoji: "\uD83E\uDDE0", duration: 2000 },
+  { key: "parseStep3", emoji: "\uD83D\uDDC2\uFE0F", duration: 1800 },
+  { key: "parseStep4", emoji: "\uD83C\uDFAF", duration: 2000 },
+  { key: "parseStep5", emoji: "\u2728", duration: 3000 },
+];
+
 export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   const t = useTranslations("timeLog");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -35,10 +44,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   const { entries, isLoading, setEntries, setLoading, setError } =
     useDraftStore();
 
+  const stepLoader = useStepLoader(PARSE_STEPS);
+
   const handleParse = useCallback(async () => {
     if (!input.trim()) return;
     setLoading(true);
     setError(null);
+    stepLoader.start();
 
     try {
       const res = await fetch("/api/time/parse", {
@@ -59,9 +71,10 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
       toast.error(t("parseFailed"));
       setError(t("parseFailed"));
     } finally {
+      stepLoader.complete();
       setLoading(false);
     }
-  }, [input, preferredProjectId, setEntries, setLoading, setError, t]);
+  }, [input, preferredProjectId, setEntries, setLoading, setError, stepLoader, t]);
 
   function handleExampleFill(text: string) {
     setInput(text);
@@ -141,11 +154,15 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         </Button>
       </div>
 
-      {/* Loading skeleton */}
+      {/* Step-by-step loading */}
       {isLoading && (
-        <div className="space-y-3">
-          <Skeleton className="h-36 w-full rounded-[20px]" />
-          <Skeleton className="h-36 w-full rounded-[20px]" />
+        <div className="rounded-[20px] border border-dashed border-primary/30 bg-primary/5">
+          <StepLoader
+            currentStep={stepLoader.currentStep}
+            currentIndex={stepLoader.currentIndex}
+            progress={stepLoader.progress}
+            namespace="ai"
+          />
         </div>
       )}
 

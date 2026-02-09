@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Loader2, Copy, Check } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
+import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { StepLoader } from "@/components/ui/step-loader";
+import { useStepLoader } from "@/lib/hooks/use-step-loader";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +37,12 @@ interface GeneratedMessage {
 
 type Phase = "alert" | "loading" | "messages";
 
+const GENERATE_STEPS = [
+  { key: "genStep1", emoji: "\uD83D\uDD0D", duration: 2000 },
+  { key: "genStep2", emoji: "\u270D\uFE0F", duration: 2500 },
+  { key: "genStep3", emoji: "\uD83D\uDC8E", duration: 2000 },
+];
+
 export function ScopeAlertModal({
   projectId,
   alert,
@@ -43,9 +51,15 @@ export function ScopeAlertModal({
 }: ScopeAlertModalProps) {
   const tAlerts = useTranslations("alerts");
   const tMessages = useTranslations("messages");
+  const locale = useLocale();
   const [phase, setPhase] = useState<Phase>("alert");
   const [messages, setMessages] = useState<GeneratedMessage[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [messageLang, setMessageLang] = useState<"ko" | "en">(
+    locale === "ko" ? "ko" : "en"
+  );
+
+  const stepLoader = useStepLoader(GENERATE_STEPS);
 
   const getRuleExplanation = (): string => {
     const { alertType, metadata } = alert;
@@ -76,12 +90,13 @@ export function ScopeAlertModal({
 
   const handleGenerateMessages = async () => {
     setPhase("loading");
+    stepLoader.start();
 
     try {
       const response = await fetch("/api/messages/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId, alertId: alert.id }),
+        body: JSON.stringify({ projectId, alertId: alert.id, messageLang }),
       });
 
       if (!response.ok) throw new Error("Failed to generate messages");
@@ -92,6 +107,8 @@ export function ScopeAlertModal({
     } catch {
       toast.error(tAlerts("generateError"));
       setPhase("alert");
+    } finally {
+      stepLoader.complete();
     }
   };
 
@@ -135,6 +152,9 @@ export function ScopeAlertModal({
             <p className="mt-1 text-sm font-medium text-[#8C7A6B] dark:text-[#B0A395]">
               {projectName}
             </p>
+            <p className="mt-2 text-sm text-[#8C7A6B] dark:text-[#B0A395]">
+              {tAlerts("modalDescription")}
+            </p>
           </DialogHeader>
         </div>
 
@@ -143,7 +163,35 @@ export function ScopeAlertModal({
             <>
               {/* Data card */}
               <div className="rounded-2xl border bg-muted/40 p-5">
-                <p className="text-base leading-relaxed">{getRuleExplanation()}</p>
+                <p className="whitespace-pre-line text-base leading-relaxed">{getRuleExplanation()}</p>
+              </div>
+              {/* Language toggle */}
+              <div className="space-y-1.5">
+                <p className="text-xs text-muted-foreground">{tAlerts("messageLang")}</p>
+                <div className="inline-flex rounded-full bg-muted p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setMessageLang("ko")}
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                      messageLang === "ko"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tAlerts("langKo")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMessageLang("en")}
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                      messageLang === "en"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tAlerts("langEn")}
+                  </button>
+                </div>
               </div>
               <DialogFooter className="gap-2">
                 <Button
@@ -164,13 +212,21 @@ export function ScopeAlertModal({
           )}
 
           {phase === "loading" && (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
+            <StepLoader
+              currentStep={stepLoader.currentStep}
+              currentIndex={stepLoader.currentIndex}
+              progress={stepLoader.progress}
+              namespace="ai"
+            />
           )}
 
           {phase === "messages" && (
             <>
+              <div className="flex items-center justify-between">
+                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
+                  {messageLang === "ko" ? tAlerts("writtenInKo") : tAlerts("writtenInEn")}
+                </span>
+              </div>
               <Tabs defaultValue="polite" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 rounded-full bg-muted p-1">
                   <TabsTrigger value="polite" className="rounded-full text-xs font-medium">
