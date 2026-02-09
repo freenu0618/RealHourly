@@ -6,3 +6,4 @@ export * from "./time-entries";
 export * from "./cost-entries";
 export * from "./alerts";
 export * from "./generated-messages";
+export * from "./weekly-reports";

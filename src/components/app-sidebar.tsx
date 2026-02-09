@@ -10,6 +10,7 @@ import {
   Sun,
   Home,
   BarChart3,
+  FileText,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -39,6 +40,7 @@ export function AppSidebar() {
     { href: "/time-log", label: t("newEntry"), icon: Clock, emoji: "\u270D\uFE0F", exact: true },
     { href: "/time-log/history", label: t("history"), icon: ClipboardList, emoji: "\uD83D\uDCCB" },
     { href: "/analytics", label: t("analytics"), icon: BarChart3, emoji: "\uD83D\uDCC8" },
+    { href: "/reports", label: t("reports"), icon: FileText, emoji: "\uD83D\uDCCB" },
     { href: "/settings", label: t("settings"), icon: Settings, emoji: "\u2699\uFE0F" },
   ];
 

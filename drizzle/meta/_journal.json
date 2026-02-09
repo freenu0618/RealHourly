@@ -8,6 +8,13 @@
       "when": 1770518874397,
       "tag": "0000_friendly_edwin_jarvis",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770643239239,
+      "tag": "0001_bumpy_demogoblin",
+      "breakpoints": true
     }
   ]
 }
