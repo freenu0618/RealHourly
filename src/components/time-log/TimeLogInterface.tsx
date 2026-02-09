@@ -22,6 +22,7 @@ import { MagicParseButton } from "./MagicParseButton";
 import { DraftCardList } from "./DraftCardList";
 import { SaveAllButton } from "./SaveAllButton";
 import { ManualEntryForm } from "./ManualEntryForm";
+import { VoiceInput } from "./VoiceInput";
 
 interface TimeLogInterfaceProps {
   projects: { id: string; name: string }[];
@@ -162,15 +163,28 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         </Select>
       </div>
 
-      {/* Chat textarea */}
-      <ChatTextarea
-        value={input}
-        onChange={setInput}
-        onParse={handleParse}
-        placeholder={t("inputPlaceholder")}
-        disabled={isLoading}
-        textareaRef={textareaRef}
-      />
+      {/* Chat textarea + voice input */}
+      <div className="flex items-start gap-2">
+        <div className="flex-1">
+          <ChatTextarea
+            value={input}
+            onChange={setInput}
+            onParse={handleParse}
+            placeholder={t("inputPlaceholder")}
+            disabled={isLoading}
+            textareaRef={textareaRef}
+          />
+        </div>
+        <div className="pt-2.5">
+          <VoiceInput
+            onTranscribed={(text) => {
+              setInput((prev) => (prev ? `${prev}\n${text}` : text));
+              textareaRef.current?.focus();
+            }}
+            disabled={isLoading}
+          />
+        </div>
+      </div>
 
       {/* Quick chips */}
       <QuickChips

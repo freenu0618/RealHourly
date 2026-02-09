@@ -116,7 +116,28 @@
     "progress": "진행률",
     "taxEnabled": "세금 적용",
     "created": "프로젝트가 생성되었습니다",
-    "createFailed": "프로젝트 생성에 실패했습니다"
+    "createFailed": "프로젝트 생성에 실패했습니다",
+    "generateEstimate": "견적서 생성",
+    "generateInvoice": "인보이스 생성"
+  },
+  "invoice": {
+    "title": "문서 생성",
+    "estimate": "견적서",
+    "invoice": "인보이스",
+    "fromName": "발신자 이름",
+    "fromEmail": "발신자 이메일",
+    "fromAddress": "주소 (선택)",
+    "bankInfo": "계좌 정보 (선택)",
+    "issueDate": "발행일",
+    "dueDate": "마감일 (선택)",
+    "notes": "비고 (선택)",
+    "notesPlaceholder": "추가 안내사항을 입력하세요",
+    "downloadPdf": "PDF 다운로드",
+    "generating": "PDF 생성 중...",
+    "success": "문서가 준비됐어요!",
+    "error": "PDF 생성에 실패했습니다",
+    "preview": "미리보기",
+    "noTimeEntries": "시간 기록이 없어 문서를 생성할 수 없습니다"
   },
   "metrics": {
     "nominalHourly": "명목 시급",
@@ -190,7 +211,20 @@
     "emptyState": "작업 내용을 자유롭게 적어주세요. AI가 정리해드릴게요",
     "reviewEntries": "파싱 결과 확인",
     "entriesFound": "개 항목",
-    "viewHistory": "기록 보기"
+    "viewHistory": "기록 보기",
+    "voiceRecord": "음성으로 기록하기",
+    "voiceRecording": "녹음 중...",
+    "voiceTranscribing": "음성을 텍스트로 변환 중...",
+    "voiceRecordAgain": "다시 녹음",
+    "voiceResult": "음성 인식 결과",
+    "voiceSuccess": "완벽하게 인식했어요!",
+    "voicePermissionDenied": "마이크 접근을 허용해주세요",
+    "voicePermissionGuide": "브라우저 설정에서 마이크 권한을 허용해주세요",
+    "voiceTranscribeFailed": "음성을 인식하지 못했어요. 다시 시도해주세요",
+    "voiceNetworkError": "연결 문제가 있어요. 잠시 후 다시 시도해주세요",
+    "voiceMaxSoon": "곧 최대 시간이에요",
+    "voiceStop": "녹음 중지",
+    "voiceNoSpeech": "음성이 감지되지 않았어요"
   },
   "history": {
     "title": "시간 기록 히스토리",

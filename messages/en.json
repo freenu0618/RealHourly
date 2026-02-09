@@ -116,7 +116,28 @@
     "progress": "Progress",
     "taxEnabled": "Tax Enabled",
     "created": "Project created",
-    "createFailed": "Failed to create project"
+    "createFailed": "Failed to create project",
+    "generateEstimate": "Generate Estimate",
+    "generateInvoice": "Generate Invoice"
+  },
+  "invoice": {
+    "title": "Generate Document",
+    "estimate": "Estimate",
+    "invoice": "Invoice",
+    "fromName": "Your Name",
+    "fromEmail": "Your Email",
+    "fromAddress": "Address (optional)",
+    "bankInfo": "Bank Info (optional)",
+    "issueDate": "Issue Date",
+    "dueDate": "Due Date (optional)",
+    "notes": "Notes (optional)",
+    "notesPlaceholder": "Add any additional notes",
+    "downloadPdf": "Download PDF",
+    "generating": "Generating PDF...",
+    "success": "Document is ready!",
+    "error": "Failed to generate PDF",
+    "preview": "Preview",
+    "noTimeEntries": "No time entries to generate document"
   },
   "metrics": {
     "nominalHourly": "Nominal Hourly",
@@ -190,7 +211,20 @@
     "emptyState": "Describe your work and let AI sort it out",
     "reviewEntries": "Review Parsed Entries",
     "entriesFound": "entries found",
-    "viewHistory": "View History"
+    "viewHistory": "View History",
+    "voiceRecord": "Record by voice",
+    "voiceRecording": "Recording...",
+    "voiceTranscribing": "Transcribing...",
+    "voiceRecordAgain": "Record again",
+    "voiceResult": "Voice recognition result",
+    "voiceSuccess": "Perfectly recognized!",
+    "voicePermissionDenied": "Please allow microphone access",
+    "voicePermissionGuide": "Enable microphone permission in browser settings",
+    "voiceTranscribeFailed": "Could not recognize speech. Please try again",
+    "voiceNetworkError": "Connection issue. Please try again later",
+    "voiceMaxSoon": "Approaching max recording time",
+    "voiceStop": "Stop recording",
+    "voiceNoSpeech": "No speech detected"
   },
   "history": {
     "title": "Time History",

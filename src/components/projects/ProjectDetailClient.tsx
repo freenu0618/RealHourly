@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { CostBreakdownPie } from "@/components/charts/CostBreakdownPie";
 import { ScopeAlertModal } from "@/components/alerts/ScopeAlertModal";
 import { formatCurrency } from "@/lib/money/currency";
 import type { ProjectMetricsDTO } from "@/lib/metrics/get-project-metrics";
+import { InvoiceDialog } from "./InvoiceDialog";
 
 interface AlertDTO {
   id: string;
@@ -37,9 +38,12 @@ export function ProjectDetailClient({
 }: ProjectDetailClientProps) {
   const t = useTranslations("metrics");
   const tAlerts = useTranslations("alerts");
+  const tProjects = useTranslations("projects");
   const [metrics, setMetrics] = useState<ProjectMetricsDTO | null>(null);
   const [pendingAlert, setPendingAlert] = useState<AlertDTO | null>(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const [invoiceType, setInvoiceType] = useState<"estimate" | "invoice">("estimate");
+  const [showInvoice, setShowInvoice] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -112,12 +116,42 @@ export function ProjectDetailClient({
       )}
 
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-bold">{project.name}</h1>
-        <Badge variant={project.isActive ? "default" : "secondary"}>
-          {project.isActive ? t("active") : t("archived")}
-        </Badge>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">{project.name}</h1>
+          <Badge variant={project.isActive ? "default" : "secondary"}>
+            {project.isActive ? t("active") : t("archived")}
+          </Badge>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 rounded-xl text-xs"
+            onClick={() => { setInvoiceType("estimate"); setShowInvoice(true); }}
+          >
+            <FileText className="size-3.5" />
+            {tProjects("generateEstimate")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 rounded-xl text-xs"
+            onClick={() => { setInvoiceType("invoice"); setShowInvoice(true); }}
+          >
+            <FileText className="size-3.5" />
+            {tProjects("generateInvoice")}
+          </Button>
+        </div>
       </div>
+
+      {/* Invoice/Estimate Dialog */}
+      <InvoiceDialog
+        open={showInvoice}
+        onOpenChange={setShowInvoice}
+        projectId={projectId}
+        defaultType={invoiceType}
+      />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
