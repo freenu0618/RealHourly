@@ -89,8 +89,6 @@ function computeMetrics(projects: ProjectSummary[]) {
   let totalNet = 0;
   let totalCost = 0;
   let totalMinutes = 0;
-  let weightedRealRate = 0;
-  let rateCount = 0;
 
   for (const p of projects) {
     const gross = p.expectedFee;
@@ -98,26 +96,21 @@ function computeMetrics(projects: ProjectSummary[]) {
     const tax = gross * p.taxRate;
     const directCost = p.fixedCosts + platformFee + tax;
     const net = gross - directCost;
-    const hours = p.totalMinutes / 60;
-    const realHourly = hours > 0 ? net / hours : null;
 
     totalRevenue += gross;
     totalNet += net;
     totalCost += directCost;
     totalMinutes += p.totalMinutes;
-
-    if (realHourly !== null) {
-      weightedRealRate += realHourly;
-      rateCount++;
-    }
   }
+
+  const totalHours = totalMinutes / 60;
 
   return {
     totalRevenue,
     totalNet,
     totalCost,
-    totalHours: Math.round((totalMinutes / 60) * 10) / 10,
-    avgRealRate: rateCount > 0 ? Math.round((weightedRealRate / rateCount) * 100) / 100 : null,
+    totalHours: Math.round(totalHours * 10) / 10,
+    avgRealRate: totalHours > 0 ? Math.round((totalNet / totalHours) * 100) / 100 : null,
     currency: projects[0]?.currency ?? "USD",
   };
 }
@@ -139,7 +132,7 @@ export function DashboardClient() {
         const json = await res.json();
         setData(json.data);
       } catch {
-        // silent
+        console.error("[Dashboard] Failed to load data");
       } finally {
         setLoading(false);
       }

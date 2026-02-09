@@ -12,6 +12,7 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(new URL(next, origin));
     }
+    console.error("[OAuth Callback]", error.message);
   }
 
   return NextResponse.redirect(new URL("/login", origin));

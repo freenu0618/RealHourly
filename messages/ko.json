@@ -118,7 +118,9 @@
     "created": "프로젝트가 생성되었습니다",
     "createFailed": "프로젝트 생성에 실패했습니다",
     "generateEstimate": "견적서 생성",
-    "generateInvoice": "인보이스 생성"
+    "generateInvoice": "인보이스 생성",
+    "deficit": "적자",
+    "nominalRate": "명목 시급"
   },
   "invoice": {
     "title": "문서 생성",

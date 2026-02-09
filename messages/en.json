@@ -118,7 +118,9 @@
     "created": "Project created",
     "createFailed": "Failed to create project",
     "generateEstimate": "Generate Estimate",
-    "generateInvoice": "Generate Invoice"
+    "generateInvoice": "Generate Invoice",
+    "deficit": "Deficit",
+    "nominalRate": "Nominal"
   },
   "invoice": {
     "title": "Generate Document",

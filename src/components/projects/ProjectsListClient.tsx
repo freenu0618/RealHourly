@@ -17,6 +17,10 @@ interface Project {
   progressPercent: number;
   expectedFee: number | null;
   expectedHours: number | null;
+  clientName: string | null;
+  totalMinutes: number;
+  realHourly: number | null;
+  nominalHourly: number | null;
 }
 
 export function ProjectsListClient() {
@@ -56,7 +60,7 @@ export function ProjectsListClient() {
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="h-36 rounded-lg" />
+            <Skeleton key={i} className="h-56 rounded-[20px]" />
           ))}
         </div>
       ) : error ? (

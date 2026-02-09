@@ -120,6 +120,7 @@ export function useAudioRecorder(): UseAudioRecorder {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "paused") {
       mediaRecorderRef.current.resume();
       setIsPaused(false);
+      clearTimer();
 
       timerRef.current = setInterval(() => {
         setDuration((prev) => {

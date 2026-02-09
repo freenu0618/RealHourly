@@ -78,12 +78,12 @@ export function ReportDetailClient({ weekStart }: Props) {
 
   const startDisplay = formatDate(
     new Date(report.weekStart),
-    "M月 d日",
+    "M월 d일",
     "ko",
   );
   const endDisplay = formatDate(
     new Date(addDays(new Date(report.weekStart), 6)),
-    "M月 d日",
+    "M월 d일",
     "ko",
   );
 
