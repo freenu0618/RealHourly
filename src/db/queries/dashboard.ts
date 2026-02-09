@@ -1,4 +1,4 @@
-import { eq, and, isNull, sql, desc } from "drizzle-orm";
+import { eq, and, isNull, inArray, sql, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { projects, timeEntries, costEntries, alerts } from "@/db/schema";
 
@@ -80,7 +80,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
         .from(timeEntries)
         .where(
           and(
-            sql`${timeEntries.projectId} = ANY(${projectIds})`,
+            inArray(timeEntries.projectId, projectIds),
             eq(timeEntries.intent, "done"),
             isNull(timeEntries.deletedAt),
           ),
@@ -99,7 +99,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
         .from(costEntries)
         .where(
           and(
-            sql`${costEntries.projectId} = ANY(${projectIds})`,
+            inArray(costEntries.projectId, projectIds),
             sql`${costEntries.costType} NOT IN ('platform_fee', 'tax')`,
             isNull(costEntries.deletedAt),
           ),
