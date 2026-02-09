@@ -20,6 +20,18 @@ import type { ParsedEntry, Category } from "@/types/time-log";
 import { CATEGORIES, BLOCKING_ISSUES, WARNING_ISSUES } from "@/types/time-log";
 import { cn } from "@/lib/utils";
 
+const CATEGORY_EMOJI: Record<Category, string> = {
+  planning: "\uD83D\uDCCB",
+  design: "\uD83C\uDFA8",
+  development: "\uD83D\uDCBB",
+  meeting: "\uD83D\uDDE3\uFE0F",
+  revision: "\uD83D\uDD04",
+  admin: "\uD83D\uDCC2",
+  email: "\uD83D\uDCE7",
+  research: "\uD83D\uDD0D",
+  other: "\uD83D\uDCCC",
+};
+
 interface DraftCardProps {
   entry: ParsedEntry;
   projects: { id: string; name: string }[];
@@ -32,14 +44,11 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
   const hasBlocking = entry.issues.some((i) =>
     BLOCKING_ISSUES.includes(i),
   );
-  const hasWarning = entry.issues.some((i) =>
-    WARNING_ISSUES.includes(i),
-  );
   const isPlanned = entry.issues.includes("FUTURE_INTENT");
 
   const borderClass = hasBlocking
-    ? "border-red-400 bg-red-50/50 dark:bg-red-950/20"
-    : "";
+    ? "border-l-4 border-l-orange-400"
+    : "border-l-4 border-l-green-500";
 
   const categoryLabelMap: Record<Category, string> = {
     planning: t("categoryPlanning"),
@@ -55,58 +64,36 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
 
   return (
     <Card
-      className={cn("relative transition-colors", borderClass)}
+      className={cn(
+        "relative rounded-[20px] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
+        borderClass,
+      )}
       role="group"
-      aria-label={`${entry.taskDescription} — ${entry.projectNameRaw}`}
+      aria-label={`${entry.taskDescription} \u2014 ${entry.projectNameRaw}`}
       tabIndex={0}
     >
-      <CardContent className="space-y-3 pt-4">
-        {/* Header: badges + delete */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-wrap gap-1.5">
-            {hasBlocking && (
-              <Badge variant="destructive" className="gap-1 text-xs">
-                <AlertCircle className="size-3" />
-                {t("selectRequired")}
-              </Badge>
-            )}
-            {entry.issues.includes("DATE_AMBIGUOUS") && (
-              <Badge
-                variant="outline"
-                className="border-yellow-400 bg-yellow-50 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400"
-              >
-                {t("dateEstimated")}
-              </Badge>
-            )}
-            {entry.issues.includes("DURATION_AMBIGUOUS") && (
-              <Badge
-                variant="outline"
-                className="border-yellow-400 bg-yellow-50 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400"
-              >
-                {t("durationEstimated")}
-              </Badge>
-            )}
-            {entry.issues.includes("CATEGORY_AMBIGUOUS") && (
-              <Badge
-                variant="outline"
-                className="border-yellow-400 bg-yellow-50 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400"
-              >
-                {t("categoryEstimated")}
-              </Badge>
-            )}
-            {isPlanned && (
-              <Badge
-                variant="outline"
-                className="border-purple-400 bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400"
-              >
-                {t("futurePlanned")}
-              </Badge>
-            )}
+      <CardContent className="space-y-3 pt-5">
+        {/* Header: category badge + task + delete */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            {/* Category emoji badge */}
+            <span className={cn(
+              "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold",
+              hasBlocking
+                ? "border border-orange-100 bg-orange-50 text-orange-700 dark:border-orange-900/50 dark:bg-orange-900/20 dark:text-orange-400"
+                : "border border-green-100 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-900/20 dark:text-green-400",
+            )}>
+              {CATEGORY_EMOJI[entry.category]} {categoryLabelMap[entry.category]}
+            </span>
+            {/* Duration */}
+            <div className="rounded-lg border bg-muted/60 px-3 py-1.5 font-mono text-sm font-bold">
+              {entry.durationMinutes ? `${(entry.durationMinutes / 60).toFixed(1)}h` : "--"}
+            </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 shrink-0"
+            className="size-8 shrink-0 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
             onClick={() => removeEntry(entry.id)}
             aria-label={t("removeEntry")}
           >
@@ -114,11 +101,62 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
           </Button>
         </div>
 
+        {/* Task description */}
+        <h4 className="text-base font-bold leading-tight">{entry.taskDescription}</h4>
+
+        {/* Issue badges */}
+        <div className="flex flex-wrap gap-1.5">
+          {hasBlocking && (
+            <Badge variant="destructive" className="gap-1 rounded-full text-xs">
+              <AlertCircle className="size-3" />
+              {t("selectRequired")}
+            </Badge>
+          )}
+          {entry.issues.includes("DATE_AMBIGUOUS") && (
+            <Badge
+              variant="outline"
+              className="rounded-full border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+            >
+              {t("dateEstimated")}
+            </Badge>
+          )}
+          {entry.issues.includes("DURATION_AMBIGUOUS") && (
+            <Badge
+              variant="outline"
+              className="rounded-full border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+            >
+              {t("durationEstimated")}
+            </Badge>
+          )}
+          {entry.issues.includes("CATEGORY_AMBIGUOUS") && (
+            <Badge
+              variant="outline"
+              className="rounded-full border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+            >
+              {t("categoryEstimated")}
+            </Badge>
+          )}
+          {isPlanned && (
+            <Badge
+              variant="outline"
+              className="rounded-full border-purple-300 bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400"
+            >
+              {t("futurePlanned")}
+            </Badge>
+          )}
+        </div>
+
         {/* Clarification question */}
         {entry.clarificationQuestion && (
-          <p className="text-sm font-medium text-red-600 dark:text-red-400">
-            {entry.clarificationQuestion}
-          </p>
+          <div className="rounded-2xl rounded-tl-none border border-blue-100 bg-blue-50 p-3 px-4 dark:border-blue-800 dark:bg-blue-900/20">
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="text-sm">{"\uD83E\uDD16"}</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-blue-600 dark:text-blue-400">Clarification</span>
+            </div>
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
+              {entry.clarificationQuestion}
+            </p>
+          </div>
         )}
 
         {/* Raw project name */}
@@ -142,8 +180,8 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
             >
               <SelectTrigger
                 className={cn(
-                  "h-9",
-                  !entry.matchedProjectId && hasBlocking && "border-red-400",
+                  "h-9 rounded-xl",
+                  !entry.matchedProjectId && hasBlocking && "border-orange-400",
                 )}
               >
                 <SelectValue placeholder={t("selectProject")} />
@@ -166,7 +204,7 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
               onChange={(e) =>
                 updateEntry(entry.id, { taskDescription: e.target.value })
               }
-              className="h-9"
+              className="h-9 rounded-xl"
             />
           </div>
 
@@ -193,8 +231,8 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
               }}
               placeholder={t("minutes")}
               className={cn(
-                "h-9",
-                entry.durationMinutes === null && hasBlocking && "border-red-400",
+                "h-9 rounded-xl",
+                entry.durationMinutes === null && hasBlocking && "border-orange-400",
               )}
             />
           </div>
@@ -208,13 +246,13 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
                 updateEntry(entry.id, { category: val as Category })
               }
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>
-                    {categoryLabelMap[cat]}
+                    {CATEGORY_EMOJI[cat]} {categoryLabelMap[cat]}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -227,7 +265,7 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
           <Button
             variant="outline"
             size="sm"
-            className="text-xs"
+            className="rounded-xl text-xs"
             onClick={() =>
               updateEntry(entry.id, {
                 intent: "done",

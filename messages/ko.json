@@ -28,7 +28,8 @@
     "hasAccount": "이미 계정이 있으신가요?",
     "signUpTitle": "계정 만들기",
     "forgotPassword": "비밀번호를 잊으셨나요?",
-    "checkEmail": "로그인 링크를 이메일에서 확인하세요"
+    "checkEmail": "로그인 링크를 이메일에서 확인하세요",
+    "emailPlaceholder": "이메일을 입력해주세요"
   },
   "nav": {
     "dashboard": "대시보드",
@@ -141,7 +142,10 @@
     "categoryEmail": "이메일",
     "categoryResearch": "리서치",
     "categoryOther": "기타",
-    "removeEntry": "항목 삭제"
+    "removeEntry": "항목 삭제",
+    "emptyState": "작업 내용을 자유롭게 적어주세요. AI가 정리해드릴게요",
+    "reviewEntries": "파싱 결과 확인",
+    "entriesFound": "개 항목"
   },
   "alerts": {
     "title": "알림",

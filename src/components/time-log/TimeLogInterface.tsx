@@ -46,7 +46,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           input: input.trim(),
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           ...(preferredProjectId && { preferredProjectId }),
         }),
       });
@@ -74,9 +74,9 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-6">
       {/* Preferred project (optional) */}
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <Label className="text-xs text-muted-foreground">
           {t("preferredProject")}
         </Label>
@@ -84,7 +84,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
           value={preferredProjectId}
           onValueChange={setPreferredProjectId}
         >
-          <SelectTrigger className="h-9">
+          <SelectTrigger className="h-9 rounded-xl">
             <SelectValue placeholder={t("selectProject")} />
           </SelectTrigger>
           <SelectContent>
@@ -124,7 +124,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-muted-foreground"
+          className="rounded-xl text-xs text-muted-foreground"
           onClick={() => handleExampleFill(t("exampleText1"))}
           disabled={isLoading}
         >
@@ -133,7 +133,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-muted-foreground"
+          className="rounded-xl text-xs text-muted-foreground"
           onClick={() => handleExampleFill(t("exampleText2"))}
           disabled={isLoading}
         >
@@ -144,14 +144,22 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
       {/* Loading skeleton */}
       {isLoading && (
         <div className="space-y-3">
-          <Skeleton className="h-36 w-full rounded-lg" />
-          <Skeleton className="h-36 w-full rounded-lg" />
+          <Skeleton className="h-36 w-full rounded-[20px]" />
+          <Skeleton className="h-36 w-full rounded-[20px]" />
         </div>
       )}
 
       {/* HITL Draft Cards */}
       {!isLoading && entries.length > 0 && (
         <>
+          <div className="flex items-center justify-between px-1">
+            <h3 className="flex items-center gap-2 text-lg font-bold">
+              {"\u2705"} {t("reviewEntries")}
+            </h3>
+            <span className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground">
+              {entries.length} {t("entriesFound")}
+            </span>
+          </div>
           <DraftCardList projects={projects} />
           <SaveAllButton onSaved={handleSaved} />
         </>
@@ -167,11 +175,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
 
       {/* Show manual entry button on error */}
       {!isLoading && entries.length === 0 && !showManual && (
-        <div className="text-center">
+        <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed border-border p-8 text-center">
+          <span className="text-4xl">{"\u270D\uFE0F"}</span>
+          <p className="text-sm text-muted-foreground">{t("emptyState")}</p>
           <Button
             variant="link"
             size="sm"
-            className="text-xs text-muted-foreground"
+            className="text-xs text-primary"
             onClick={() => setShowManual(true)}
           >
             {t("manualEntry")}

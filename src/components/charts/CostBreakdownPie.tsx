@@ -17,9 +17,9 @@ interface CostBreakdownPieProps {
 }
 
 const COLORS: Record<string, string> = {
-  platform_fee: "hsl(30 80% 55%)",
-  tax: "hsl(0 70% 55%)",
-  fixed: "hsl(220 10% 60%)",
+  platform_fee: "#7EB5A6",
+  tax: "#E89B48",
+  fixed: "#A4D4C8",
 };
 
 const TYPE_KEYS: Record<string, string> = {
@@ -39,13 +39,14 @@ export function CostBreakdownPie({
     .map((c) => ({
       name: t(TYPE_KEYS[c.type] ?? c.type),
       value: Math.round(c.amount * 100) / 100,
-      color: COLORS[c.type] ?? "hsl(220 10% 50%)",
+      color: COLORS[c.type] ?? "#D1EBE4",
     }));
 
   if (data.length === 0) {
     return (
-      <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
-        {t("noCosts")}
+      <div className="flex h-[200px] flex-col items-center justify-center gap-2 text-center">
+        <span className="text-3xl">{"\uD83D\uDCB8"}</span>
+        <span className="text-sm text-muted-foreground">{t("noCosts")}</span>
       </div>
     );
   }
@@ -73,6 +74,11 @@ export function CostBreakdownPie({
         </Pie>
         <Tooltip
           formatter={(value) => formatCurrency(Number(value), currency)}
+          contentStyle={{
+            borderRadius: "12px",
+            border: "1px solid #E6DDD3",
+            backgroundColor: "#FFF8EE",
+          }}
         />
         <Legend />
       </PieChart>

@@ -28,7 +28,8 @@
     "hasAccount": "Already have an account?",
     "signUpTitle": "Create your account",
     "forgotPassword": "Forgot password?",
-    "checkEmail": "Check your email for a login link"
+    "checkEmail": "Check your email for a login link",
+    "emailPlaceholder": "Enter your email"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -141,7 +142,10 @@
     "categoryEmail": "Email",
     "categoryResearch": "Research",
     "categoryOther": "Other",
-    "removeEntry": "Remove entry"
+    "removeEntry": "Remove entry",
+    "emptyState": "Describe your work and let AI sort it out",
+    "reviewEntries": "Review Parsed Entries",
+    "entriesFound": "entries found"
   },
   "alerts": {
     "title": "Alerts",

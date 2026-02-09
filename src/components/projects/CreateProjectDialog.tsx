@@ -22,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
 
 interface FormValues {
   name: string;
@@ -40,7 +39,7 @@ const PRESET_LABELS: Record<string, string> = {
   none: "None (0%)",
   upwork: "Upwork (10%)",
   fiverr: "Fiverr (20%)",
-  kmong: "크몽 (20%)",
+  kmong: "\uD06C\uBABD (20%)",
   custom: "Custom",
 };
 
@@ -100,46 +99,52 @@ export function CreateProjectDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="size-4" />
+        <Button className="gap-2 rounded-xl bg-primary font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#6CA395] hover:shadow-md">
+          <span className="text-base">{"\u2728"}</span>
           {t("create")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-[24px] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{t("create")}</DialogTitle>
+          <DialogTitle className="text-lg font-bold">{"\uD83D\uDCC1"} {t("create")}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Name */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label>{t("name")}</Label>
-            <Input {...register("name", { required: true })} />
+            <Input
+              {...register("name", { required: true })}
+              className="rounded-xl"
+              placeholder="e.g. Website Redesign"
+            />
           </div>
 
           {/* Fee + Hours + Currency */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label>{t("expectedFee")}</Label>
               <Input
                 type="number"
                 step="0.01"
                 {...register("expectedFee", { valueAsNumber: true })}
+                className="rounded-xl"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label>{t("expectedHours")}</Label>
               <Input
                 type="number"
                 {...register("expectedHours", { valueAsNumber: true })}
+                className="rounded-xl"
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label>{t("currency")}</Label>
               <Select
                 value={watch("currency")}
                 onValueChange={(v) => setValue("currency", v)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -152,13 +157,13 @@ export function CreateProjectDialog() {
           </div>
 
           {/* Platform Fee Preset */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label>{t("platformFee")}</Label>
             <Select
               value={preset}
               onValueChange={(v) => setValue("platformFeePreset", v)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -175,7 +180,7 @@ export function CreateProjectDialog() {
                 max={1}
                 placeholder="0.15 = 15%"
                 {...register("platformFeeRate", { valueAsNumber: true })}
-                className="mt-1"
+                className="mt-1 rounded-xl"
               />
             )}
           </div>
@@ -186,7 +191,7 @@ export function CreateProjectDialog() {
               type="checkbox"
               id="taxEnabled"
               {...register("taxEnabled")}
-              className="size-4"
+              className="size-4 rounded"
             />
             <Label htmlFor="taxEnabled">{t("taxEnabled")}</Label>
             {taxEnabled && (
@@ -197,22 +202,27 @@ export function CreateProjectDialog() {
                 max={1}
                 placeholder="0.033 = 3.3%"
                 {...register("taxRate", { valueAsNumber: true })}
-                className="w-28"
+                className="w-28 rounded-xl"
               />
             )}
           </div>
 
           {/* Fixed Cost */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label>{t("monthlyFixedCost")}</Label>
             <Input
               type="number"
               step="0.01"
               {...register("fixedCostAmount", { valueAsNumber: true })}
+              className="rounded-xl"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={formState.isSubmitting}>
+          <Button
+            type="submit"
+            className="w-full rounded-xl bg-primary py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+            disabled={formState.isSubmitting}
+          >
             {t("create")}
           </Button>
         </form>
