@@ -54,19 +54,15 @@ export function CostBreakdownPie({
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
+    <ResponsiveContainer width="100%" height={250}>
       <PieChart>
         <Pie
           data={data}
           cx="50%"
-          cy="50%"
+          cy="45%"
           innerRadius={45}
           outerRadius={75}
           dataKey="value"
-          label={({ name, value }) =>
-            `${name} ${formatCurrency(value, currency)} (${Math.round((value / total) * 100)}%)`
-          }
-          labelLine={false}
         >
           {data.map((d, i) => (
             <Cell key={i} fill={d.color} />
@@ -80,7 +76,16 @@ export function CostBreakdownPie({
             backgroundColor: "#FFF8EE",
           }}
         />
-        <Legend />
+        <Legend
+          verticalAlign="bottom"
+          height={36}
+          formatter={(value, entry) => {
+            const payload = entry?.payload as { value?: number } | undefined;
+            const v = payload?.value ?? 0;
+            const pct = total > 0 ? Math.round((v / total) * 100) : 0;
+            return `${value} ${pct}%`;
+          }}
+        />
       </PieChart>
     </ResponsiveContainer>
   );

@@ -13,6 +13,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { Link, usePathname } from "@/i18n/navigation";
+import { createClientSupabaseClient } from "@/lib/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -90,17 +91,17 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="rounded-xl">
-              <form action="/api/auth/logout" method="POST">
-                <button
-                  type="submit"
-                  className="flex w-full items-center gap-2"
-                  aria-label={tAuth("logout")}
-                >
-                  <LogOut className="size-4" />
-                  <span>{tAuth("logout")}</span>
-                </button>
-              </form>
+            <SidebarMenuButton
+              className="rounded-xl"
+              onClick={async () => {
+                const supabase = createClientSupabaseClient();
+                await supabase.auth.signOut();
+                window.location.href = "/login";
+              }}
+              aria-label={tAuth("logout")}
+            >
+              <LogOut className="size-4" />
+              <span>{tAuth("logout")}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
