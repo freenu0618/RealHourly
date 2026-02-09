@@ -7,6 +7,7 @@ import {
   LogOut,
   Moon,
   Sun,
+  Home,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -30,6 +31,7 @@ export function AppSidebar() {
   const { theme, setTheme } = useTheme();
 
   const navItems = [
+    { href: "/dashboard", label: t("dashboard"), icon: Home, emoji: "\uD83C\uDFE0" },
     { href: "/projects", label: t("projects"), icon: FolderKanban, emoji: "\uD83D\uDCCA" },
     { href: "/time-log", label: t("timeLog"), icon: Clock, emoji: "\u270D\uFE0F" },
     { href: "/settings", label: t("settings"), icon: Settings, emoji: "\u2699\uFE0F" },
@@ -38,7 +40,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border px-5 py-4">
-        <Link href="/projects" className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-xl">
             {"\u2615"}
           </div>
