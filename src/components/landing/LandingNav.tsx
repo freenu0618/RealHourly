@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, useRouter, usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function LandingNav() {
   const t = useTranslations("landing");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -20,47 +23,51 @@ export function LandingNav() {
 
   const links = [
     { href: "#features", label: t("nav.features") },
+    { href: "#how-it-works", label: t("nav.howItWorks") },
     { href: "#pricing", label: t("nav.pricing") },
     { href: "#faq", label: t("nav.faq") },
   ];
+
+  function toggleLocale() {
+    const next = locale === "ko" ? "en" : "ko";
+    router.replace(pathname, { locale: next });
+  }
 
   return (
     <nav
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         scrolled
-          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          ? "bg-background/80 backdrop-blur-xl shadow-sm border-b border-border/50"
           : "bg-transparent",
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/logo.png"
-            alt="RealHourly"
-            width={32}
-            height={32}
-            className="rounded-lg"
-          />
+          <Image src="/images/logo.png" alt="RealHourly" width={28} height={28} className="rounded-lg" />
           <span className="text-lg font-bold text-foreground">RealHourly</span>
         </Link>
 
-        {/* Desktop menu */}
+        {/* Desktop center menu */}
         <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {link.label}
             </a>
           ))}
-          <Link
-            href="/login"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+        </div>
+
+        {/* Desktop right */}
+        <div className="hidden items-center gap-3 md:flex">
+          <button
+            type="button"
+            onClick={toggleLocale}
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-muted-foreground hover:bg-muted"
           >
+            {locale === "ko" ? "KR" : "EN"}
+          </button>
+          <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">
             {t("nav.login")}
           </Link>
           <Link
@@ -72,12 +79,7 @@ export function LandingNav() {
         </div>
 
         {/* Mobile hamburger */}
-        <button
-          type="button"
-          className="md:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? t("nav.close") : "Menu"}
-        >
+        <button type="button" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? t("nav.close") : "Menu"}>
           {mobileOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
@@ -87,26 +89,17 @@ export function LandingNav() {
         <div className="border-t bg-background px-6 pb-6 pt-4 md:hidden">
           <div className="flex flex-col gap-4">
             {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
+              <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                 {link.label}
               </a>
             ))}
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <button type="button" onClick={toggleLocale} className="text-left text-sm text-muted-foreground hover:text-foreground">
+              {locale === "ko" ? "English" : "한국어"}
+            </button>
+            <Link href="/login" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.login")}
             </Link>
-            <Link
-              href="/login"
-              className="rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground"
-            >
+            <Link href="/login" className="rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
               {t("nav.cta")}
             </Link>
           </div>
