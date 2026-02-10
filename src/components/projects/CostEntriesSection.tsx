@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { DollarSign, Pencil, Trash2, Plus } from "lucide-react";
+import { DollarSign, Pencil, Trash2, Plus, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ReceiptUploader } from "./ReceiptUploader";
+import { ReceiptPreviewCard } from "./ReceiptPreviewCard";
+import type { ParsedReceipt } from "@/lib/validators/receipt";
 import {
   Select,
   SelectContent,
@@ -58,10 +61,13 @@ export function CostEntriesSection({
   isEditable,
 }: CostEntriesSectionProps) {
   const t = useTranslations("projects");
+  const tReceipt = useTranslations("receipt");
 
   const [costEntries, setCostEntries] = useState<CostEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [showReceiptUploader, setShowReceiptUploader] = useState(false);
+  const [receiptResult, setReceiptResult] = useState<{ parsed: ParsedReceipt; thumbnail: string } | null>(null);
 
   const [newAmount, setNewAmount] = useState("");
   const [newCostType, setNewCostType] = useState<string>("tool");
@@ -146,19 +152,56 @@ export function CostEntriesSection({
             {t("costEntries")}
           </CardTitle>
           {isEditable && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl"
-              onClick={() => setIsAddDialogOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              {t("addCost")}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl"
+                onClick={() => setShowReceiptUploader((v) => !v)}
+              >
+                <Camera className="h-4 w-4 mr-1" />
+                {tReceipt("upload")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl"
+                onClick={() => setIsAddDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                {t("addCost")}
+              </Button>
+            </div>
           )}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        {/* Receipt uploader */}
+        {isEditable && showReceiptUploader && !receiptResult && (
+          <ReceiptUploader
+            projectId={projectId}
+            currency={currency}
+            onParsed={(parsed, thumbnail) => {
+              setReceiptResult({ parsed, thumbnail });
+              setShowReceiptUploader(false);
+            }}
+          />
+        )}
+
+        {/* Receipt HITL preview */}
+        {receiptResult && (
+          <ReceiptPreviewCard
+            projectId={projectId}
+            parsed={receiptResult.parsed}
+            thumbnail={receiptResult.thumbnail}
+            onSaved={() => {
+              setReceiptResult(null);
+              fetchCostEntries();
+            }}
+            onCancel={() => setReceiptResult(null)}
+          />
+        )}
+
         {isLoading ? (
           <p className="text-sm text-muted-foreground">{t("loading")}</p>
         ) : costEntries.length === 0 ? (

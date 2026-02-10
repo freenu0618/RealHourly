@@ -789,6 +789,17 @@
     "weeklyRate": "주간 평균 실제 시급",
     "weeklyHours": "이번 주 {hours}시간 작업"
   },
+  "receipt": {
+    "upload": "영수증으로 추가",
+    "dragDrop": "영수증/정산서 이미지를 드래그하거나 클릭",
+    "analyzing": "AI가 영수증을 분석 중...",
+    "lowConfidence": "AI 추출 정확도가 낮습니다. 확인해주세요.",
+    "extracted": "추출 완료 — 확인 후 저장하세요",
+    "save": "비용 저장",
+    "cancel": "취소",
+    "imageTooLarge": "이미지가 5MB를 초과합니다",
+    "parseError": "이미지를 분석할 수 없습니다"
+  },
   "projectDetail": {
     "recentEntries": "최근 기록",
     "viewAll": "전체보기",

@@ -789,6 +789,17 @@
     "weeklyRate": "Weekly Avg Real Rate",
     "weeklyHours": "{hours}h this week"
   },
+  "receipt": {
+    "upload": "Add from receipt",
+    "dragDrop": "Drag or click to upload a receipt/invoice image",
+    "analyzing": "AI is analyzing the receipt...",
+    "lowConfidence": "AI extraction confidence is low. Please verify.",
+    "extracted": "Extraction complete — review and save",
+    "save": "Save Cost",
+    "cancel": "Cancel",
+    "imageTooLarge": "Image exceeds 5MB limit",
+    "parseError": "Unable to analyze the image"
+  },
   "projectDetail": {
     "recentEntries": "Recent Entries",
     "viewAll": "View all",
