@@ -36,6 +36,7 @@ interface EditProjectDialogProps {
     currency: string;
     platformFeeRate: number | null;
     taxRate: number | null;
+    agreedRevisionCount: number | null;
   };
   onUpdated: () => void;
 }
@@ -72,6 +73,9 @@ export function EditProjectDialog({
   );
   const [taxRate, setTaxRate] = useState(
     project.taxRate ? toPercent(project.taxRate).toString() : "",
+  );
+  const [agreedRevisionCount, setAgreedRevisionCount] = useState(
+    project.agreedRevisionCount?.toString() ?? "",
   );
   const [isSaving, setIsSaving] = useState(false);
   const [clients, setClients] = useState<ClientDTO[]>([]);
@@ -114,6 +118,9 @@ export function EditProjectDialog({
             ? toRate(parseFloat(platformFeeRate))
             : null,
           taxRate: taxRate ? toRate(parseFloat(taxRate)) : null,
+          agreedRevisionCount: agreedRevisionCount
+            ? parseInt(agreedRevisionCount, 10)
+            : null,
         }),
       });
 
@@ -264,6 +271,26 @@ export function EditProjectDialog({
                 className="rounded-xl"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="agreedRevisionCount">
+              {t("agreedRevisionCount")}
+            </Label>
+            <Input
+              id="agreedRevisionCount"
+              type="number"
+              min="0"
+              max="50"
+              step="1"
+              value={agreedRevisionCount}
+              onChange={(e) => setAgreedRevisionCount(e.target.value)}
+              placeholder={t("agreedRevisionCountPlaceholder")}
+              className="rounded-xl"
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("agreedRevisionCountHint")}
+            </p>
           </div>
 
           <DialogFooter className="gap-2">

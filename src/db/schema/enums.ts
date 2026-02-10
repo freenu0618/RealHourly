@@ -34,6 +34,7 @@ export const alertTypeEnum = pgEnum("alert_type", [
   "scope_rule1",
   "scope_rule2",
   "scope_rule3",
+  "scope_rule4",
 ]);
 
 export const messageToneEnum = pgEnum("message_tone", [

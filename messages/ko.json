@@ -111,6 +111,9 @@
     "aliasesPlaceholder": "쉼표로 구분: ABC, 리브랜딩",
     "aliasesHint": "AI 파싱 시 프로젝트 자동 매칭에 사용됩니다",
     "platformFee": "플랫폼 수수료",
+    "agreedRevisionCount": "합의된 수정 횟수",
+    "agreedRevisionCountPlaceholder": "예: 3",
+    "agreedRevisionCountHint": "비워두면 수정 횟수를 추적하지 않습니다",
     "monthlyFixedCost": "월 고정 비용",
     "details": "프로젝트 상세",
     "metrics": "지표",
@@ -366,6 +369,7 @@
     "ruleExplanation1": "작업 시간이 예상보다 빠르게 소진되고 있어요 ⏰\n예상 시간의 {ratio}%를 사용했는데, 진척도는 {progress}%예요",
     "ruleExplanation2": "수정 작업 비율이 높아지고 있어요 🔄\n전체 작업 시간의 {ratio}%가 수정 작업이에요",
     "ruleExplanation3": "수정 요청이 계속 늘어나고 있어요 📝\n수정 작업이 {count}건 진행됐어요",
+    "ruleExplanation4": "합의된 수정 횟수를 초과했어요 ⚠️\n{actual}회 수정 완료 (합의: {agreed}회, 초과: {excess}회)",
     "ruleDefault": "프로젝트 상태를 확인해보세요",
     "messageLang": "메시지 언어",
     "langKo": "🇰🇷 한국어",
@@ -454,6 +458,7 @@
     "hoursUsed": "예상 시간의 {ratio}% 사용, 진행률 {progress}%",
     "revisionRatioHigh": "전체 작업의 {ratio}%가 수정 작업",
     "revisionsDetected": "수정 요청 {count}건 감지",
+    "revisionCountExceeded": "합의 {agreed}회 중 {actual}회 수정 완료 — 초과!",
     "writingMessages": "AI가 메시지를 작성하고 있어요",
     "refiningTones": "톤별로 다듬고 있어요",
     "toneReady": "{tone} 톤 준비 완료",
@@ -799,6 +804,10 @@
     "cancel": "취소",
     "imageTooLarge": "이미지가 5MB를 초과합니다",
     "parseError": "이미지를 분석할 수 없습니다"
+  },
+  "revision": {
+    "title": "수정 횟수 트래커",
+    "exceeded": "합의된 수정 횟수를 {excess}회 초과했습니다"
   },
   "projectDetail": {
     "recentEntries": "최근 기록",

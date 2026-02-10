@@ -60,6 +60,7 @@ export async function createProject(
       currency: data.currency,
       platformFeeRate: String(platformFeeRate),
       taxRate: String(taxRate),
+      agreedRevisionCount: data.agreedRevisionCount ?? null,
     })
     .returning();
 
@@ -94,6 +95,9 @@ export async function updateProject(
   if (data.taxRate !== undefined) setData.taxRate = String(data.taxRate);
   if (data.progressPercent !== undefined)
     setData.progressPercent = data.progressPercent;
+
+  if (data.agreedRevisionCount !== undefined)
+    setData.agreedRevisionCount = data.agreedRevisionCount;
 
   // Handle status transitions — status is the single source of truth
   if (data.status !== undefined) {

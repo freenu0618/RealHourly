@@ -31,6 +31,7 @@ import { CostEntriesSection } from "./CostEntriesSection";
 import { ShareManagementSection } from "./ShareManagementSection";
 import { TimeEntriesSection } from "./TimeEntriesSection";
 import { BudgetProgressBar } from "./BudgetProgressBar";
+import { RevisionTracker } from "./RevisionTracker";
 
 interface AlertDTO {
   id: string;
@@ -53,6 +54,7 @@ interface ProjectDetailClientProps {
     expectedHours: number | null;
     platformFeeRate: number | null;
     taxRate: number | null;
+    agreedRevisionCount: number | null;
   };
   initialMetrics?: ProjectMetricsDTO | null;
   initialAlert?: AlertDTO | null;
@@ -178,6 +180,13 @@ export function ProjectDetailClient({
         />
       )}
 
+      {metrics.agreedRevisionCount != null && metrics.agreedRevisionCount > 0 && (
+        <RevisionTracker
+          agreedCount={metrics.agreedRevisionCount}
+          actualCount={metrics.actualRevisionCount}
+        />
+      )}
+
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KPICard title={t("nominalHourly")} value={metrics.nominalHourly !== null ? formatCurrency(metrics.nominalHourly, currency) : "\u2014"} />
         <KPICard title={t("realHourly")} value={metrics.realHourly !== null ? formatCurrency(metrics.realHourly, currency) : "\u2014"} highlight={metrics.realHourly !== null && metrics.nominalHourly !== null && metrics.realHourly < metrics.nominalHourly} />
@@ -198,7 +207,7 @@ export function ProjectDetailClient({
 
       <InvoiceDialog open={showInvoice} onOpenChange={setShowInvoice} projectId={projectId} defaultType={invoiceType} />
       <CompleteProjectDialog open={showComplete} onOpenChange={setShowComplete} projectId={projectId} metrics={metrics ? { totalHours: metrics.totalHours, realHourly: metrics.realHourly, net: metrics.net, currency } : null} onCompleted={() => { handleStatusChanged("completed"); setShowComplete(false); }} />
-      <EditProjectDialog open={showEdit} onOpenChange={setShowEdit} project={{ id: projectId, name: project.name, clientId: project.clientId, aliases: project.aliases, startDate: project.startDate, expectedFee: project.expectedFee, expectedHours: project.expectedHours, currency: project.currency, platformFeeRate: project.platformFeeRate, taxRate: project.taxRate }} onUpdated={handleRefresh} />
+      <EditProjectDialog open={showEdit} onOpenChange={setShowEdit} project={{ id: projectId, name: project.name, clientId: project.clientId, aliases: project.aliases, startDate: project.startDate, expectedFee: project.expectedFee, expectedHours: project.expectedHours, currency: project.currency, platformFeeRate: project.platformFeeRate, taxRate: project.taxRate, agreedRevisionCount: project.agreedRevisionCount }} onUpdated={handleRefresh} />
       <DeleteProjectDialog open={showDelete} onOpenChange={setShowDelete} projectId={projectId} projectName={project.name} />
     </div>
   );

@@ -1,8 +1,9 @@
-type AlertType = "scope_rule1" | "scope_rule2" | "scope_rule3";
+type AlertType = "scope_rule1" | "scope_rule2" | "scope_rule3" | "scope_rule4";
 
 interface ProjectInfo {
   expectedHours: number | null;
   progressPercent: number;
+  agreedRevisionCount?: number | null;
 }
 
 interface TimeEntryInfo {
@@ -68,6 +69,24 @@ export function checkScopeCreep(
       revisionCount,
       threshold: 5,
     };
+  }
+
+  // Rule 4: actual revision entries exceed agreed revision count
+  if (
+    project.agreedRevisionCount != null &&
+    project.agreedRevisionCount > 0
+  ) {
+    const revisionEntryCount = timeEntries.filter(
+      (e) => e.category === "revision",
+    ).length;
+    if (revisionEntryCount > project.agreedRevisionCount) {
+      triggered.push("scope_rule4");
+      metadata.rule4 = {
+        actualRevisionCount: revisionEntryCount,
+        agreedRevisionCount: project.agreedRevisionCount,
+        excessCount: revisionEntryCount - project.agreedRevisionCount,
+      };
+    }
   }
 
   return triggered.length > 0 ? { triggered, metadata } : null;

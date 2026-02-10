@@ -111,6 +111,9 @@
     "aliasesPlaceholder": "Comma separated: ABC, rebrand",
     "aliasesHint": "Used for automatic AI matching when logging time",
     "platformFee": "Platform Fee",
+    "agreedRevisionCount": "Agreed Revision Count",
+    "agreedRevisionCountPlaceholder": "e.g. 3",
+    "agreedRevisionCountHint": "Leave empty to skip revision tracking",
     "monthlyFixedCost": "Monthly Fixed Cost",
     "details": "Project Details",
     "metrics": "Metrics",
@@ -366,6 +369,7 @@
     "ruleExplanation1": "Work hours are being used faster than expected ⏰\n{ratio}% of estimated hours used, but progress is at {progress}%",
     "ruleExplanation2": "Revision work is taking up a large portion 🔄\n{ratio}% of total work time is revisions",
     "ruleExplanation3": "Revision requests keep adding up 📝\n{count} revision entries so far",
+    "ruleExplanation4": "Agreed revision count exceeded ⚠️\n{actual} revisions done ({agreed} agreed, {excess} extra)",
     "ruleDefault": "Your project needs attention",
     "messageLang": "Message language",
     "langKo": "🇰🇷 한국어",
@@ -454,6 +458,7 @@
     "hoursUsed": "{ratio}% of estimated hours used, progress at {progress}%",
     "revisionRatioHigh": "{ratio}% of total work is revisions",
     "revisionsDetected": "{count} revision requests detected",
+    "revisionCountExceeded": "{actual} of {agreed} agreed revisions done — exceeded!",
     "writingMessages": "AI is writing messages",
     "refiningTones": "Refining by tone",
     "toneReady": "{tone} tone ready",
@@ -799,6 +804,10 @@
     "cancel": "Cancel",
     "imageTooLarge": "Image exceeds 5MB limit",
     "parseError": "Unable to analyze the image"
+  },
+  "revision": {
+    "title": "Revision Tracker",
+    "exceeded": "Exceeded agreed revision count by {excess}"
   },
   "projectDetail": {
     "recentEntries": "Recent Entries",

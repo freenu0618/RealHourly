@@ -30,6 +30,8 @@ export function buildMessagePrompt(ctx: MessageContext, messageLang?: "ko" | "en
           return `- Excessive Revisions: Revision work accounts for ${Math.round(((data.revisionRatio as number) ?? 0) * 100)}% of total time (${data.revisionMinutes ?? "?"}min / ${data.totalMinutes ?? "?"}min)`;
         case "scope_rule3":
           return `- Frequent Revisions: ${data.revisionCount ?? "?"} separate revision entries recorded (threshold: ${data.threshold ?? 5})`;
+        case "scope_rule4":
+          return `- Revision Count Exceeded: ${data.actualRevisionCount ?? "?"} revisions done, but only ${data.agreedRevisionCount ?? "?"} were agreed upon (${data.excessCount ?? "?"} extra revisions)`;
         default:
           return `- ${rule}`;
       }

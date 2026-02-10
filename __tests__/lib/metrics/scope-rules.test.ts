@@ -210,6 +210,82 @@ describe("checkScopeCreep", () => {
   });
 
   // ──────────────────────────────────────────────
+  // Rule 4: actual revision entries > agreed revision count
+  // ──────────────────────────────────────────────
+  describe("Rule 4 — actual revisions > agreed count", () => {
+    it("triggers when actual revisions exceed agreed count", () => {
+      const entries = Array(4).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80, agreedRevisionCount: 3 },
+        240,
+        entries,
+      );
+      expect(result).not.toBeNull();
+      expect(result!.triggered).toContain("scope_rule4");
+      expect(result!.metadata.rule4).toEqual({
+        actualRevisionCount: 4,
+        agreedRevisionCount: 3,
+        excessCount: 1,
+      });
+    });
+
+    it("does NOT trigger when actual revisions equal agreed count", () => {
+      const entries = Array(3).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80, agreedRevisionCount: 3 },
+        180,
+        entries,
+      );
+      const hasRule4 = result?.triggered.includes("scope_rule4") ?? false;
+      expect(hasRule4).toBe(false);
+    });
+
+    it("does NOT trigger when actual revisions are below agreed count", () => {
+      const entries = Array(2).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80, agreedRevisionCount: 3 },
+        120,
+        entries,
+      );
+      const hasRule4 = result?.triggered.includes("scope_rule4") ?? false;
+      expect(hasRule4).toBe(false);
+    });
+
+    it("does NOT trigger when agreedRevisionCount is null", () => {
+      const entries = Array(10).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80, agreedRevisionCount: null },
+        600,
+        entries,
+      );
+      const hasRule4 = result?.triggered.includes("scope_rule4") ?? false;
+      expect(hasRule4).toBe(false);
+    });
+
+    it("does NOT trigger when agreedRevisionCount is 0", () => {
+      const entries = Array(3).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80, agreedRevisionCount: 0 },
+        180,
+        entries,
+      );
+      const hasRule4 = result?.triggered.includes("scope_rule4") ?? false;
+      expect(hasRule4).toBe(false);
+    });
+
+    it("does NOT trigger when agreedRevisionCount is not provided", () => {
+      const entries = Array(10).fill({ minutes: 60, category: "revision" });
+      const result = checkScopeCreep(
+        { expectedHours: 100, progressPercent: 80 },
+        600,
+        entries,
+      );
+      const hasRule4 = result?.triggered.includes("scope_rule4") ?? false;
+      expect(hasRule4).toBe(false);
+    });
+  });
+
+  // ──────────────────────────────────────────────
   // No rules triggered → null
   // ──────────────────────────────────────────────
   describe("No rules triggered", () => {
@@ -254,6 +330,28 @@ describe("checkScopeCreep", () => {
       expect(result!.triggered).toContain("scope_rule2");
       expect(result!.triggered).toContain("scope_rule3");
       expect(result!.triggered).toHaveLength(3);
+    });
+
+    it("triggers all 4 rules simultaneously", () => {
+      // Rule1: 80h / 40h = 2.0 >= 0.8, progress 20% < 50%
+      // Rule2: 2400 revision / 4800 total = 50% >= 40%
+      // Rule3: 6 revision entries >= 5
+      // Rule4: 6 revision entries > agreedRevisionCount 2
+      const entries = [
+        ...Array(6).fill({ minutes: 400, category: "revision" }),
+        ...Array(6).fill({ minutes: 400, category: "development" }),
+      ];
+      const result = checkScopeCreep(
+        { expectedHours: 40, progressPercent: 20, agreedRevisionCount: 2 },
+        4800,
+        entries,
+      );
+      expect(result).not.toBeNull();
+      expect(result!.triggered).toContain("scope_rule1");
+      expect(result!.triggered).toContain("scope_rule2");
+      expect(result!.triggered).toContain("scope_rule3");
+      expect(result!.triggered).toContain("scope_rule4");
+      expect(result!.triggered).toHaveLength(4);
     });
   });
 });

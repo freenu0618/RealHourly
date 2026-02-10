@@ -20,7 +20,7 @@ export async function getActiveAlertByProject(projectId: string) {
 
 export async function createAlert(
   projectId: string,
-  alertType: "scope_rule1" | "scope_rule2" | "scope_rule3",
+  alertType: "scope_rule1" | "scope_rule2" | "scope_rule3" | "scope_rule4",
   metadata: Record<string, unknown>,
 ) {
   const [row] = await db

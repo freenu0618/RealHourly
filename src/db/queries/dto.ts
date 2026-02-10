@@ -38,6 +38,7 @@ export function projectToDTO(row: Row) {
     platformFeeRate: toNumber(row.platformFeeRate),
     taxRate: toNumber(row.taxRate),
     progressPercent: row.progressPercent as number,
+    agreedRevisionCount: (row.agreedRevisionCount as number) ?? null,
     status: (row.status as string) ?? "active",
     completedAt: toISOString(row.completedAt),
     isActive: (row.status as string) === "active",

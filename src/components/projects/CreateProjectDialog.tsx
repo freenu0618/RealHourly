@@ -36,6 +36,7 @@ interface FormValues {
   taxEnabled: boolean;
   taxRate: number;
   fixedCostAmount: number;
+  agreedRevisionCount: string;
 }
 
 const PRESET_LABELS: Record<string, string> = {
@@ -65,6 +66,7 @@ export function CreateProjectDialog() {
         taxEnabled: true,
         taxRate: 3.3,
         fixedCostAmount: 0,
+        agreedRevisionCount: "",
       },
     });
 
@@ -111,6 +113,9 @@ export function CreateProjectDialog() {
           taxRate: values.taxRate / 100,
           fixedCostAmount: values.fixedCostAmount > 0 ? values.fixedCostAmount : undefined,
           fixedCostType: values.fixedCostAmount > 0 ? "misc" : undefined,
+          agreedRevisionCount: values.agreedRevisionCount
+            ? parseInt(values.agreedRevisionCount, 10)
+            : null,
         }),
       });
 
@@ -259,6 +264,23 @@ export function CreateProjectDialog() {
                 <span className="text-sm text-muted-foreground">%</span>
               </div>
             )}
+          </div>
+
+          {/* Agreed Revision Count */}
+          <div className="space-y-1.5">
+            <Label>{t("agreedRevisionCount")}</Label>
+            <Input
+              type="number"
+              min={0}
+              max={50}
+              step={1}
+              {...register("agreedRevisionCount")}
+              className="rounded-xl"
+              placeholder={t("agreedRevisionCountPlaceholder")}
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("agreedRevisionCountHint")}
+            </p>
           </div>
 
           {/* Fixed Cost */}

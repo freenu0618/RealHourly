@@ -69,7 +69,7 @@ export function ScopeAlertModal({
 
   // Fetch related entries on mount
   useEffect(() => {
-    const isRevisionRule = alert.alertType === "scope_rule2" || alert.alertType === "scope_rule3";
+    const isRevisionRule = alert.alertType === "scope_rule2" || alert.alertType === "scope_rule3" || alert.alertType === "scope_rule4";
     const params = new URLSearchParams({ projectId });
     if (isRevisionRule) params.set("category", "revision");
     fetch(`/api/time/history?${params}`)
@@ -104,6 +104,17 @@ export function ScopeAlertModal({
     if (alertType === "scope_rule3") {
       const revisionCount = (ruleData.revisionCount as number) ?? 0;
       return tAlerts("ruleExplanation3", { count: String(revisionCount) });
+    }
+
+    if (alertType === "scope_rule4") {
+      const actual = (ruleData.actualRevisionCount as number) ?? 0;
+      const agreed = (ruleData.agreedRevisionCount as number) ?? 0;
+      const excess = (ruleData.excessCount as number) ?? 0;
+      return tAlerts("ruleExplanation4", {
+        actual: String(actual),
+        agreed: String(agreed),
+        excess: String(excess),
+      });
     }
 
     return tAlerts("ruleDefault");
@@ -145,6 +156,17 @@ export function ScopeAlertModal({
       thinking.addDetail(
         s1,
         tAi("revisionsDetected", { count: String(revisionCount) })
+      );
+    }
+    if (alertType === "scope_rule4") {
+      const actual = (ruleData.actualRevisionCount as number) ?? 0;
+      const agreed = (ruleData.agreedRevisionCount as number) ?? 0;
+      thinking.addDetail(
+        s1,
+        tAi("revisionCountExceeded", {
+          actual: String(actual),
+          agreed: String(agreed),
+        })
       );
     }
 
@@ -263,6 +285,7 @@ export function ScopeAlertModal({
                   <Link
                     href={`/time-log/history?projectId=${projectId}${
                       alert.alertType !== "scope_rule1" ? "&category=revision" : ""
+
                     }`}
                     className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
                   >

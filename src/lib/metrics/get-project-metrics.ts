@@ -19,6 +19,8 @@ export interface ProjectMetricsDTO {
   costBreakdown: CostBreakdownItem[];
   progressPercent: number;
   currency: string;
+  agreedRevisionCount: number | null;
+  actualRevisionCount: number;
 }
 
 export async function getProjectMetrics(
@@ -64,6 +66,7 @@ export async function getProjectMetrics(
     {
       expectedHours: project.expectedHours,
       progressPercent: project.progressPercent,
+      agreedRevisionCount: project.agreedRevisionCount,
     },
     totalMinutes,
     timeEntries.map((e) => ({ minutes: e.minutes, category: e.category })),
@@ -91,6 +94,8 @@ export async function getProjectMetrics(
       costBreakdown,
       progressPercent: project.progressPercent,
       currency: project.currency,
+      agreedRevisionCount: project.agreedRevisionCount ?? null,
+      actualRevisionCount: timeEntries.filter((e) => e.category === "revision").length,
     },
     pendingAlert,
   };

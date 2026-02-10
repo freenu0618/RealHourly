@@ -40,6 +40,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         expectedHours: project.expectedHours,
         platformFeeRate: project.platformFeeRate,
         taxRate: project.taxRate,
+        agreedRevisionCount: project.agreedRevisionCount,
       }}
       initialMetrics={metricsResult?.metrics ?? null}
       initialAlert={metricsResult?.pendingAlert ?? null}

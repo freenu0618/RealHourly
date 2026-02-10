@@ -31,6 +31,7 @@ export const projects = pgTable(
     platformFeeRate: numeric("platform_fee_rate").notNull().default("0"),
     taxRate: numeric("tax_rate").notNull().default("0"),
     progressPercent: integer("progress_percent").notNull().default(0),
+    agreedRevisionCount: integer("agreed_revision_count"),
     /** @deprecated Use `status` instead. Will be removed in a future migration. */
     isActive: boolean("is_active").notNull().default(true),
     status: projectStatusEnum("status").notNull().default("active"),
