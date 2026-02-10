@@ -15,13 +15,21 @@ interface ProjectFeedback {
   budgetUsedPercent: number | null;
 }
 
-interface SaveAllButtonProps {
-  onSaved: () => void;
+interface ProjectProgress {
+  projectId: string;
+  projectName: string;
+  currentProgress: number;
 }
 
-export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
+interface SaveAllButtonProps {
+  onSaved: () => void;
+  onProgressPrompt?: (projects: ProjectProgress[]) => void;
+}
+
+export function SaveAllButton({ onSaved, onProgressPrompt }: SaveAllButtonProps) {
   const t = useTranslations("timeLog");
   const tFeedback = useTranslations("profitabilityFeedback");
+  const tProgress = useTranslations("progress");
   const { entries, canSaveAll, clearAll } = useDraftStore();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -69,6 +77,19 @@ export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
             );
           }
         }
+      }
+
+      // Show progress update prompt (max 1 toast, 8s duration)
+      const progressProjects = data.projectProgress as ProjectProgress[] | undefined;
+      if (progressProjects && progressProjects.length > 0 && onProgressPrompt) {
+        const names = progressProjects.map((p) => p.projectName).join(", ");
+        toast.info(tProgress("promptToast", { projects: names }), {
+          duration: 8000,
+          action: {
+            label: tProgress("updateAction"),
+            onClick: () => onProgressPrompt(progressProjects),
+          },
+        });
       }
 
       setSaved(true);

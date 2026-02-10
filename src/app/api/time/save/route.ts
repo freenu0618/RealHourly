@@ -14,6 +14,12 @@ interface ProjectFeedback {
   budgetUsedPercent: number | null;
 }
 
+interface ProjectProgress {
+  projectId: string;
+  projectName: string;
+  currentProgress: number;
+}
+
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
@@ -79,8 +85,22 @@ export async function POST(req: Request) {
       // Feedback is non-critical; don't fail the save
     }
 
+    // Collect progress info for projects that aren't complete yet
+    const projectProgress: ProjectProgress[] = affectedProjectIds
+      .map((pid) => {
+        const project = projectMap.get(pid);
+        if (!project) return null;
+        if (project.progressPercent >= 100) return null;
+        return {
+          projectId: pid,
+          projectName: project.name,
+          currentProgress: project.progressPercent ?? 0,
+        };
+      })
+      .filter((p): p is ProjectProgress => p !== null);
+
     return NextResponse.json(
-      { data: { inserted: saved.length, feedback } },
+      { data: { inserted: saved.length, feedback, projectProgress } },
       { status: 201 },
     );
   } catch (error) {

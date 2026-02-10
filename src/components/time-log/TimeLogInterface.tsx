@@ -21,6 +21,7 @@ import { QuickChips } from "./QuickChips";
 import { MagicParseButton } from "./MagicParseButton";
 import { DraftCardList } from "./DraftCardList";
 import { SaveAllButton } from "./SaveAllButton";
+import { ProgressUpdateDialog } from "./ProgressUpdateDialog";
 import { ManualEntryForm } from "./ManualEntryForm";
 import { VoiceInput } from "./VoiceInput";
 
@@ -44,6 +45,10 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   } | null>(null);
   const [suggestedProgress, setSuggestedProgress] = useState(0);
   const [showProgressHint, setShowProgressHint] = useState(false);
+  const [progressDialogOpen, setProgressDialogOpen] = useState(false);
+  const [progressProjects, setProgressProjects] = useState<
+    { projectId: string; projectName: string; currentProgress: number }[]
+  >([]);
 
   const { entries, isLoading, setEntries, setLoading, setError } =
     useDraftStore();
@@ -179,6 +184,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
     setPreferredProjectId("");
     setShowProgressHint(false);
     setProgressHint(null);
+  }
+
+  function handleProgressPrompt(
+    projects: { projectId: string; projectName: string; currentProgress: number }[],
+  ) {
+    setProgressProjects(projects);
+    setProgressDialogOpen(true);
   }
 
   return (
@@ -331,7 +343,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
             </span>
           </div>
           <DraftCardList projects={projects} />
-          <SaveAllButton onSaved={handleSaved} />
+          <SaveAllButton onSaved={handleSaved} onProgressPrompt={handleProgressPrompt} />
         </>
       )}
 
@@ -358,6 +370,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
           </Button>
         </div>
       )}
+
+      {/* Progress Update Dialog */}
+      <ProgressUpdateDialog
+        open={progressDialogOpen}
+        onOpenChange={setProgressDialogOpen}
+        projects={progressProjects}
+      />
     </div>
   );
 }

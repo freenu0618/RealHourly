@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { ThinkingLog } from "@/components/ui/ThinkingLog";
 import { useThinkingLog, sleep } from "@/lib/hooks/use-thinking-log";
@@ -16,6 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { copyToClipboard } from "@/lib/utils/clipboard";
+import { getCategoryEmoji } from "@/lib/utils/category-emoji";
+import { Link } from "@/i18n/navigation";
 
 interface ScopeAlertModalProps {
   projectId: string;
@@ -33,6 +35,14 @@ interface GeneratedMessage {
   tone: "polite" | "neutral" | "firm";
   subject: string;
   body: string;
+}
+
+interface RelatedEntry {
+  id: string;
+  date: string;
+  minutes: number;
+  category: string;
+  taskDescription: string;
 }
 
 type Phase = "alert" | "thinking" | "messages";
@@ -53,8 +63,24 @@ export function ScopeAlertModal({
   const [messageLang, setMessageLang] = useState<"ko" | "en">(
     locale === "ko" ? "ko" : "en"
   );
+  const [relatedEntries, setRelatedEntries] = useState<RelatedEntry[]>([]);
 
   const thinking = useThinkingLog();
+
+  // Fetch related entries on mount
+  useEffect(() => {
+    const isRevisionRule = alert.alertType === "scope_rule2" || alert.alertType === "scope_rule3";
+    const params = new URLSearchParams({ projectId });
+    if (isRevisionRule) params.set("category", "revision");
+    fetch(`/api/time/history?${params}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.data) {
+          setRelatedEntries((json.data as RelatedEntry[]).slice(0, 5));
+        }
+      })
+      .catch(() => {});
+  }, [projectId, alert.alertType]);
 
   const getRuleExplanation = (): string => {
     const { alertType, metadata } = alert;
@@ -220,6 +246,32 @@ export function ScopeAlertModal({
               <div className="rounded-2xl border bg-muted/40 p-5">
                 <p className="whitespace-pre-line text-base leading-relaxed">{getRuleExplanation()}</p>
               </div>
+              {/* Related entries */}
+              {relatedEntries.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">{tAlerts("relatedEntries")}</p>
+                  <div className="max-h-[160px] space-y-1 overflow-y-auto rounded-xl border bg-muted/30 p-3">
+                    {relatedEntries.map((entry) => (
+                      <div key={entry.id} className="flex items-center gap-2 text-xs">
+                        <span>{getCategoryEmoji(entry.category)}</span>
+                        <span className="text-muted-foreground">{entry.date}</span>
+                        <span className="flex-1 truncate">{entry.taskDescription}</span>
+                        <span className="font-medium">{entry.minutes}m</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Link
+                    href={`/time-log/history?projectId=${projectId}${
+                      alert.alertType !== "scope_rule1" ? "&category=revision" : ""
+                    }`}
+                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                  >
+                    {tAlerts("viewAllEntries")}
+                    <ExternalLink className="size-3" />
+                  </Link>
+                </div>
+              )}
+
               {/* Language toggle */}
               <div className="space-y-1.5">
                 <p className="text-xs text-muted-foreground">{tAlerts("messageLang")}</p>

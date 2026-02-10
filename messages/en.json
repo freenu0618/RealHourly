@@ -371,7 +371,9 @@
     "langKo": "🇰🇷 한국어",
     "langEn": "🇺🇸 English",
     "writtenInKo": "🇰🇷 Written in Korean",
-    "writtenInEn": "🇺🇸 Written in English"
+    "writtenInEn": "🇺🇸 Written in English",
+    "relatedEntries": "Related Entries",
+    "viewAllEntries": "View all entries"
   },
   "messages": {
     "title": "Generated Messages",
@@ -786,5 +788,27 @@
     "rateFeedback": "{project}: Real rate now {rate}/h",
     "weeklyRate": "Weekly Avg Real Rate",
     "weeklyHours": "{hours}h this week"
+  },
+  "projectDetail": {
+    "recentEntries": "Recent Entries",
+    "viewAll": "View all",
+    "planned": "Planned"
+  },
+  "progress": {
+    "promptToast": "Update progress for {projects}?",
+    "updateAction": "Update Progress",
+    "title": "Update Project Progress",
+    "description": "Set the current progress for {project}",
+    "current": "Current",
+    "skip": "Later",
+    "save": "Save",
+    "saving": "Saving...",
+    "updated": "{project} progress updated to {percent}%",
+    "updateFailed": "Failed to update progress",
+    "projectCount": "{current} / {total} projects",
+    "completeTitle": "Mark project as complete?",
+    "completeDescription": "Setting {project} to 100% will mark it as completed.",
+    "completeConfirm": "Complete",
+    "completeCancel": "Cancel"
   }
 }

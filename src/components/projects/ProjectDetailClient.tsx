@@ -20,6 +20,7 @@ import { EditProjectDialog } from "./EditProjectDialog";
 import { DeleteProjectDialog } from "./DeleteProjectDialog";
 import { CostEntriesSection } from "./CostEntriesSection";
 import { ShareManagementSection } from "./ShareManagementSection";
+import { TimeEntriesSection } from "./TimeEntriesSection";
 import { BudgetProgressBar } from "./BudgetProgressBar";
 
 interface AlertDTO {
@@ -174,6 +175,8 @@ export function ProjectDetailClient({
         <Card><CardHeader><CardTitle className="text-base">{t("hourlyComparison")}</CardTitle></CardHeader><CardContent><HourlyRateBar nominalHourly={metrics.nominalHourly} realHourly={metrics.realHourly} currency={currency} net={metrics.net} /></CardContent></Card>
         <Card><CardHeader><CardTitle className="text-base">{t("costBreakdown")}</CardTitle></CardHeader><CardContent><CostBreakdownPie costBreakdown={metrics.costBreakdown} currency={currency} /></CardContent></Card>
       </div>
+
+      <TimeEntriesSection projectId={projectId} />
 
       <CostEntriesSection projectId={projectId} currency={currency} isEditable={isEditable} />
 

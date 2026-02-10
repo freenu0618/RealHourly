@@ -371,7 +371,9 @@
     "langKo": "🇰🇷 한국어",
     "langEn": "🇺🇸 English",
     "writtenInKo": "🇰🇷 한국어로 작성됨",
-    "writtenInEn": "🇺🇸 Written in English"
+    "writtenInEn": "🇺🇸 Written in English",
+    "relatedEntries": "관련 기록",
+    "viewAllEntries": "기록 전체보기"
   },
   "messages": {
     "title": "생성된 메시지",
@@ -786,5 +788,27 @@
     "rateFeedback": "{project}: 현재 실제 시급 {rate}/h",
     "weeklyRate": "주간 평균 실제 시급",
     "weeklyHours": "이번 주 {hours}시간 작업"
+  },
+  "projectDetail": {
+    "recentEntries": "최근 기록",
+    "viewAll": "전체보기",
+    "planned": "예정"
+  },
+  "progress": {
+    "promptToast": "{projects} 진행률을 업데이트할까요?",
+    "updateAction": "진행률 업데이트",
+    "title": "프로젝트 진행률 업데이트",
+    "description": "{project}의 현재 진행률을 설정하세요",
+    "current": "현재",
+    "skip": "나중에",
+    "save": "저장",
+    "saving": "저장 중...",
+    "updated": "{project} 진행률이 {percent}%로 업데이트됐어요",
+    "updateFailed": "진행률 업데이트에 실패했어요",
+    "projectCount": "{current} / {total} 프로젝트",
+    "completeTitle": "프로젝트를 완료 처리할까요?",
+    "completeDescription": "{project}의 진행률을 100%로 설정하면 프로젝트가 완료 상태로 변경됩니다.",
+    "completeConfirm": "완료 처리",
+    "completeCancel": "취소"
   }
 }
