@@ -9,6 +9,7 @@ const PUBLIC_PATHS = ["/login", "/auth/callback"];
 
 function isPublicPath(pathname: string): boolean {
   const pathWithoutLocale = pathname.replace(/^\/(en|ko)/, "") || "/";
+  if (pathWithoutLocale === "/") return true;
   return PUBLIC_PATHS.some((p) => pathWithoutLocale.startsWith(p));
 }
 
@@ -26,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
   // 3. Auth redirect for protected routes
   const { pathname } = request.nextUrl;
-  if (!isPublicPath(pathname) && pathname !== "/") {
+  if (!isPublicPath(pathname)) {
     const {
       data: { user },
     } = await createSupabaseMiddlewareClient(request).auth.getUser();
