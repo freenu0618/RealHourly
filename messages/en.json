@@ -274,6 +274,7 @@
     "parseSummary": "Parsed into {count} entries",
     "parseFailed": "Failed to parse",
     "manualEntry": "Manual Entry",
+    "timerStopped": "Timer stopped. Review the result below.",
     "exampleFill1": "Fill Example 1",
     "exampleFill2": "Fill Example 2",
     "exampleText1": "Yesterday ABC rebrand planning 2h, team meeting 30m",
@@ -808,6 +809,15 @@
   "revision": {
     "title": "Revision Tracker",
     "exceeded": "Exceeded agreed revision count by {excess}"
+  },
+  "timer": {
+    "button": "Timer",
+    "start": "Start",
+    "stop": "Stop",
+    "dialogTitle": "Quick Timer",
+    "selectProject": "Select project",
+    "selectCategory": "Select category",
+    "taskDescription": "Task description (optional)"
   },
   "projectDetail": {
     "recentEntries": "Recent Entries",

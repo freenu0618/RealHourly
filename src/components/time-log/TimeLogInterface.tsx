@@ -24,6 +24,10 @@ import { SaveAllButton } from "./SaveAllButton";
 import { ProgressUpdateDialog } from "./ProgressUpdateDialog";
 import { ManualEntryForm } from "./ManualEntryForm";
 import { VoiceInput } from "./VoiceInput";
+import { QuickTimer } from "./QuickTimer";
+import type { TimerResult } from "@/store/use-timer-store";
+import { generateId } from "@/lib/utils/nanoid";
+import type { Category } from "@/types/time-log";
 
 interface TimeLogInterfaceProps {
   projects: { id: string; name: string }[];
@@ -193,6 +197,25 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
     setProgressDialogOpen(true);
   }
 
+  function handleTimerStopped(result: TimerResult) {
+    const entry: ParsedEntry = {
+      id: generateId(),
+      projectNameRaw: result.projectName,
+      matchedProjectId: result.projectId,
+      matchSource: "name",
+      taskDescription: result.taskDescription,
+      date: result.startedAt,
+      durationMinutes: result.minutes,
+      category: result.category as Category,
+      intent: "done",
+      issues: [],
+      needsUserAction: false,
+      clarificationQuestion: null,
+    };
+    setEntries([...entries, entry]);
+    toast.success(t("timerStopped"));
+  }
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       {/* Preferred project (optional) */}
@@ -217,7 +240,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         </Select>
       </div>
 
-      {/* Chat textarea + voice input */}
+      {/* Chat textarea + voice input + timer */}
       <div className="flex items-start gap-2">
         <div className="flex-1">
           <ChatTextarea
@@ -229,13 +252,17 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
             textareaRef={textareaRef}
           />
         </div>
-        <div className="pt-2.5">
+        <div className="flex flex-col gap-1.5 pt-2.5">
           <VoiceInput
             onTranscribed={(text) => {
               setInput((prev) => (prev ? `${prev}\n${text}` : text));
               textareaRef.current?.focus();
             }}
             disabled={isLoading}
+          />
+          <QuickTimer
+            projects={projects}
+            onTimerStopped={handleTimerStopped}
           />
         </div>
       </div>
