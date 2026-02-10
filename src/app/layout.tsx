@@ -13,8 +13,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://realhourly.ai"),
   title: "RealHourly",
   description: "AI-powered freelancer profitability dashboard",
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
+  openGraph: {
+    title: "RealHourly",
+    description: "AI-powered freelancer profitability dashboard. Find your real hourly rate.",
+    images: ["/api/og"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RealHourly",
+    description: "AI-powered freelancer profitability dashboard. Find your real hourly rate.",
+    images: ["/api/og"],
+  },
 };
 
 export default function RootLayout({

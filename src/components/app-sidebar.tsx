@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   FolderKanban,
   Clock,
@@ -48,9 +49,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border px-5 py-4">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-xl">
-            {"\u2615"}
-          </div>
+          <Image src="/images/logo.png" alt="RealHourly" width={36} height={36} className="rounded-lg" />
           <span className="text-lg font-bold tracking-tight">RealHourly</span>
         </Link>
       </SidebarHeader>

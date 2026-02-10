@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Loader2 } from "lucide-react";
@@ -25,9 +26,14 @@ export default function LoginPage() {
     <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-2">
-        <div className="mb-2 flex size-16 items-center justify-center rounded-2xl border border-[#F5E6D3] bg-gradient-to-br from-[#FFF8E7] to-[#FFF0E0] shadow-sm transition-transform duration-300 hover:scale-105 dark:border-[#4A3B2A] dark:from-[#2c3633] dark:to-[#1e2624]">
-          <span className="text-3xl drop-shadow-sm">{"\u2615"}</span>
-        </div>
+        <Image
+          src="/images/logo.png"
+          alt="RealHourly"
+          width={72}
+          height={72}
+          className="mb-1 transition-transform duration-300 hover:scale-105"
+          priority
+        />
         <h2 className="text-xl font-bold tracking-tight text-muted-foreground">RealHourly</h2>
       </div>
 
