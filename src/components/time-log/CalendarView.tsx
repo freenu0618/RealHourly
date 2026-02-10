@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/date";
 
 interface CalendarViewProps {
   entries: {
@@ -25,13 +26,7 @@ interface CalendarViewProps {
   locale: string;
 }
 
-const DAY_HEADERS_KO = ["\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0", "\uC77C"];
-const DAY_HEADERS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const MONTH_NAMES_EN = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 function getHeatmapClass(minutes: number): string {
   if (minutes === 0) return "";
@@ -59,14 +54,13 @@ export default function CalendarView({
   locale,
 }: CalendarViewProps) {
   const t = useTranslations("history");
-  const dayHeaders = locale === "ko" ? DAY_HEADERS_KO : DAY_HEADERS_EN;
-  const todayLabel = locale === "ko" ? "\uC624\uB298" : "Today";
+  const tReports = useTranslations("reports");
+  const dayHeaders = DAY_KEYS.map((key) => tReports(key));
+  const todayLabel = t("todayLabel");
 
   const monthDisplay = useMemo(() => {
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    if (locale === "ko") return `${year}\uB144 ${month + 1}\uC6D4`;
-    return `${MONTH_NAMES_EN[month]} ${year}`;
+    const fmt = locale === "ko" ? "yyyy\uB144 M\uC6D4" : "MMMM yyyy";
+    return formatDate(currentMonth, fmt, locale);
   }, [currentMonth, locale]);
 
   const dailyMinutes = useMemo(() => {

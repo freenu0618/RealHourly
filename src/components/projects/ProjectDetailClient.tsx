@@ -19,6 +19,7 @@ import { CompleteProjectDialog } from "./CompleteProjectDialog";
 import { EditProjectDialog } from "./EditProjectDialog";
 import { DeleteProjectDialog } from "./DeleteProjectDialog";
 import { CostEntriesSection } from "./CostEntriesSection";
+import { ShareManagementSection } from "./ShareManagementSection";
 
 interface AlertDTO {
   id: string;
@@ -84,7 +85,7 @@ export function ProjectDetailClient({
   useEffect(() => { fetchMetrics(); }, [fetchMetrics]);
 
   const handleStatusChanged = (newStatus: string) => {
-    setProject((p) => ({ ...p, status: newStatus, isActive: newStatus === "active" }));
+    setProject((p) => ({ ...p, status: newStatus }));
     fetchMetrics();
   };
 
@@ -165,6 +166,8 @@ export function ProjectDetailClient({
       </div>
 
       <CostEntriesSection projectId={projectId} currency={currency} isEditable={isEditable} />
+
+      <ShareManagementSection projectId={projectId} />
 
       <InvoiceDialog open={showInvoice} onOpenChange={setShowInvoice} projectId={projectId} defaultType={invoiceType} />
       <CompleteProjectDialog open={showComplete} onOpenChange={setShowComplete} projectId={projectId} metrics={metrics ? { totalHours: metrics.totalHours, realHourly: metrics.realHourly, net: metrics.net, currency } : null} onCompleted={() => { handleStatusChanged("completed"); setShowComplete(false); }} />

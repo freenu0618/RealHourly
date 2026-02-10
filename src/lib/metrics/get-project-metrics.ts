@@ -44,12 +44,14 @@ export async function getProjectMetrics(
   const net = gross - directCost;
   const totalHours = totalMinutes / 60;
 
-  const nominalHourly =
+  const rawNominal =
     (project.expectedHours ?? 0) > 0
       ? gross / project.expectedHours!
       : null;
+  const nominalHourly = rawNominal !== null && Number.isFinite(rawNominal) ? rawNominal : null;
 
-  const realHourly = totalHours > 0 ? net / totalHours : null;
+  const rawReal = totalHours > 0 ? net / totalHours : null;
+  const realHourly = rawReal !== null && Number.isFinite(rawReal) ? rawReal : null;
 
   const costBreakdown: CostBreakdownItem[] = [
     { type: "platform_fee", amount: platformFeeAmount },

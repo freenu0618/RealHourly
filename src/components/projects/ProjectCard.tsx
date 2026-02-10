@@ -56,7 +56,7 @@ function getRateHealth(realHourly: number | null, currency: string) {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("projects");
-  const status = getStatusBadge(project.status ?? (project.isActive ? "active" : "paused"), project.progressPercent, t);
+  const status = getStatusBadge(project.status ?? "active", project.progressPercent, t);
   const health = getRateHealth(project.realHourly, project.currency);
 
   return (

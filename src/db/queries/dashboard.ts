@@ -185,7 +185,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     id: p.id,
     name: p.name,
     currency: p.currency,
-    isActive: p.isActive,
+    isActive: p.status === "active",
     progressPercent: p.progressPercent,
     expectedFee: Number(p.expectedFee),
     expectedHours: Number(p.expectedHours),

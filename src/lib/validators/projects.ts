@@ -43,7 +43,6 @@ export const UpdateProjectSchema = z.object({
   platformFeeRate: z.number().min(0).max(1).optional(),
   taxRate: z.number().min(0).max(1).optional(),
   progressPercent: z.number().int().min(0).max(100).optional(),
-  isActive: z.boolean().optional(),
   status: statusEnum.optional(),
 });
 

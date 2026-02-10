@@ -12,12 +12,7 @@ export async function GET(req: Request) {
     const user = await requireUser();
     const { searchParams } = new URL(req.url);
     const statusParam = searchParams.get("status");
-    const activeParam = searchParams.get("active");
-    const opts = statusParam
-      ? { status: statusParam }
-      : activeParam !== null
-        ? { active: activeParam === "true" }
-        : undefined;
+    const opts = statusParam ? { status: statusParam } : undefined;
     const baseProjects = await getProjectsByUserId(user.id, opts);
 
     if (baseProjects.length === 0) {
@@ -86,9 +81,11 @@ export async function GET(req: Request) {
       const net = gross - (fixedCosts + platformFee + tax);
       const totalHours = totalMinutes / 60;
 
-      const nominalHourly =
+      const rawNominal =
         (p.expectedHours ?? 0) > 0 ? gross / p.expectedHours! : null;
-      const realHourly = totalHours > 0 ? net / totalHours : null;
+      const nominalHourly = rawNominal !== null && Number.isFinite(rawNominal) ? rawNominal : null;
+      const rawReal = totalHours > 0 ? net / totalHours : null;
+      const realHourly = rawReal !== null && Number.isFinite(rawReal) ? rawReal : null;
 
       return {
         ...p,

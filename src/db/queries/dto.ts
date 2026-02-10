@@ -98,3 +98,25 @@ export function generatedMessageToDTO(row: Row) {
     updatedAt: toISOString(row.updatedAt),
   };
 }
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://realhourly.ai";
+
+export function projectShareToDTO(row: Row) {
+  const token = row.shareToken as string;
+  return {
+    id: row.id as string,
+    projectId: row.projectId as string,
+    shareToken: token,
+    shareUrl: `${SITE_URL}/report/${token}`,
+    label: (row.label as string) ?? null,
+    expiresAt: toISOString(row.expiresAt),
+    showTimeDetails: row.showTimeDetails as boolean,
+    showCategoryBreakdown: row.showCategoryBreakdown as boolean,
+    showProgress: row.showProgress as boolean,
+    showInvoiceDownload: row.showInvoiceDownload as boolean,
+    isRevoked: row.isRevoked as boolean,
+    lastAccessedAt: toISOString(row.lastAccessedAt),
+    accessCount: (row.accessCount as number) ?? 0,
+    createdAt: toISOString(row.createdAt),
+  };
+}

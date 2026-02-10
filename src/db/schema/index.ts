@@ -7,3 +7,4 @@ export * from "./cost-entries";
 export * from "./alerts";
 export * from "./generated-messages";
 export * from "./weekly-reports";
+export * from "./project-shares";

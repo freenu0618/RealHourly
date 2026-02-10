@@ -14,7 +14,7 @@ async function getActiveProjects(): Promise<{ id: string; name: string }[]> {
   try {
     const user = await getUser();
     if (!user) return [];
-    const projects = await getProjectsByUserId(user.id, { active: true });
+    const projects = await getProjectsByUserId(user.id, { status: "active" });
     return projects.map((p) => ({ id: p.id, name: p.name }));
   } catch {
     return [];

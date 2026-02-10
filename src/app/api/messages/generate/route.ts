@@ -9,10 +9,20 @@ import { getActiveAlertByProject } from "@/db/queries/alerts";
 import { getSumMinutesByProject } from "@/db/queries/time-entries";
 import { generateMessages } from "@/lib/ai/generate-messages";
 import { ApiError } from "@/lib/api/errors";
+import { messageRateLimit } from "@/lib/api/rate-limit";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    const { success, retryAfterMs } = await messageRateLimit.check(user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" } },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } },
+      );
+    }
+
     const body = GenerateMessagesSchema.parse(await req.json());
 
     const project = await getProjectById(body.projectId, user.id);

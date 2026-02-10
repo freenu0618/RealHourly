@@ -5,11 +5,23 @@ import { ParseTimeSchema } from "@/lib/validators/time";
 import { parseTimeLog } from "@/lib/ai/parse-time-log";
 import { normalizeEntries } from "@/lib/ai/normalize-parsed-entries";
 import { getActiveProjectsForMatching } from "@/db/queries/projects";
+import { parseRateLimit } from "@/lib/api/rate-limit";
+import { sanitizeForParse } from "@/lib/ai/sanitize-input";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    const { success, retryAfterMs } = await parseRateLimit.check(user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" } },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } },
+      );
+    }
+
     const body = ParseTimeSchema.parse(await req.json());
+    body.input = sanitizeForParse(body.input);
 
     const activeProjects = await getActiveProjectsForMatching(user.id);
 

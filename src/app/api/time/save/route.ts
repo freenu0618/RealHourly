@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       }
       if (project.status !== "active") {
         throw new ApiError(
-          "BAD_REQUEST",
+          "PROJECT_NOT_ACTIVE",
           400,
           `Cannot log time to ${project.status} project "${project.name}"`,
         );

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import OpenAI, { toFile } from "openai";
 import { requireUser } from "@/lib/auth/server";
 import { handleApiError } from "@/lib/api/handler";
+import { transcribeRateLimit } from "@/lib/api/rate-limit";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB (Whisper limit)
 
@@ -16,7 +17,15 @@ function getOpenAI(): OpenAI {
 
 export async function POST(req: Request) {
   try {
-    await requireUser();
+    const user = await requireUser();
+
+    const { success, retryAfterMs } = await transcribeRateLimit.check(user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" } },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } },
+      );
+    }
 
     const formData = await req.formData();
     const audioFile = formData.get("audio");

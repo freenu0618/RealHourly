@@ -29,9 +29,9 @@ export default function HistorySummary({ summary, locale, loading }: HistorySumm
 
   const hours = Math.floor(summary.totalMinutes / 60);
   const mins = summary.totalMinutes % 60;
-  const totalDisplay = locale === "ko"
-    ? `${hours}\uC2DC\uAC04 ${mins}\uBD84`
-    : `${hours}h ${mins}m`;
+  const hShort = t("hoursShort");
+  const mShort = t("minutesShort");
+  const totalDisplay = `${hours}${hShort} ${mins}${mShort}`;
 
   const chartData = summary.byCategory
     .filter((c) => c.minutes > 0)
@@ -50,7 +50,7 @@ export default function HistorySummary({ summary, locale, loading }: HistorySumm
       <div className="rounded-2xl border bg-card p-4 shadow-sm">
         <p className="text-xs font-medium text-muted-foreground">{t("totalEntries")}</p>
         <p className="mt-1 text-2xl font-bold tracking-tight">
-          {summary.totalEntries}{locale === "ko" ? "\uAC74" : ""}
+          {summary.totalEntries}{t("entriesSuffix")}
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export default function HistorySummary({ summary, locale, loading }: HistorySumm
                   const v = Number(value) || 0;
                   const h = Math.floor(v / 60);
                   const m = v % 60;
-                  return locale === "ko" ? `${h}\uC2DC\uAC04 ${m}\uBD84` : `${h}h ${m}m`;
+                  return `${h}${hShort} ${m}${mShort}`;
                 }}
               />
             </PieChart>

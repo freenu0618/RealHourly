@@ -1,7 +1,8 @@
 # RealHourly — Product Requirements Document (PRD)
 
-> Version: P0 (Hackathon MVP)
-> Last Updated: 2026-02-08
+> Version: P1 MVP Complete
+> Last Updated: 2026-02-10
+> Phase: P0 Hackathon MVP (Done) → P1 Production-Ready (Current)
 
 ---
 
@@ -12,12 +13,14 @@
 3. [Feature 1: NLP Time Log](#3-feature-1-nlp-time-log)
 4. [Feature 2: Real Hourly Rate Calculator](#4-feature-2-real-hourly-rate-calculator)
 5. [Feature 3: Scope Creep Detection + Billing Messages](#5-feature-3-scope-creep-detection--billing-messages)
-6. [Database Schema](#6-database-schema)
-7. [API Endpoints](#7-api-endpoints)
-8. [Coding Conventions](#8-coding-conventions)
-9. [Directory Structure](#9-directory-structure)
-10. [Demo Scenario](#10-demo-scenario)
-11. [Seed Data](#11-seed-data)
+6. [Extended Features (F4~F13)](#6-extended-features-f4f13)
+7. [Database Schema](#7-database-schema)
+8. [API Endpoints](#8-api-endpoints)
+9. [Coding Conventions](#9-coding-conventions)
+10. [Directory Structure](#10-directory-structure)
+11. [Architecture Summary](#11-architecture-summary)
+12. [Demo Scenario](#12-demo-scenario)
+13. [Seed Data](#13-seed-data)
 
 ---
 
@@ -61,24 +64,25 @@ AI 기반 프리랜서 수익성 대시보드:
 
 ### 2.1 Core Stack
 
-| Layer | Tech | Notes |
-|-------|------|-------|
-| Framework | Next.js 15 (App Router) | TypeScript strict mode |
-| Styling | Tailwind CSS + shadcn/ui | Radix 기반, cn() 유틸 자동 포함 |
-| i18n | next-intl | `/[locale]/[feature]` URL prefix, 브라우저 자동 감지 |
-| DB | Supabase | PostgreSQL + Auth + RLS |
-| ORM | Drizzle ORM | snake_case DB ↔ camelCase DTO 변환 |
-| Validation | Zod | 폼 + API + LLM 스키마 통일 (Single Source of Truth) |
-| Forms | React Hook Form + Zod | shadcn 공식 지원 |
-| Charts | Recharts | Bar + Pie (P0) |
-| State | zustand | HITL 파싱 드래프트 전용 (범위 한정) |
-| Icons | lucide-react | shadcn 기본 |
-| Toast | sonner | shadcn 공식 권장 |
-| Date | date-fns | `lib/date/index.ts` 래퍼 통일 |
-| Clipboard | navigator.clipboard 래퍼 | `lib/utils/clipboard.ts` |
-| Temp IDs | nanoid | HITL 드래프트 아이템용 |
-| Deploy | Vercel | Next.js 최적화 |
-| Package | pnpm | 속도 + 디스크 효율 |
+| Layer | Tech | Version | Notes |
+|-------|------|---------|-------|
+| Framework | Next.js (App Router) | 16.1.6 | TypeScript 5.9 strict mode |
+| Styling | Tailwind CSS + shadcn/ui | 4.x | Radix 기반, cn() 유틸 자동 포함 |
+| i18n | next-intl | 4.8.2 | `/[locale]/[feature]` URL prefix, 브라우저 자동 감지 |
+| DB | Supabase | — | PostgreSQL + Auth + RLS |
+| ORM | Drizzle ORM | 0.45.1 | snake_case DB ↔ camelCase DTO 변환 |
+| Validation | Zod | 4.3.6 | import from `"zod/v4"`. 폼 + API + LLM 스키마 통일 |
+| Forms | React Hook Form + Zod | — | shadcn 공식 지원 |
+| Charts | Recharts | — | Bar + Pie + Scatter + Donut + Stacked |
+| PDF | @react-pdf/renderer | — | Invoice/Estimate generation |
+| State | zustand | — | HITL 파싱 드래프트 전용 (범위 한정) |
+| Icons | lucide-react | — | shadcn 기본 |
+| Toast | sonner | — | shadcn 공식 권장 |
+| Date | date-fns | 4.x | `lib/date/index.ts` 래퍼 통일 |
+| Clipboard | navigator.clipboard 래퍼 | — | `lib/utils/clipboard.ts` |
+| Temp IDs | nanoid | — | HITL 드래프트 아이템용 |
+| Deploy | Vercel | — | Next.js 최적화 |
+| Package | pnpm | — | 속도 + 디스크 효율 |
 
 ### 2.2 LLM Strategy (OpenAI, Tiered)
 
@@ -87,7 +91,10 @@ AI 기반 프리랜서 수익성 대시보드:
 | 타임로그 파싱 (Primary) | gpt-5-mini | `LLM_MODEL_PARSE` | ✅ 정상 동작 |
 | 타임로그 파싱 (Fallback) | gpt-5-mini | `LLM_MODEL_PARSE_FALLBACK` | ✅ 정상 동작 |
 | 청구 메시지 생성 (기본) | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
-| 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | 🔲 미사용 (P0) |
+| 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | 🔲 미사용 |
+| 주간 리포트 인사이트 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| 인보이스 라인아이템 생성 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| 음성 입력 (Whisper) | whisper-1 | — | ✅ 정상 동작 |
 
 > ⚠️ 초기 계획의 `gpt-5-nano`는 Structured Outputs 호환 이슈로 `gpt-5-mini`로 통일.
 
@@ -105,6 +112,13 @@ gpt-5 계열 모델은 이전 gpt-4o 계열과 API 파라미터가 다릅니다:
 
 ⚠️ `max_tokens`를 사용하면 `400 Unsupported parameter` 에러 발생. 반드시 `max_completion_tokens` 사용.
 
+#### Structured Outputs strict 모드 필수 규칙
+
+- **Nullable 필드**: `"type": ["string", "null"]` 배열 형식 사용 (OpenAI 공식 권장)
+- **`additionalProperties: false`**: strict 모드에서 필수 — 모든 object에 명시
+- **`required`**: 모든 필드를 required에 포함 필수 (nullable이어도 required에 포함)
+- **enum 필드**: `"type": "string"` + `"enum": [...]` 형태로 명시
+
 ### 2.3 Environment Variables
 
 ```
@@ -113,6 +127,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 OPENAI_API_KEY=
+NEXT_PUBLIC_SITE_URL=https://realhourly.ai
 LLM_MODEL_PARSE=gpt-5-mini
 LLM_MODEL_PARSE_FALLBACK=gpt-5-mini
 LLM_MODEL_GENERATE=gpt-5-mini
@@ -123,7 +138,29 @@ LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
 
 ## 3. Feature 1: NLP Time Log
 
-### 3.1 Input UI Layout (top → bottom)
+> **Status: Done** — 15 components, 11 AI modules, zustand store
+
+### 3.1 Implementation Status
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Chat-style text input | Done | Multi-line, bilingual (EN/KO) |
+| AI parsing (OpenAI Structured Outputs) | Done | gpt-5-mini with fallback |
+| HITL draft card system | Done | Editable fields: project, date, duration, category, intent |
+| Blocking vs warning issue system | Done | 3 blocking, 4 warning issue types |
+| Fuzzy project matching | Done | Levenshtein distance + alias matching |
+| Manual entry form | Done | Fallback for when AI fails |
+| Quick chips (shortcuts) | Done | Category/duration presets |
+| Voice input (Whisper) | Done | Audio recording + transcription + parse |
+| Batch save | Done | Save all valid drafts at once |
+| Progress hint detection | Done | Auto-detects "50% done" in input |
+| Step-by-step AI loading UI | Done | Shows parsing progress visually |
+| ThinkingLog (AI reasoning display) | Done | Real-time LLM thought process |
+| Category emoji consistency | Done | Shared `category-emoji.ts` utility |
+
+**Files**: `components/time-log/` (15 files), `lib/ai/` (11 files), `store/use-draft-store.ts`
+
+### 3.2 Input UI Layout (top → bottom)
 
 **A) Preferred Project (옵션)**
 - 라벨: "(선택) 주로 작업한 프로젝트"
@@ -149,11 +186,11 @@ LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
 
 **F) HITL Draft Cards → Save All**
 
-### 3.2 Categories (9개)
+### 3.3 Categories (9개)
 
 `planning`, `design`, `development`, `meeting`, `revision`, `admin`, `email`, `research`, `other`
 
-### 3.3 LLM Output Schema (A-1: Raw)
+### 3.4 LLM Output Schema (A-1: Raw)
 
 ```typescript
 interface LLMParseResponse {
@@ -206,20 +243,13 @@ interface LLMEntry {
 }
 ```
 
-#### Structured Outputs strict 모드 필수 규칙
-
-- **Nullable 필드**: `"type": ["string", "null"]` 배열 형식 사용 (OpenAI 공식 권장)
-- **`additionalProperties: false`**: strict 모드에서 필수 — 모든 object에 명시
-- **`required`**: 모든 필드를 required에 포함 필수 (nullable이어도 required에 포함)
-- **enum 필드**: `"type": "string"` + `"enum": [...]` 형태로 명시
-
 **LLM date 규칙**:
 - 명확하면 "YYYY-MM-DD"
 - 상대 표현(오늘/어제/today/yesterday) 허용
 - 애매하면 `null`
 - 미래 표현(내일/tomorrow) → date 채우되 `intent=planned`
 
-### 3.4 Server Normalization (A-2: HITL에 전달)
+### 3.5 Server Normalization (A-2: HITL에 전달)
 
 ```typescript
 interface ParsedResponse {
@@ -238,14 +268,14 @@ interface ParsedEntry {
   category: Category;
   intent: "done" | "planned";
   issues: IssueCode[];
-  needs_user_action: boolean;                  // blocking issue ≥ 1
+  needs_user_action: boolean;                  // blocking issue >= 1
   clarification_question: string | null;       // UI 고정 문구
 }
 
 type MatchSource = "alias" | "name" | "client" | "none";
 ```
 
-### 3.5 Issue Codes
+### 3.6 Issue Codes
 
 **Blocking (빨간 강조, Save 비활성)**:
 
@@ -264,7 +294,7 @@ type MatchSource = "alias" | "name" | "client" | "none";
 | `CATEGORY_AMBIGUOUS` | LLM 카테고리 불확실 | 배지만, LLM 선택 유지 |
 | `FUTURE_INTENT` | `intent=planned` | "예정" 배지 + "완료로 전환" 버튼 |
 
-### 3.6 Server Normalization Rules
+### 3.7 Server Normalization Rules
 
 | Field | LLM Output | Server Processing |
 |-------|-----------|-------------------|
@@ -279,15 +309,15 @@ type MatchSource = "alias" | "name" | "client" | "none";
 
 **Date handling**:
 - 저장 단위: 로컬 날짜 `YYYY-MM-DD` (DATE 타입)
-- 타임존: 유저 프로필 `timezone` 기준 (P0 기본: `Asia/Seoul`)
-- 지원(P0): 오늘/어제/그제, today/yesterday, YYYY-MM-DD, MM/DD
-- 미지원(P0): "지난주 내내", "주말에" → `DATE_AMBIGUOUS`
+- 타임존: 유저 프로필 `timezone` 기준 (기본: `Asia/Seoul`)
+- 지원: 오늘/어제/그제, today/yesterday, YYYY-MM-DD, MM/DD
+- 미지원: "지난주 내내", "주말에" → `DATE_AMBIGUOUS`
 
 **Project matching**:
 - LLM 컨텍스트에 active projects 제공 (30개 초과 시 최근 사용 상위 20개 + preferred project 힌트)
-- Aliases: 프로젝트 생성 시 자동 추출 (프로젝트명 핵심 토큰). 사용자는 선택적으로 수정.
+- Aliases: 프로젝트 생성 시 사용자 직접 입력 (쉼표 구분)
 
-### 3.7 HITL UI Behavior
+### 3.8 HITL UI Behavior
 
 **Card states**:
 - 🟢 정상: issues 없음, 모든 필드 pre-filled
@@ -317,36 +347,16 @@ const canSaveAll = entries.every(entry => {
 });
 ```
 
-**Interaction flow**:
-```
-[Input] → [Magic Parse click]
-  → textarea/button disabled
-  → skeleton + "AI가 타임로그를 분석 중…"
+### 3.9 Fallback
 
-[Parse success]
-  → Badge: "3개 항목으로 분해됨"
-  → blocking있으면: 첫 문제 카드로 스크롤/포커스
-  → blocking 없으면: Save All 활성
-
-[Parse fail (LLM error)]
-  → Error toast: "분석에 실패했습니다"
-  → "수동 입력" 버튼 → 수동 폼 전환
-
-[Save All click]
-  → POST /api/time/save (batch)
-  → Success toast: "3건 저장됨"
-  → textarea 초기화
-  → planned: "예정 1건 저장 (계산 제외)" 별도 안내
-```
-
-### 3.8 Fallback
-
-- LLM 파싱 실패 시: 즉시 수동 입력 폼으로 전환 (재시도 없음, P0 단순화)
+- LLM 파싱 실패 시: 즉시 수동 입력 폼으로 전환 (재시도 없음)
 - 수동 폼: 프로젝트 선택 + 날짜 + 시간 + 카테고리 + 태스크 설명
 
 ---
 
 ## 4. Feature 2: Real Hourly Rate Calculator
+
+> **Status: Done** — Metrics engine, charts, currency formatting
 
 ### 4.1 Calculation Logic
 
@@ -393,16 +403,7 @@ function getProjectMetrics(project, sumMinutesDone, sumFixedCosts) {
 - `projects.platform_fee_rate` (0~1), `projects.tax_rate` (0~1)
 - 퍼센트 비용은 cost_entries로 저장하지 않음 (계산 시 동적 반영)
 
-### 4.3 Calculation Trigger (Hybrid)
-
-- **페이지 로드 시**: `getProjectMetrics(projectId)` 서버 계산
-- **이벤트 후 즉시 재계산**:
-  - 타임로그 저장 성공 후
-  - 비용 추가/수정/삭제 성공 후
-  - expected_fee / expected_hours / fee_rate / tax_rate 수정 후
-- P0 구현: `router.refresh()` (P1에서 tag revalidate 전환)
-
-### 4.4 Visualization (P0)
+### 4.3 Visualization
 
 **A) Bar Chart**: 명목 시급 vs 실제 시급
 - 색상: 명목(blue), 실제(red) — 팩트 폭격 대비
@@ -412,19 +413,19 @@ function getProjectMetrics(project, sumMinutesDone, sumFixedCosts) {
 - platform_fee_amount, tax_amount, fixed_cost
 - "왜 낮은지" 설명용
 
-**C) Line chart (Phase 2)**: 시간 추이
-
-### 4.5 Edge Cases
+### 4.4 Edge Cases
 
 | Case | Handling |
 |------|----------|
 | `total_hours == 0` | `real_hourly = null`, UI: "시간 로그가 없어서 계산할 수 없음" + CTA "타임로그 입력하기" |
 | `expected_hours == 0` | `nominal_hourly = null` |
-| `net < 0` | 음수 시급 표시 (적자 프로젝트) → "⚠️ 적자" 배지, 데모 임팩트 극대화 |
+| `net < 0` | 음수 시급 표시 (적자 프로젝트) → "⚠️ 적자" 배지 |
 
 ---
 
 ## 5. Feature 3: Scope Creep Detection + Billing Messages
+
+> **Status: Done** — 3 detection rules, 3-tone LLM messages, alert lifecycle
 
 ### 5.1 Detection Rules (checked in `getProjectMetrics`)
 
@@ -493,17 +494,182 @@ getProjectMetrics 실행
 
 **Storage**: generated_messages 테이블에 3 rows 저장 (alert_id로 연결)
 
-### 5.4 Clarification Questions (UI Fixed)
+---
 
-P0에서 `clarification_question`은 서버/LLM 생성 없이 UI 고정 문구:
-- `PROJECT_UNMATCHED`: "프로젝트를 선택해주세요"
-- `PROJECT_AMBIGUOUS`: "동명의 프로젝트가 있어요. 올바른 프로젝트를 선택해주세요"
+## 6. Extended Features (F4~F13)
+
+### F4. Dashboard — Done
+
+Overview of all freelancer activity.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| KPI cards (revenue, hours, rate, projects) | Done | Animated count-up |
+| Weekly hours bar chart | Done | Today's bar highlighted |
+| Recent time entries | Done | Last 5 entries with details |
+| Active alert banners | Done | Direct navigation to project |
+| Time-of-day greeting | Done | Morning/afternoon/evening/night |
+| Empty state | Done | Onboarding guidance |
+
+**Files**: `components/dashboard/DashboardClient.tsx`, `db/queries/dashboard.ts`
+
+### F5. Project Management — Done
+
+CRUD + lifecycle management for projects.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Create project (name, fee, hours, currency) | Done | With platform fee preset |
+| Client name (auto-resolve) | Done | Find existing or create new |
+| Project aliases (AI matching) | Done | Comma-separated input |
+| Edit project dialog | Done | All fields editable |
+| Delete project (soft delete) | Done | Confirmation dialog |
+| Status management | Done | Active/completed/paused/cancelled |
+| Status dropdown | Done | DropdownMenu component |
+| Status banner (top of detail) | Done | Color-coded by status |
+| Complete project flow | Done | Summary dialog → set completed |
+| Progress tracking (slider) | Done | 0-100% with step 5 |
+| Progress update after save | Done | Modal after time log save |
+| Project list tab filter | Done | All/active/completed/paused |
+| Cost entries CRUD | Done | Add/edit/delete on detail page |
+| Invoice/estimate PDF generation | Done | AI-generated line items + PDF |
+
+**Files**: `components/projects/` (14 files), `lib/pdf/`
+
+### F6. Time Log History — Done
+
+Calendar and list view of past entries.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Calendar heatmap view | Done | Monthly grid with minute counts |
+| Today highlight badge | Done | Primary color pill |
+| List view (grouped by date) | Done | With total hours per day |
+| Inline edit | Done | Task, duration, category |
+| Delete with confirmation | Done | Browser confirm dialog |
+| Filter by project | Done | Dropdown filter |
+| Filter by category | Done | Dropdown filter |
+| Summary statistics | Done | Total entries, hours, avg/day |
+
+**Files**: `components/time-log/HistoryClient.tsx`, `components/time-log/CalendarView.tsx`, `components/time-log/HistoryList.tsx`
+
+### F7. Analytics — Done
+
+Multi-project comparison and insights.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Hourly rate ranking chart | Done | Bar chart comparing projects |
+| Category stacked bar | Done | Time distribution per project |
+| Revenue vs time scatter plot | Done | With project name labels |
+| Client summary cards | Done | KPI per client |
+| AI insight cards | Done | Best rate, worst rate, etc. |
+
+**Files**: `components/analytics/` (6 files), `db/queries/analytics.ts`
+
+### F8. Weekly Reports — Done
+
+Auto-generated weekly summaries.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Report list (8 weeks + show more) | Done | Expandable to 20 weeks |
+| Generate report on demand | Done | Collects weekly data |
+| Daily hours bar chart | Done | Per-day breakdown |
+| Project time donut chart | Done | 10 distinct colors |
+| Category breakdown bar | Done | Hours by category |
+| AI-generated insights | Done | LLM weekly analysis |
+| Report detail page | Done | Full weekly summary view |
+
+**Files**: `components/reports/` (5 files), `lib/reports/`, `lib/ai/generate-weekly-insight.ts`
+
+### F9. Authentication — Done
+
+Supabase-based auth with Google OAuth.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Email/password signup | Done | With validation |
+| Email/password login | Done | Error handling |
+| Google OAuth | Done | One-click sign in |
+| Password reset flow | Done | Email → reset page |
+| Email verification | Done | Verification page |
+| Auto profile creation | Done | On first login |
+| Protected route middleware | Done | Redirect to login |
+| Logout | Done | POST route handler |
+
+**Files**: `app/[locale]/(auth)/`, `lib/auth/`, `middleware.ts`
+
+### F10. Settings — Done
+
+User preferences and account management.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Profile section (name, email) | Done | Display name editable |
+| Preferences (currency, timezone, locale) | Done | All configurable |
+| Account section (password, logout) | Done | Password change form |
+| Data export (CSV) | Done | All time entries |
+| OG image generation | Done | Dynamic social previews |
+
+**Files**: `components/settings/` (5 files), `api/settings/`
+
+### F11. Marketing Landing — Done
+
+Public-facing landing page.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Hero carousel (rotating taglines) | Done | Auto-rotating |
+| Feature showcase | Done | 3 core features with mockups |
+| Interactive mock cards | Done | Live app previews |
+| Empathy/pain-point section | Done | Problem statement |
+| How-it-works steps | Done | 5-step visual guide |
+| Before/after comparison | Done | Rate comparison table |
+| Use case section | Done | Different freelancer types |
+| Stats counter (animated) | Done | Count-up numbers |
+| Pricing section | Done | Free/Pro tiers |
+| FAQ accordion | Done | Expandable questions |
+| CTA section | Done | Sign up call-to-action |
+| Navigation bar (lang toggle) | Done | With login button |
+| Footer | Done | Links + branding |
+
+**Files**: `components/landing/` (15 files), `app/[locale]/(marketing)/`
+
+### F12. i18n — Done
+
+Bilingual support throughout.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Korean translations | Done | ~400+ keys |
+| English translations | Done | ~400+ keys |
+| Browser auto-detect | Done | Via next-intl middleware |
+| Locale URL prefix (/ko, /en) | Done | |
+| NLP input (both languages) | Done | LLM handles both |
+| Generated messages (user lang) | Done | Language selection |
+
+**Files**: `messages/ko.json`, `messages/en.json`, `i18n/`
+
+### F13. Design System — Done
+
+Consistent visual language.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Ghibli-Warm theme | Done | CSS custom properties |
+| Dark mode support | Done | System preference aware |
+| shadcn/ui components (24) | Done | Button, Card, Dialog, etc. |
+| Collapsible sidebar | Done | shadcn Sidebar component |
+| Loading skeletons | Done | Throughout app |
+| Toast notifications (sonner) | Done | Success/error feedback |
+| Responsive layout | Done | Mobile-friendly |
 
 ---
 
-## 6. Database Schema
+## 7. Database Schema
 
-### 6.1 Common Conventions
+### 7.1 Common Conventions
 
 - **PK**: UUID (`gen_random_uuid()`)
 - **Timestamps**: `created_at timestamptz DEFAULT now()`, `updated_at timestamptz DEFAULT now()`
@@ -511,10 +677,11 @@ P0에서 `clarification_question`은 서버/LLM 생성 없이 UI 고정 문구:
 - **RLS**: All tables scoped to `auth.uid()`
 - **Enum values**: lowercase (exception: currency = UPPERCASE ISO)
 
-### 6.2 Enums
+### 7.2 Enums (7개)
 
 ```sql
 CREATE TYPE project_currency AS ENUM ('USD', 'KRW', 'EUR', 'GBP', 'JPY');
+CREATE TYPE project_status AS ENUM ('active', 'completed', 'paused', 'cancelled');
 CREATE TYPE time_category AS ENUM ('planning', 'design', 'development', 'meeting', 'revision', 'admin', 'email', 'research', 'other');
 CREATE TYPE time_intent AS ENUM ('done', 'planned');
 CREATE TYPE cost_type AS ENUM ('platform_fee', 'tax', 'tool', 'contractor', 'misc');
@@ -522,12 +689,13 @@ CREATE TYPE alert_type AS ENUM ('scope_rule1', 'scope_rule2', 'scope_rule3');
 CREATE TYPE message_tone AS ENUM ('polite', 'neutral', 'firm');
 ```
 
-### 6.3 Tables
+### 7.3 Tables (8개)
 
 #### profiles
 ```sql
 CREATE TABLE profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id),
+  display_name text,
   default_currency project_currency NOT NULL DEFAULT 'USD',
   timezone text NOT NULL DEFAULT 'Asia/Seoul',
   locale text NOT NULL DEFAULT 'en',
@@ -568,11 +736,14 @@ CREATE TABLE projects (
   tax_rate numeric NOT NULL DEFAULT 0 CHECK (tax_rate BETWEEN 0 AND 1),
   progress_percent int NOT NULL DEFAULT 0 CHECK (progress_percent BETWEEN 0 AND 100),
   is_active boolean NOT NULL DEFAULT true,
+  status project_status NOT NULL DEFAULT 'active',
+  completed_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   deleted_at timestamptz
 );
 CREATE INDEX idx_projects_user_active ON projects(user_id, is_active) WHERE deleted_at IS NULL;
+CREATE INDEX idx_projects_user_status ON projects(user_id, status) WHERE deleted_at IS NULL;
 CREATE INDEX idx_projects_client ON projects(client_id) WHERE deleted_at IS NULL;
 -- RLS: user_id = auth.uid()
 ```
@@ -652,32 +823,54 @@ CREATE INDEX idx_messages_alert ON generated_messages(alert_id, tone) WHERE dele
 -- RLS: via alert → project.user_id = auth.uid()
 ```
 
-### 6.4 Migration Checklist (P0)
+#### weekly_reports
+```sql
+CREATE TABLE weekly_reports (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  week_start date NOT NULL,
+  week_end date NOT NULL,
+  total_minutes int NOT NULL DEFAULT 0,
+  total_projects int NOT NULL DEFAULT 0,
+  project_breakdown jsonb NOT NULL DEFAULT '[]'::jsonb,
+  category_breakdown jsonb NOT NULL DEFAULT '{}'::jsonb,
+  daily_breakdown jsonb NOT NULL DEFAULT '[]'::jsonb,
+  ai_insight text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE UNIQUE INDEX idx_weekly_reports_user_week ON weekly_reports(user_id, week_start) WHERE deleted_at IS NULL;
+-- RLS: user_id = auth.uid()
+```
+
+### 7.4 Migration Checklist
 
 1. `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
-2. Enum 생성 (6개)
+2. Enum 생성 (7개 — project_status 포함)
 3. profiles 테이블 (FK to auth.users)
 4. clients, projects 테이블
 5. time_entries, cost_entries 테이블
 6. alerts, generated_messages 테이블
-7. 인덱스 + CHECK 제약
-8. alerts partial unique index
-9. RLS 정책 설정
+7. weekly_reports 테이블
+8. 인덱스 + CHECK 제약
+9. alerts partial unique index
+10. RLS 정책 설정
 
 ---
 
-## 7. API Endpoints
+## 8. API Endpoints
 
-### 7.1 Common
+### 8.1 Common
 
 - **Auth**: Supabase session 필수 (미인증 → 401)
 - **Content-Type**: JSON only
 - **Soft delete**: 기본 조회 `deleted_at IS NULL`
-- **API versioning**: 없음 (P0)
+- **API versioning**: 없음
 - **Request/Response**: camelCase
 - **Error shape**: `{ "error": { "code": "SOME_CODE", "message": "...", "details": {} } }`
 
-### 7.2 Route Handler Pattern
+### 8.2 Route Handler Pattern
 
 ```typescript
 export async function POST(req: Request) {
@@ -688,12 +881,18 @@ export async function POST(req: Request) {
 }
 ```
 
-### 7.3 Endpoints
+### 8.3 Endpoints (25 routes)
 
 #### Health
 | Method | Path | Response |
 |--------|------|----------|
 | GET | `/api/health` | `{ data: { ok: true } }` |
+
+#### Auth
+| Method | Path | Response |
+|--------|------|----------|
+| GET | `/api/auth/callback` | OAuth callback → redirect |
+| POST | `/api/auth/logout` | Session destroy → redirect |
 
 #### Clients (CRUD)
 | Method | Path | Body | Response |
@@ -703,43 +902,71 @@ export async function POST(req: Request) {
 | PATCH | `/api/clients/:clientId` | `{ name? }` | `{ data: Client }` |
 | DELETE | `/api/clients/:clientId` | — | 204 |
 
-#### Projects (CRUD + Preset)
+#### Projects (CRUD + Status)
 | Method | Path | Body | Response |
 |--------|------|------|----------|
-| GET | `/api/projects?active=true` | — | `{ data: Project[] }` |
-| POST | `/api/projects` | `{ clientId?, name, aliases?, expectedFee, expectedHours, currency, platformFeePreset, platformFeeRate?, taxEnabled, taxRate?, fixedCostAmount?, fixedCostType? }` | 201 `{ data: Project }` |
+| GET | `/api/projects?status=active` | — | `{ data: Project[] }` (with metrics) |
+| POST | `/api/projects` | `{ name, clientName?, aliases?, expectedFee, expectedHours, currency, platformFeePreset, platformFeeRate?, taxEnabled, taxRate?, fixedCostAmount? }` | 201 `{ data: Project }` |
 | GET | `/api/projects/:projectId` | — | `{ data: Project }` |
-| PATCH | `/api/projects/:projectId` | `{ name?, aliases?, expectedFee?, expectedHours?, currency?, platformFeeRate?, taxRate?, progressPercent?, isActive? }` | `{ data: Project }` |
+| PATCH | `/api/projects/:projectId` | `{ name?, aliases?, expectedFee?, expectedHours?, currency?, platformFeeRate?, taxRate?, progressPercent?, status? }` | `{ data: Project }` |
 | DELETE | `/api/projects/:projectId` | — | 204 |
-
-#### Time (Actions)
-| Method | Path | Body | Response |
-|--------|------|------|----------|
-| POST | `/api/time/parse` | `{ input, userTimezone? }` | `{ data: ParsedResponse }` |
-| POST | `/api/time/save` | `{ entries: ParsedEntry[] }` | `{ data: { inserted: number } }` |
-
-Errors: 422 `INVALID_INPUT`, 502 `LLM_PARSE_FAILED`, 409 `PROJECT_REQUIRED`
 
 #### Metrics
 | Method | Path | Response |
 |--------|------|----------|
-| GET | `/api/projects/:projectId/metrics` | `{ data: { metrics: ProjectMetricsDTO, pendingAlert: Alert | null } }` |
+| GET | `/api/projects/:projectId/metrics` | `{ data: { metrics, pendingAlert } }` |
 
 #### Costs (CRUD)
 | Method | Path | Body | Response |
 |--------|------|------|----------|
+| GET | `/api/projects/:projectId/cost-entries` | — | `{ data: CostEntry[] }` |
 | POST | `/api/projects/:projectId/cost-entries` | `{ amount, costType, date?, notes? }` | 201 `{ data: CostEntry }` |
 | PATCH | `/api/cost-entries/:costEntryId` | `{ amount?, costType?, date?, notes? }` | `{ data: CostEntry }` |
 | DELETE | `/api/cost-entries/:costEntryId` | — | 204 |
 
-#### Alerts + Messages (Actions)
+#### Time (Actions)
 | Method | Path | Body | Response |
 |--------|------|------|----------|
-| POST | `/api/alerts/:alertId/dismiss` | — | `{ data: { dismissedAt: string } }` |
-| POST | `/api/messages/generate` | `{ projectId, alertId, tones: ["polite","neutral","firm"] }` | `{ data: { messages: [{ tone, subject, body }] } }` |
-| POST | `/api/messages/:messageId/copied` | — | `{ data: { copiedAt: string } }` |
+| POST | `/api/time/parse` | `{ input, userTimezone?, preferredProjectId? }` | `{ data: ParsedResponse }` |
+| POST | `/api/time/save` | `{ entries: ParsedEntry[] }` | `{ data: { inserted: number } }` |
+| PATCH | `/api/time/:entryId` | `{ taskDescription?, minutes?, category? }` | `{ data: TimeEntry }` |
+| DELETE | `/api/time/:entryId` | — | 204 |
 
-### 7.4 Validation Schema Location
+#### Voice
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/voice/transcribe` | FormData (audio) | `{ data: { text } }` |
+
+#### Alerts + Messages
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/alerts/:alertId/dismiss` | — | `{ data: { dismissedAt } }` |
+| POST | `/api/messages/generate` | `{ projectId, alertId, tones }` | `{ data: { messages } }` |
+| POST | `/api/messages/:messageId/copied` | — | `{ data: { copiedAt } }` |
+
+#### Dashboard + Analytics + History + Reports
+| Method | Path | Response |
+|--------|------|----------|
+| GET | `/api/dashboard` | `{ data: { kpi, weeklyChart, recentEntries, activeAlerts } }` |
+| GET | `/api/analytics` | `{ data: { hourlyRanking, categoryBreakdown, ... } }` |
+| GET | `/api/time/history?projectId=&category=` | `{ data: TimeEntry[] }` |
+| GET | `/api/reports/weekly` | `{ data: WeeklyReport[] }` |
+| POST | `/api/reports/weekly/generate` | — | `{ data: WeeklyReport }` |
+| GET | `/api/reports/weekly/:reportId` | `{ data: WeeklyReport }` |
+
+#### Settings
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| PATCH | `/api/settings/profile` | `{ displayName? }` | `{ data: Profile }` |
+| PATCH | `/api/settings/preferences` | `{ currency?, timezone?, locale? }` | `{ data: Profile }` |
+| GET | `/api/settings/export` | — | CSV file download |
+
+#### Invoice
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/projects/:projectId/invoice/generate-items` | `{ type }` | `{ data: { lineItems } }` |
+
+### 8.4 Validation Schema Location
 
 | Domain | File |
 |--------|------|
@@ -753,9 +980,9 @@ Errors: 422 `INVALID_INPUT`, 502 `LLM_PARSE_FAILED`, 409 `PROJECT_REQUIRED`
 
 ---
 
-## 8. Coding Conventions
+## 9. Coding Conventions
 
-### 8.1 Naming
+### 9.1 Naming
 
 | Type | Convention | Example |
 |------|-----------|---------|
@@ -766,7 +993,7 @@ Errors: 422 `INVALID_INPUT`, 502 `LLM_PARSE_FAILED`, 409 `PROJECT_REQUIRED`
 | Enum values | lowercase | `done`, `planned`, `polite` |
 | Currency | UPPERCASE ISO | `USD`, `KRW` (only exception) |
 
-### 8.2 Import Alias
+### 9.2 Import Alias
 
 `@/*` = `src/*`
 
@@ -776,7 +1003,7 @@ import { Button } from '@/components/ui/button';
 import { projects } from '@/db/schema/projects';
 ```
 
-### 8.3 Key Rules
+### 9.3 Key Rules
 
 1. **Zod = Single Source of Truth** — 폼, API, LLM 스키마 모두 Zod 기반
 2. **Route Handler 진입 검증** — Schema.parse() 후에만 로직 실행
@@ -784,92 +1011,137 @@ import { projects } from '@/db/schema/projects';
 4. **Soft delete** — 모든 조회 `WHERE deleted_at IS NULL`. `db/queries/*`에서만 SQL 접근.
 5. **Date wrapper** — 모든 날짜 연산은 `lib/date/index.ts` 경유. 직접 format() 금지.
 6. **Clipboard wrapper** — 모든 복사 연산은 `lib/utils/clipboard.ts` 경유.
-7. **P0: Route Handlers only** — Server Actions 미사용 (디버깅 용이)
+7. **Route Handlers only** — Server Actions 미사용 (디버깅 용이)
 8. **camelCase API ↔ snake_case DB** — DTO 변환 함수로 명시적 매핑
+9. **Zod 4** — `import { z } from "zod/v4"` 사용. `z.string().url()` (not `z.url()`)
 
 ---
 
-## 9. Directory Structure
+## 10. Directory Structure
 
 ```
-.
-├─ src/
-│  ├─ app/
+src/
+├─ app/
+│  ├─ [locale]/
 │  │  ├─ (auth)/
+│  │  │  ├─ login/page.tsx
+│  │  │  ├─ signup/page.tsx
+│  │  │  ├─ reset-password/page.tsx
+│  │  │  └─ verify/page.tsx
 │  │  ├─ (dashboard)/
+│  │  │  ├─ page.tsx                            # Dashboard home
 │  │  │  ├─ projects/
-│  │  │  │  ├─ page.tsx                        # Projects list
-│  │  │  │  └─ [projectId]/
-│  │  │  │     └─ page.tsx                     # Project Detail
-│  │  │  ├─ time-log/
-│  │  │  │  └─ page.tsx                        # Feature 1 input
-│  │  │  └─ layout.tsx
-│  │  ├─ api/
-│  │  │  ├─ health/route.ts
-│  │  │  ├─ clients/route.ts
-│  │  │  ├─ clients/[clientId]/route.ts
-│  │  │  ├─ projects/route.ts
-│  │  │  ├─ projects/[projectId]/route.ts
-│  │  │  ├─ projects/[projectId]/metrics/route.ts
-│  │  │  ├─ projects/[projectId]/cost-entries/route.ts
-│  │  │  ├─ cost-entries/[costEntryId]/route.ts
-│  │  │  ├─ time/parse/route.ts
-│  │  │  ├─ time/save/route.ts
-│  │  │  ├─ alerts/[alertId]/dismiss/route.ts
-│  │  │  ├─ messages/generate/route.ts
-│  │  │  └─ messages/[messageId]/copied/route.ts
-│  │  ├─ globals.css
-│  │  └─ middleware.ts                         # next-intl locale routing
-│  ├─ components/
-│  │  ├─ ui/                                   # shadcn/ui generated
-│  │  ├─ time-log/                             # domain UI
-│  │  ├─ projects/
-│  │  ├─ alerts/
-│  │  └─ charts/
-│  ├─ lib/
-│  │  ├─ ai/
-│  │  │  ├─ time-log-schema.ts
-│  │  │  └─ message-schema.ts
-│  │  ├─ metrics/
-│  │  │  ├─ get-project-metrics.ts
-│  │  │  └─ scope-rules.ts
-│  │  ├─ money/
-│  │  │  ├─ currency.ts
-│  │  │  └─ format.ts
-│  │  ├─ date/index.ts                         # date-fns wrapper
-│  │  ├─ auth/server.ts
-│  │  ├─ supabase/
-│  │  │  ├─ server.ts
-│  │  │  └─ client.ts
-│  │  ├─ validators/
-│  │  │  ├─ projects.ts
-│  │  │  ├─ time.ts
-│  │  │  ├─ messages.ts
-│  │  │  ├─ costs.ts
-│  │  │  └─ clients.ts
-│  │  └─ utils/
-│  │     ├─ cn.ts
-│  │     ├─ nanoid.ts
-│  │     └─ clipboard.ts
-│  ├─ db/
-│  │  ├─ schema/
-│  │  ├─ queries/
-│  │  └─ index.ts
-│  ├─ store/
-│  │  └─ use-draft-store.ts                    # zustand (HITL only)
-│  ├─ types/index.ts
-│  └─ env.ts                                   # env validation (Zod)
-├─ drizzle/                                    # migrations output
-├─ drizzle.config.ts
-├─ next.config.ts
-├─ tailwind.config.ts
-├─ tsconfig.json
-└─ package.json
+│  │  │  │  ├─ page.tsx                          # Projects list
+│  │  │  │  └─ [projectId]/page.tsx              # Project Detail
+│  │  │  ├─ time-log/page.tsx                    # NLP input
+│  │  │  ├─ history/page.tsx                     # Calendar + list
+│  │  │  ├─ analytics/page.tsx                   # Multi-project
+│  │  │  ├─ reports/
+│  │  │  │  ├─ page.tsx                          # Weekly list
+│  │  │  │  └─ [reportId]/page.tsx               # Report detail
+│  │  │  ├─ clients/page.tsx                     # Client list
+│  │  │  ├─ settings/page.tsx                    # User settings
+│  │  │  └─ layout.tsx                           # Sidebar layout
+│  │  └─ (marketing)/
+│  │     ├─ page.tsx                             # Landing page
+│  │     └─ layout.tsx
+│  ├─ api/                                       # 25 route handlers
+│  │  ├─ auth/callback/route.ts
+│  │  ├─ auth/logout/route.ts
+│  │  ├─ health/route.ts
+│  │  ├─ dashboard/route.ts
+│  │  ├─ analytics/route.ts
+│  │  ├─ clients/route.ts
+│  │  ├─ clients/[clientId]/route.ts
+│  │  ├─ projects/route.ts
+│  │  ├─ projects/[projectId]/route.ts
+│  │  ├─ projects/[projectId]/metrics/route.ts
+│  │  ├─ projects/[projectId]/cost-entries/route.ts
+│  │  ├─ projects/[projectId]/invoice/generate-items/route.ts
+│  │  ├─ cost-entries/[costEntryId]/route.ts
+│  │  ├─ time/parse/route.ts
+│  │  ├─ time/save/route.ts
+│  │  ├─ time/[entryId]/route.ts
+│  │  ├─ time/history/route.ts
+│  │  ├─ voice/transcribe/route.ts
+│  │  ├─ alerts/[alertId]/dismiss/route.ts
+│  │  ├─ messages/generate/route.ts
+│  │  ├─ messages/[messageId]/copied/route.ts
+│  │  ├─ reports/weekly/route.ts
+│  │  ├─ reports/weekly/generate/route.ts
+│  │  ├─ reports/weekly/[reportId]/route.ts
+│  │  ├─ settings/profile/route.ts
+│  │  ├─ settings/preferences/route.ts
+│  │  ├─ settings/export/route.ts
+│  │  └─ og/route.tsx
+│  ├─ globals.css
+│  └─ middleware.ts                              # next-intl locale routing
+├─ components/                                   # 84 components
+│  ├─ ui/                                        # shadcn/ui (24 components)
+│  ├─ time-log/                                  # NLP input + HITL + history (15 files)
+│  ├─ projects/                                  # Project cards, forms, lifecycle (14 files)
+│  ├─ dashboard/                                 # KPI, charts (3 files)
+│  ├─ analytics/                                 # Multi-project charts (6 files)
+│  ├─ reports/                                   # Weekly reports (5 files)
+│  ├─ settings/                                  # User settings (5 files)
+│  ├─ alerts/                                    # Scope alert modal (2 files)
+│  ├─ charts/                                    # Shared chart components (3 files)
+│  ├─ landing/                                   # Marketing page (15 files)
+│  └─ layout/                                    # Sidebar, app shell (3 files)
+├─ lib/                                          # 45 modules
+│  ├─ ai/                                        # LLM schemas + prompts (11 files)
+│  ├─ metrics/                                   # Rate calc + scope rules
+│  ├─ money/                                     # Currency + format
+│  ├─ pdf/                                       # Invoice template + utils
+│  ├─ reports/                                   # Weekly report logic
+│  ├─ date/index.ts                              # date-fns wrapper
+│  ├─ auth/server.ts                             # getUser(), requireUser()
+│  ├─ api/handler.ts                             # Error handler util
+│  ├─ supabase/                                  # Client + server helpers
+│  ├─ validators/                                # Zod schemas (5 files)
+│  └─ utils/                                     # cn, nanoid, clipboard, category-emoji
+├─ db/
+│  ├─ schema/                                    # Drizzle table/enum definitions (8 tables)
+│  ├─ queries/                                   # DB access functions (11 modules)
+│  └─ index.ts                                   # Drizzle client init
+├─ store/
+│  └─ use-draft-store.ts                         # zustand (HITL draft ONLY)
+├─ hooks/                                        # Custom React hooks
+├─ i18n/                                         # next-intl config
+├─ types/index.ts                                # shared types
+└─ env.ts                                        # env validation (Zod)
+
+messages/
+├─ ko.json                                       # ~400+ keys
+└─ en.json                                       # ~400+ keys
+
+drizzle/                                         # migrations output
+scripts/
+├─ seed.ts                                       # Demo seed data
+└─ test-logic.ts                                 # 68 unit test cases
 ```
 
 ---
 
-## 10. Demo Scenario (2 minutes)
+## 11. Architecture Summary
+
+| Metric | Count |
+|--------|-------|
+| Pages | 17 |
+| API Routes | 25 |
+| Components | 84 |
+| Lib Modules | 45 |
+| DB Tables | 8 |
+| DB Enums | 7 |
+| DB Queries | 11 modules |
+| i18n Keys | ~400+ per language |
+| Unit Tests | 68 cases |
+| Total Commits | 33 |
+| Build Output | 44 pages, 0 errors |
+
+---
+
+## 12. Demo Scenario (2 minutes)
 
 ### Flow
 
@@ -902,7 +1174,7 @@ import { projects } from '@/db/schema/projects';
 
 ---
 
-## 11. Seed Data
+## 13. Seed Data
 
 ### Demo Project
 
@@ -954,8 +1226,8 @@ import { projects } from '@/db/schema/projects';
 (revision 이벤트: 7건 — Rule 3 트리거!)
 
 gross = $2,000
-platform_fee = $2,000 × 0.20 = $400
-tax = $2,000 × 0.10 = $200
+platform_fee = $2,000 x 0.20 = $400
+tax = $2,000 x 0.10 = $200
 fixed_cost = $50
 direct_cost = $400 + $200 + $50 = $650
 net = $2,000 - $650 = $1,350

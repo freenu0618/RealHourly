@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +16,9 @@ export default function DashboardLayout({
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
         </header>
-        <main className="flex-1 p-6 md:p-8 lg:px-12">{children}</main>
+        <main className="flex-1 p-6 md:p-8 lg:px-12">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

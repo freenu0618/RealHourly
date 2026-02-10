@@ -80,30 +80,23 @@ export default function HistoryList({
   const formatDateHeader = (dateStr: string, totalMinutes: number) => {
     const date = new Date(dateStr + "T00:00:00");
     const hours = (totalMinutes / 60).toFixed(1);
-
-    if (locale === "ko") {
-      const formatted = formatDate(date, "M\uC6D4 d\uC77C EEEE", "ko");
-      return `${formatted} \u2014 ${hours}\uC2DC\uAC04`;
-    } else {
-      const formatted = formatDate(date, "EEE, MMM d", "en");
-      return `${formatted} \u2014 ${hours}h`;
-    }
+    const fmt = locale === "ko" ? "M\uC6D4 d\uC77C EEEE" : "EEE, MMM d";
+    const formatted = formatDate(date, fmt, locale);
+    return `${formatted} \u2014 ${hours}${t("hoursShort")}`;
   };
 
   const formatDuration = (minutes: number) => {
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
-    if (locale === "ko") {
-      return h > 0 ? `${h}시간 ${m}분` : `${m}분`;
-    } else {
-      return h > 0 ? `${h}h ${m}m` : `${m}m`;
-    }
+    const hShort = t("hoursShort");
+    const mShort = t("minutesShort");
+    return h > 0 ? `${h}${hShort} ${m}${mShort}` : `${m}${mShort}`;
   };
 
   if (entries.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        {t("noEntries") || "기록된 시간이 없습니다"}
+        {t("noEntries")}
       </div>
     );
   }
@@ -124,7 +117,6 @@ export default function HistoryList({
                 onDelete={onDelete}
                 formatDuration={formatDuration}
                 categoryLabel={tCategory(`category${entry.category.charAt(0).toUpperCase() + entry.category.slice(1)}`) || entry.category}
-                locale={locale}
               />
             ))}
           </div>
@@ -140,7 +132,6 @@ interface HistoryEntryCardProps {
   onDelete: HistoryListProps["onDelete"];
   formatDuration: (minutes: number) => string;
   categoryLabel: string;
-  locale: string;
 }
 
 function HistoryEntryCard({
@@ -149,8 +140,9 @@ function HistoryEntryCard({
   onDelete,
   formatDuration,
   categoryLabel,
-  locale,
 }: HistoryEntryCardProps) {
+  const t = useTranslations("history");
+  const tCommon = useTranslations("common");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     taskDescription: entry.taskDescription,
@@ -181,11 +173,7 @@ function HistoryEntryCard({
   };
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      locale === "ko"
-        ? "이 시간 기록을 삭제하시겠습니까?"
-        : "Are you sure you want to delete this entry?"
-    );
+    const confirmed = window.confirm(t("deleteConfirm"));
     if (confirmed) {
       await onDelete(entry.id);
     }
@@ -199,7 +187,7 @@ function HistoryEntryCard({
           onChange={(e) =>
             setEditData({ ...editData, taskDescription: e.target.value })
           }
-          placeholder={locale === "ko" ? "작업 설명" : "Task description"}
+          placeholder={t("taskPlaceholder")}
           className="text-sm"
         />
         <div className="flex gap-2">
@@ -235,11 +223,11 @@ function HistoryEntryCard({
             disabled={isLoading}
           >
             <X className="h-4 w-4 mr-1" />
-            {locale === "ko" ? "취소" : "Cancel"}
+            {tCommon("cancel")}
           </Button>
           <Button size="sm" onClick={handleSave} disabled={isLoading}>
             <Check className="h-4 w-4 mr-1" />
-            {locale === "ko" ? "저장" : "Save"}
+            {tCommon("save")}
           </Button>
         </div>
       </div>
@@ -278,7 +266,7 @@ function HistoryEntryCard({
               variant="ghost"
               className="h-8 w-8"
               onClick={() => setIsEditing(true)}
-              aria-label={locale === "ko" ? "수정" : "Edit"}
+              aria-label={tCommon("edit")}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -287,7 +275,7 @@ function HistoryEntryCard({
               variant="ghost"
               className="h-8 w-8 text-destructive hover:text-destructive"
               onClick={handleDelete}
-              aria-label={locale === "ko" ? "삭제" : "Delete"}
+              aria-label={tCommon("delete")}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

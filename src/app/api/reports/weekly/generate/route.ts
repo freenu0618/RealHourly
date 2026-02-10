@@ -10,10 +10,19 @@ import {
 } from "@/db/queries/weekly-reports";
 import { startOfWeek, subWeeks } from "date-fns";
 import { formatDate } from "@/lib/date";
+import { reportRateLimit } from "@/lib/api/rate-limit";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    const { success, retryAfterMs } = await reportRateLimit.check(user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: { code: "RATE_LIMIT_EXCEEDED", message: "Too many requests" } },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } },
+      );
+    }
     const body = GenerateWeeklyReportSchema.parse(await req.json());
 
     // Default to last week's Monday

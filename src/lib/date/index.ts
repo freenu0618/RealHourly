@@ -49,3 +49,28 @@ export function getCurrentDate(timezone: string = "Asia/Seoul"): Date {
   const formatted = now.toLocaleString("en-US", { timeZone: timezone });
   return new Date(formatted);
 }
+
+/**
+ * Parse a date string (yyyy-MM-dd) into a local Date object,
+ * avoiding timezone offset issues from `new Date(dateStr)`.
+ */
+export function parseLocalDate(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/**
+ * Format a Date to yyyy-MM-dd string in a specific timezone.
+ */
+export function toDateString(
+  date: Date = new Date(),
+  timezone: string = "Asia/Seoul",
+): string {
+  const local = getCurrentDate(timezone);
+  if (date !== undefined && date !== null && !(date instanceof Date && isNaN(date.getTime()))) {
+    const formatted = date.toLocaleString("en-US", { timeZone: timezone });
+    const tz = new Date(formatted);
+    return `${tz.getFullYear()}-${String(tz.getMonth() + 1).padStart(2, "0")}-${String(tz.getDate()).padStart(2, "0")}`;
+  }
+  return `${local.getFullYear()}-${String(local.getMonth() + 1).padStart(2, "0")}-${String(local.getDate()).padStart(2, "0")}`;
+}

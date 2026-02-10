@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ProfitabilityPreview } from "@/components/projects/ProfitabilityPreview";
 
 interface FormValues {
   name: string;
@@ -69,6 +70,23 @@ export function CreateProjectDialog() {
 
   const preset = watch("platformFeePreset");
   const taxEnabled = watch("taxEnabled");
+  const watchedFee = watch("expectedFee");
+  const watchedHours = watch("expectedHours");
+  const watchedCurrency = watch("currency");
+  const watchedTaxRate = watch("taxRate");
+  const watchedFixedCost = watch("fixedCostAmount");
+  const watchedCustomRate = watch("platformFeeRate");
+
+  const PRESET_RATES: Record<string, number> = {
+    none: 0,
+    upwork: 0.1,
+    fiverr: 0.2,
+    kmong: 0.2,
+    custom: watchedCustomRate || 0,
+  };
+  const effectivePlatformFeeRate = PRESET_RATES[preset] ?? 0;
+  const effectiveTaxRate = taxEnabled ? (watchedTaxRate || 0) / 100 : 0;
+  const showPreview = watchedFee > 0 && watchedHours > 0;
 
   async function onSubmit(values: FormValues) {
     try {
@@ -253,6 +271,17 @@ export function CreateProjectDialog() {
               className="rounded-xl"
             />
           </div>
+
+          {showPreview && (
+            <ProfitabilityPreview
+              expectedFee={watchedFee}
+              expectedHours={watchedHours}
+              platformFeeRate={effectivePlatformFeeRate}
+              taxRate={effectiveTaxRate}
+              fixedCostAmount={watchedFixedCost || 0}
+              currency={watchedCurrency}
+            />
+          )}
 
           <Button
             type="submit"

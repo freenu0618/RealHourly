@@ -31,6 +31,7 @@ export const projects = pgTable(
     platformFeeRate: numeric("platform_fee_rate").notNull().default("0"),
     taxRate: numeric("tax_rate").notNull().default("0"),
     progressPercent: integer("progress_percent").notNull().default(0),
+    /** @deprecated Use `status` instead. Will be removed in a future migration. */
     isActive: boolean("is_active").notNull().default(true),
     status: projectStatusEnum("status").notNull().default("active"),
     completedAt: timestamp("completed_at", { withTimezone: true }),
@@ -43,9 +44,7 @@ export const projects = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (table) => [
-    index("idx_projects_user_active")
-      .on(table.userId, table.isActive)
-      .where(sql`${table.deletedAt} IS NULL`),
+    // idx_projects_user_active removed — status index covers all use cases
     index("idx_projects_user_status")
       .on(table.userId, table.status)
       .where(sql`${table.deletedAt} IS NULL`),
