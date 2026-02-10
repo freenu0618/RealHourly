@@ -104,6 +104,9 @@
     "noProjects": "No projects yet",
     "createFirst": "Create your first project to start tracking",
     "clientName": "Client Name (optional)",
+    "selectClient": "Select client",
+    "noClient": "No client",
+    "startDate": "Start Date",
     "aliases": "Project Aliases (optional)",
     "aliasesPlaceholder": "Comma separated: ABC, rebrand",
     "aliasesHint": "Used for automatic AI matching when logging time",
@@ -199,7 +202,11 @@
     "amount": "Amount",
     "notes": "Notes",
     "notesOptional": "Notes (optional)",
-    "add": "Add"
+    "add": "Add",
+    "timeBudget": "Time Budget",
+    "duplicateProject": "Duplicate",
+    "duplicated": "Project duplicated",
+    "duplicateFailed": "Failed to duplicate project"
   },
   "invoice": {
     "title": "Generate Document",
@@ -278,6 +285,7 @@
     "durationEstimated": "Duration estimated: 60min",
     "categoryEstimated": "Category estimated",
     "futurePlanned": "Planned",
+    "preferredFallback": "Assigned to preferred project",
     "selectRequired": "Selection required",
     "categoryPlanning": "Planning",
     "categoryDesign": "Design",
@@ -744,6 +752,14 @@
     "noShares": "No share links yet",
     "noSharesDesc": "Create a share link to let your client view the work report"
   },
+  "budget": {
+    "timeBudget": "Time Budget",
+    "used": "Used",
+    "progress": "Progress",
+    "overBudget": "{hours}h over budget",
+    "paceWarning": "Work pace is ahead of progress",
+    "dashboardWarning": "{count} projects using 80%+ of time budget"
+  },
   "publicReport": {
     "title": "Work Report",
     "freelancer": "Freelancer",
@@ -765,5 +781,10 @@
     "ongoing": "Ongoing",
     "hoursUnit": "h",
     "minutesUnit": "m"
+  },
+  "profitabilityFeedback": {
+    "rateFeedback": "{project}: Real rate now {rate}/h",
+    "weeklyRate": "Weekly Avg Real Rate",
+    "weeklyHours": "{hours}h this week"
   }
 }

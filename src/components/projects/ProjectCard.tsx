@@ -117,6 +117,27 @@ export function ProjectCard({ project }: ProjectCardProps) {
             )}
           </div>
 
+          {/* Budget mini bar */}
+          {project.expectedHours != null && project.expectedHours > 0 && (() => {
+            const budgetRatio = (project.totalMinutes / 60) / project.expectedHours;
+            const budgetPct = Math.round(budgetRatio * 100);
+            const barColor = budgetRatio > 1 ? "bg-red-500" : budgetRatio >= 0.8 ? "bg-orange-500" : budgetRatio >= 0.6 ? "bg-amber-500" : "bg-green-500";
+            return (
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs font-medium text-muted-foreground">
+                  <span>{t("timeBudget")}</span>
+                  <span>{budgetPct}%</span>
+                </div>
+                <div className="h-1 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className={`h-full rounded-full transition-all ${barColor}`}
+                    style={{ width: `${Math.min(budgetPct, 100)}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Real Hourly Rate */}
           <div className={`flex items-center justify-between rounded-xl px-3.5 py-3 ${health.bg || "bg-muted/30"}`}>
             <div className="min-w-0">

@@ -144,6 +144,14 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
               {t("futurePlanned")}
             </Badge>
           )}
+          {entry.matchSource === "preferred" && (
+            <Badge
+              variant="outline"
+              className="rounded-full border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400"
+            >
+              {t("preferredFallback")}
+            </Badge>
+          )}
         </div>
 
         {/* Clarification question */}

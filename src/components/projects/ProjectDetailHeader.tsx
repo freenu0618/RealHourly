@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import { Pencil, Trash2, FileText } from "lucide-react";
+import { Pencil, Trash2, FileText, Copy } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ProjectStatusDropdown } from "./ProjectStatusDropdown";
+import { useRouter } from "@/i18n/navigation";
 
 /**
  * ProjectDetailHeader
@@ -50,6 +52,25 @@ export function ProjectDetailHeader({
   onInvoiceRequest,
 }: ProjectDetailHeaderProps) {
   const t = useTranslations("projects");
+  const router = useRouter();
+  const [duplicating, setDuplicating] = React.useState(false);
+
+  async function handleDuplicate() {
+    setDuplicating(true);
+    try {
+      const res = await fetch(`/api/projects/${projectId}/duplicate`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error();
+      const { data } = await res.json();
+      toast.success(t("duplicated"));
+      router.push(`/projects/${data.id}`);
+    } catch {
+      toast.error(t("duplicateFailed"));
+    } finally {
+      setDuplicating(false);
+    }
+  }
 
   return (
     <div className="mb-6">
@@ -86,6 +107,17 @@ export function ProjectDetailHeader({
           >
             <Trash2 className="h-3.5 w-3.5" />
             {t("deleteProject")}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDuplicate}
+            disabled={duplicating}
+            className="gap-1.5 rounded-xl text-xs"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            {duplicating ? t("saving") : t("duplicateProject")}
           </Button>
 
           <Button

@@ -11,6 +11,8 @@ import { DashboardKPICards } from "./DashboardKPICards";
 import { DashboardWeeklyChart } from "./DashboardWeeklyChart";
 import { DashboardRecentEntries } from "./DashboardRecentEntries";
 import { DashboardAlertBanner } from "./DashboardAlertBanner";
+import { DashboardBudgetWarning } from "./DashboardBudgetWarning";
+import { DashboardProfitabilityCard } from "./DashboardProfitabilityCard";
 
 function getGreeting(t: (key: string) => string): { emoji: string; text: string } {
   const hour = new Date().getHours();
@@ -61,6 +63,8 @@ export function DashboardClient() {
       </div>
 
       <DashboardKPICards metrics={metrics} t={t} />
+      <DashboardBudgetWarning projects={data.projects} />
+      <DashboardProfitabilityCard projects={data.projects} weeklyMinutes={data.weeklyMinutes} />
       <DashboardWeeklyChart weeklyMinutes={data.weeklyMinutes} t={t} />
       <DashboardRecentEntries entries={data.recentEntries} t={t} tTimeLog={tTimeLog} />
 

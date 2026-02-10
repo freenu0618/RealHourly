@@ -36,7 +36,9 @@ const statusEnum = z.enum(["active", "completed", "paused", "cancelled"]);
 
 export const UpdateProjectSchema = z.object({
   name: z.string().min(1).max(200).optional(),
+  clientId: z.string().uuid().nullable().optional(),
   aliases: z.array(z.string()).optional(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   expectedFee: z.number().min(0).optional(),
   expectedHours: z.number().min(0).optional(),
   currency: currencyEnum.optional(),

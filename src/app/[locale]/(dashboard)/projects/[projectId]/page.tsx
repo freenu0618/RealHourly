@@ -25,6 +25,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         name: project.name,
         aliases: project.aliases,
         clientId: project.clientId,
+        startDate: project.startDate,
         currency: project.currency,
         isActive: project.isActive,
         status: project.status,

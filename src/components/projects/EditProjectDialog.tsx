@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import {
@@ -20,26 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toPercent, toRate } from "@/lib/utils/rate-conversion";
 
-/**
- * EditProjectDialog
- *
- * @description Dialog for editing project details
- * @example
- * <EditProjectDialog
- *   open={true}
- *   onOpenChange={setOpen}
- *   project={projectData}
- *   onUpdated={() => refetch()}
- * />
- */
 interface EditProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   project: {
     id: string;
     name: string;
+    clientId: string | null;
     aliases: string[];
+    startDate: string | null;
     expectedFee: number | null;
     expectedHours: number | null;
     currency: string;
@@ -49,7 +40,13 @@ interface EditProjectDialogProps {
   onUpdated: () => void;
 }
 
+interface ClientDTO {
+  id: string;
+  name: string;
+}
+
 const CURRENCIES = ["USD", "KRW", "EUR", "GBP", "JPY"];
+const NO_CLIENT = "__none__";
 
 export function EditProjectDialog({
   open,
@@ -60,16 +57,32 @@ export function EditProjectDialog({
   const t = useTranslations("projects");
 
   const [name, setName] = useState(project.name);
-  const [expectedFee, setExpectedFee] = useState(project.expectedFee?.toString() || "");
-  const [expectedHours, setExpectedHours] = useState(project.expectedHours?.toString() || "");
+  const [clientId, setClientId] = useState(project.clientId ?? NO_CLIENT);
+  const [aliasesText, setAliasesText] = useState(project.aliases.join(", "));
+  const [startDate, setStartDate] = useState(project.startDate ?? "");
+  const [expectedFee, setExpectedFee] = useState(
+    project.expectedFee?.toString() || "",
+  );
+  const [expectedHours, setExpectedHours] = useState(
+    project.expectedHours?.toString() || "",
+  );
   const [currency, setCurrency] = useState(project.currency);
   const [platformFeeRate, setPlatformFeeRate] = useState(
-    project.platformFeeRate ? (project.platformFeeRate * 100).toString() : ""
+    project.platformFeeRate ? toPercent(project.platformFeeRate).toString() : "",
   );
   const [taxRate, setTaxRate] = useState(
-    project.taxRate ? (project.taxRate * 100).toString() : ""
+    project.taxRate ? toPercent(project.taxRate).toString() : "",
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [clients, setClients] = useState<ClientDTO[]>([]);
+
+  useEffect(() => {
+    if (!open) return;
+    fetch("/api/clients")
+      .then((r) => r.json())
+      .then((json) => setClients(json.data ?? []))
+      .catch(() => {});
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +92,11 @@ export function EditProjectDialog({
       return;
     }
 
+    const aliases = aliasesText
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
     setIsSaving(true);
     try {
       const response = await fetch(`/api/projects/${project.id}`, {
@@ -86,11 +104,16 @@ export function EditProjectDialog({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
+          clientId: clientId === NO_CLIENT ? null : clientId,
+          aliases,
+          startDate: startDate || null,
           expectedFee: expectedFee ? parseFloat(expectedFee) : null,
           expectedHours: expectedHours ? parseFloat(expectedHours) : null,
           currency,
-          platformFeeRate: platformFeeRate ? parseFloat(platformFeeRate) / 100 : null,
-          taxRate: taxRate ? parseFloat(taxRate) / 100 : null,
+          platformFeeRate: platformFeeRate
+            ? toRate(parseFloat(platformFeeRate))
+            : null,
+          taxRate: taxRate ? toRate(parseFloat(taxRate)) : null,
         }),
       });
 
@@ -111,7 +134,7 @@ export function EditProjectDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("editProject")}</DialogTitle>
         </DialogHeader>
@@ -123,6 +146,46 @@ export function EditProjectDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              className="rounded-xl"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="client">{t("client")}</Label>
+            <Select value={clientId} onValueChange={setClientId}>
+              <SelectTrigger id="client" className="rounded-xl">
+                <SelectValue placeholder={t("selectClient")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={NO_CLIENT}>{t("noClient")}</SelectItem>
+                {clients.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="aliases">{t("aliases")}</Label>
+            <Input
+              id="aliases"
+              value={aliasesText}
+              onChange={(e) => setAliasesText(e.target.value)}
+              placeholder={t("aliasesPlaceholder")}
+              className="rounded-xl"
+            />
+            <p className="text-xs text-muted-foreground">{t("aliasesHint")}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="startDate">{t("startDate")}</Label>
+            <Input
+              id="startDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
               className="rounded-xl"
             />
           </div>
@@ -173,7 +236,9 @@ export function EditProjectDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="platformFeeRate">{t("platformFeeRate")} (%)</Label>
+              <Label htmlFor="platformFeeRate">
+                {t("platformFeeRate")} (%)
+              </Label>
               <Input
                 id="platformFeeRate"
                 type="number"

@@ -4,6 +4,7 @@ import {
   BLOCKING_ISSUES,
   type IssueCode,
   type LLMParseResponse,
+  type MatchSource,
   type ParsedEntry,
   type ParsedResponse,
   type ProjectForMatching,
@@ -79,6 +80,7 @@ export function normalizeEntries(
   raw: LLMParseResponse,
   activeProjects: ProjectForMatching[],
   userTimezone: string,
+  preferredProjectId?: string,
 ): ParsedResponse {
   const entries: ParsedEntry[] = raw.entries.map((llmEntry) => {
     const issues: IssueCode[] = [];
@@ -87,13 +89,19 @@ export function normalizeEntries(
     // 1. Project matching
     const match = matchProject(llmEntry.project_name_raw, activeProjects);
     let matchedProjectId = match.projectId;
-    let matchSource = match.source;
+    let matchSource: MatchSource = match.source;
 
     if (match.candidates === 0) {
-      issues.push("PROJECT_UNMATCHED");
-      clarificationQuestion = "프로젝트를 선택해주세요";
-      matchedProjectId = null;
-      matchSource = "none";
+      // No match found — try preferred project fallback
+      if (preferredProjectId && activeProjects.some((p) => p.id === preferredProjectId)) {
+        matchedProjectId = preferredProjectId;
+        matchSource = "preferred";
+      } else {
+        issues.push("PROJECT_UNMATCHED");
+        clarificationQuestion = "프로젝트를 선택해주세요";
+        matchedProjectId = null;
+        matchSource = "none";
+      }
     } else if (match.candidates >= 2) {
       issues.push("PROJECT_AMBIGUOUS");
       clarificationQuestion = "여러 프로젝트가 매칭되었습니다. 올바른 프로젝트를 선택해주세요";

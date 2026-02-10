@@ -14,7 +14,7 @@ export type Category = (typeof CATEGORIES)[number];
 
 export type Intent = "done" | "planned";
 
-export type MatchSource = "alias" | "name" | "client" | "none";
+export type MatchSource = "alias" | "name" | "client" | "preferred" | "none";
 
 export type IssueCode =
   | "PROJECT_UNMATCHED"

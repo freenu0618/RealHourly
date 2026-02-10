@@ -36,6 +36,7 @@ export async function POST(req: Request) {
       llmResponse,
       activeProjects,
       body.userTimezone,
+      body.preferredProjectId,
     );
 
     return NextResponse.json({ data });

@@ -104,6 +104,9 @@
     "noProjects": "프로젝트가 없습니다",
     "createFirst": "첫 프로젝트를 생성하여 추적을 시작하세요",
     "clientName": "클라이언트명 (선택)",
+    "selectClient": "클라이언트 선택",
+    "noClient": "클라이언트 없음",
+    "startDate": "시작일",
     "aliases": "프로젝트 별칭 (선택)",
     "aliasesPlaceholder": "쉼표로 구분: ABC, 리브랜딩",
     "aliasesHint": "AI 파싱 시 프로젝트 자동 매칭에 사용됩니다",
@@ -199,7 +202,11 @@
     "amount": "금액",
     "notes": "메모",
     "notesOptional": "메모 (선택)",
-    "add": "추가"
+    "add": "추가",
+    "timeBudget": "시간 예산",
+    "duplicateProject": "복제",
+    "duplicated": "프로젝트가 복제됐어요",
+    "duplicateFailed": "프로젝트 복제에 실패했어요"
   },
   "invoice": {
     "title": "문서 생성",
@@ -278,6 +285,7 @@
     "durationEstimated": "시간 추정됨: 60분",
     "categoryEstimated": "카테고리 추정됨",
     "futurePlanned": "예정",
+    "preferredFallback": "기본 프로젝트로 배정됨",
     "selectRequired": "필수 선택",
     "categoryPlanning": "기획",
     "categoryDesign": "디자인",
@@ -744,6 +752,14 @@
     "noShares": "아직 공유 링크가 없어요",
     "noSharesDesc": "공유 링크를 생성해서 클라이언트가 작업 리포트를 볼 수 있게 해보세요"
   },
+  "budget": {
+    "timeBudget": "시간 예산",
+    "used": "사용",
+    "progress": "진행률",
+    "overBudget": "예산 초과 {hours}시간",
+    "paceWarning": "작업 속도가 진행률보다 빠릅니다",
+    "dashboardWarning": "{count}개 프로젝트가 시간 예산 80% 이상 사용 중"
+  },
   "publicReport": {
     "title": "작업 리포트",
     "freelancer": "프리랜서",
@@ -765,5 +781,10 @@
     "ongoing": "진행중",
     "hoursUnit": "시간",
     "minutesUnit": "분"
+  },
+  "profitabilityFeedback": {
+    "rateFeedback": "{project}: 현재 실제 시급 {rate}/h",
+    "weeklyRate": "주간 평균 실제 시급",
+    "weeklyHours": "이번 주 {hours}시간 작업"
   }
 }

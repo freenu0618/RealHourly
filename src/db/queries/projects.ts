@@ -81,7 +81,9 @@ export async function updateProject(
 ) {
   const setData: Record<string, unknown> = { updatedAt: new Date() };
   if (data.name !== undefined) setData.name = data.name;
+  if (data.clientId !== undefined) setData.clientId = data.clientId;
   if (data.aliases !== undefined) setData.aliases = data.aliases;
+  if (data.startDate !== undefined) setData.startDate = data.startDate;
   if (data.expectedFee !== undefined)
     setData.expectedFee = String(data.expectedFee);
   if (data.expectedHours !== undefined)

@@ -6,6 +6,14 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useDraftStore } from "@/store/use-draft-store";
+import { formatCurrency } from "@/lib/money/currency";
+
+interface ProjectFeedback {
+  projectName: string;
+  realHourly: number | null;
+  currency: string;
+  budgetUsedPercent: number | null;
+}
 
 interface SaveAllButtonProps {
   onSaved: () => void;
@@ -13,6 +21,7 @@ interface SaveAllButtonProps {
 
 export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
   const t = useTranslations("timeLog");
+  const tFeedback = useTranslations("profitabilityFeedback");
   const { entries, canSaveAll, clearAll } = useDraftStore();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -47,6 +56,19 @@ export function SaveAllButton({ onSaved }: SaveAllButtonProps) {
       toast.success(t("saved", { count: data.inserted }));
       if (plannedCount > 0) {
         toast.info(t("savedPlanned", { count: plannedCount }));
+      }
+
+      // Show profitability feedback toast
+      if (data.feedback && Array.isArray(data.feedback)) {
+        for (const fb of data.feedback as ProjectFeedback[]) {
+          if (fb.realHourly !== null) {
+            const rateStr = formatCurrency(fb.realHourly, fb.currency);
+            toast.info(
+              tFeedback("rateFeedback", { project: fb.projectName, rate: rateStr }),
+              { duration: 5000 },
+            );
+          }
+        }
       }
 
       setSaved(true);
