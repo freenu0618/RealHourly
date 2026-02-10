@@ -1,4 +1,4 @@
-import { eq, and, isNull, or, sql } from "drizzle-orm";
+import { eq, and, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { projects, clients, costEntries } from "@/db/schema";
 import { projectToDTO } from "./dto";
@@ -10,10 +10,12 @@ import {
 
 export async function getProjectsByUserId(
   userId: string,
-  opts?: { active?: boolean },
+  opts?: { active?: boolean; status?: string },
 ) {
   const conditions = [eq(projects.userId, userId), isNull(projects.deletedAt)];
-  if (opts?.active !== undefined) {
+  if (opts?.status) {
+    conditions.push(sql`${projects.status} = ${opts.status}`);
+  } else if (opts?.active !== undefined) {
     conditions.push(eq(projects.isActive, opts.active));
   }
   const rows = await db
@@ -94,6 +96,25 @@ export async function updateProject(
     setData.progressPercent = data.progressPercent;
   if (data.isActive !== undefined) setData.isActive = data.isActive;
 
+  // Handle status transitions
+  if (data.status !== undefined) {
+    setData.status = data.status;
+    if (data.status === "completed") {
+      setData.progressPercent = 100;
+      setData.completedAt = new Date();
+      setData.isActive = false;
+    } else if (data.status === "active") {
+      setData.completedAt = null;
+      setData.isActive = true;
+    } else {
+      // paused, cancelled
+      setData.isActive = false;
+      if (data.status === "cancelled") {
+        setData.completedAt = new Date();
+      }
+    }
+  }
+
   const [row] = await db
     .update(projects)
     .set(setData)
@@ -142,7 +163,7 @@ export async function getActiveProjectsForMatching(
     .where(
       and(
         eq(projects.userId, userId),
-        eq(projects.isActive, true),
+        eq(projects.status, "active"),
         isNull(projects.deletedAt),
       ),
     )

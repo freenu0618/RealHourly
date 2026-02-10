@@ -49,7 +49,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     .where(
       and(
         eq(projects.userId, userId),
-        eq(projects.isActive, true),
+        eq(projects.status, "active"),
         isNull(projects.deletedAt),
       ),
     );

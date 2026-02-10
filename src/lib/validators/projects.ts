@@ -31,6 +31,8 @@ export const CreateProjectSchema = z.object({
   fixedCostType: z.enum(["tool", "misc"]).optional(),
 });
 
+const statusEnum = z.enum(["active", "completed", "paused", "cancelled"]);
+
 export const UpdateProjectSchema = z.object({
   name: z.string().min(1).max(200).optional(),
   aliases: z.array(z.string()).optional(),
@@ -41,6 +43,7 @@ export const UpdateProjectSchema = z.object({
   taxRate: z.number().min(0).max(1).optional(),
   progressPercent: z.number().int().min(0).max(100).optional(),
   isActive: z.boolean().optional(),
+  status: statusEnum.optional(),
 });
 
 export type CreateProjectInput = z.infer<typeof CreateProjectSchema>;

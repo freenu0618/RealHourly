@@ -11,16 +11,24 @@ export async function POST(req: Request) {
     const user = await requireUser();
     const body = SaveTimeSchema.parse(await req.json());
 
-    // Verify each project belongs to user
+    // Verify each project belongs to user and is active
     const userProjects = await getProjectsByUserId(user.id);
-    const userProjectIds = new Set(userProjects.map((p) => p.id));
+    const projectMap = new Map(userProjects.map((p) => [p.id, p]));
 
     for (const entry of body.entries) {
-      if (!userProjectIds.has(entry.projectId)) {
+      const project = projectMap.get(entry.projectId);
+      if (!project) {
         throw new ApiError(
           "FORBIDDEN",
           403,
           `Project ${entry.projectId} does not belong to user`,
+        );
+      }
+      if (project.status !== "active") {
+        throw new ApiError(
+          "BAD_REQUEST",
+          400,
+          `Cannot log time to ${project.status} project "${project.name}"`,
         );
       }
     }

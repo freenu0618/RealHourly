@@ -33,12 +33,21 @@ const MONTH_NAMES_EN = [
   "July", "August", "September", "October", "November", "December",
 ];
 
-function getHeatmapClass(hours: number): string {
-  if (hours === 0) return "";
-  if (hours < 2) return "bg-primary/10";
-  if (hours < 4) return "bg-primary/25";
-  if (hours < 6) return "bg-primary/40";
-  return "bg-primary/60";
+function getHeatmapClass(minutes: number): string {
+  if (minutes === 0) return "";
+  if (minutes < 60) return "bg-primary/10";
+  if (minutes < 120) return "bg-primary/20";
+  if (minutes < 240) return "bg-primary/30";
+  if (minutes < 360) return "bg-primary/40";
+  return "bg-primary/50";
+}
+
+function formatDuration(minutes: number): string {
+  if (minutes >= 60) {
+    const h = minutes / 60;
+    return `${h % 1 === 0 ? h : h.toFixed(1)}h`;
+  }
+  return `${minutes}m`;
 }
 
 export default function CalendarView({
@@ -51,6 +60,7 @@ export default function CalendarView({
 }: CalendarViewProps) {
   const t = useTranslations("history");
   const dayHeaders = locale === "ko" ? DAY_HEADERS_KO : DAY_HEADERS_EN;
+  const todayLabel = locale === "ko" ? "\uC624\uB298" : "Today";
 
   const monthDisplay = useMemo(() => {
     const year = currentMonth.getFullYear();
@@ -59,7 +69,7 @@ export default function CalendarView({
     return `${MONTH_NAMES_EN[month]} ${year}`;
   }, [currentMonth, locale]);
 
-  const entriesByDate = useMemo(() => {
+  const dailyMinutes = useMemo(() => {
     const map = new Map<string, number>();
     for (const e of entries) {
       map.set(e.date, (map.get(e.date) ?? 0) + e.minutes);
@@ -78,17 +88,17 @@ export default function CalendarView({
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
-    const days: { date: number | null; dateStr: string | null; isToday: boolean; hours: number }[] = [];
+    const days: { day: number | null; dateStr: string | null; isToday: boolean; minutes: number }[] = [];
     for (let i = 0; i < dow; i++) {
-      days.push({ date: null, dateStr: null, isToday: false, hours: 0 });
+      days.push({ day: null, dateStr: null, isToday: false, minutes: 0 });
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const minutes = entriesByDate.get(dateStr) ?? 0;
-      days.push({ date: d, dateStr, isToday: dateStr === todayStr, hours: minutes / 60 });
+      const minutes = dailyMinutes.get(dateStr) ?? 0;
+      days.push({ day: d, dateStr, isToday: dateStr === todayStr, minutes });
     }
     return days;
-  }, [currentMonth, entriesByDate]);
+  }, [currentMonth, dailyMinutes]);
 
   const handlePrev = () => {
     const d = new Date(currentMonth);
@@ -120,24 +130,43 @@ export default function CalendarView({
           </div>
         ))}
 
-        {calendarDays.map((day, i) => {
-          if (day.date === null) return <div key={`e-${i}`} className="aspect-square" />;
-          const isSelected = day.dateStr === selectedDate;
+        {calendarDays.map((cell, i) => {
+          if (cell.day === null) return <div key={`e-${i}`} className="min-h-[72px] md:min-h-[80px]" />;
+          const isSelected = cell.dateStr === selectedDate;
           return (
             <button
-              key={day.dateStr}
-              onClick={() => onDateSelect(isSelected ? null : day.dateStr)}
+              key={cell.dateStr}
+              onClick={() => onDateSelect(isSelected ? null : cell.dateStr)}
               className={cn(
-                "flex aspect-square flex-col items-center justify-center gap-0.5 rounded-xl border border-transparent p-1 transition-all",
-                "hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                getHeatmapClass(day.hours),
-                day.isToday && !isSelected && "ring-2 ring-primary",
-                isSelected && "bg-primary text-primary-foreground ring-2 ring-primary",
+                "flex min-h-[72px] flex-col items-center justify-start gap-1 rounded-xl border p-1.5 transition-all md:min-h-[80px] md:p-2",
+                "hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                getHeatmapClass(cell.minutes),
+                !cell.isToday && !isSelected && "border-border",
+                cell.isToday && !isSelected && "border-2 border-primary ring-2 ring-primary/20",
+                isSelected && "border-2 border-primary bg-primary/10 ring-2 ring-primary/30",
               )}
             >
-              <span className="text-sm font-medium">{day.date}</span>
-              {day.hours > 0 && (
-                <span className="text-[10px] opacity-90">{day.hours.toFixed(1)}h</span>
+              <div className="flex items-center gap-0.5">
+                <span className={cn(
+                  "text-sm font-medium",
+                  cell.isToday && "font-bold text-primary",
+                  isSelected && "text-primary",
+                )}>
+                  {cell.day}
+                </span>
+                {cell.isToday && (
+                  <span className="text-[9px] font-semibold text-primary">{todayLabel}</span>
+                )}
+              </div>
+              {cell.minutes > 0 && (
+                <span className={cn(
+                  "text-[10px] font-medium rounded-full px-1.5 py-0.5",
+                  isSelected
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-primary/20 text-primary",
+                )}>
+                  {formatDuration(cell.minutes)}
+                </span>
               )}
             </button>
           );

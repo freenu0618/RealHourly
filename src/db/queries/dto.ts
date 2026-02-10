@@ -36,7 +36,9 @@ export function projectToDTO(row: Row) {
     platformFeeRate: toNumber(row.platformFeeRate),
     taxRate: toNumber(row.taxRate),
     progressPercent: row.progressPercent as number,
-    isActive: row.isActive as boolean,
+    status: (row.status as string) ?? "active",
+    completedAt: toISOString(row.completedAt),
+    isActive: (row.status as string) === "active",
     createdAt: toISOString(row.createdAt),
     updatedAt: toISOString(row.updatedAt),
   };

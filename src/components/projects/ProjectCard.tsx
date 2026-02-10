@@ -11,6 +11,7 @@ interface ProjectCardProps {
     name: string;
     currency: string;
     isActive: boolean;
+    status: string;
     progressPercent: number;
     expectedFee: number | null;
     expectedHours: number | null;
@@ -21,11 +22,13 @@ interface ProjectCardProps {
   };
 }
 
-function getStatusBadge(progress: number, isActive: boolean) {
-  if (!isActive) return { emoji: "\uD83D\uDCA4", label: "Archived", color: "text-muted-foreground bg-muted" };
-  if (progress >= 80) return { emoji: "\uD83C\uDF3F", label: "Almost Done", color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
-  if (progress >= 40) return { emoji: "\uD83D\uDCA1", label: "In Progress", color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
-  return { emoji: "\uD83C\uDF31", label: "Getting Started", color: "text-primary bg-primary/10" };
+function getStatusBadge(status: string, progress: number, t: (key: string) => string) {
+  if (status === "completed") return { label: t("statusCompleted"), color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
+  if (status === "paused") return { label: t("statusPaused"), color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
+  if (status === "cancelled") return { label: t("statusCancelled"), color: "text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/30" };
+  if (progress >= 80) return { label: "Almost Done", color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
+  if (progress >= 40) return { label: "In Progress", color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
+  return { label: t("statusActive"), color: "text-primary bg-primary/10" };
 }
 
 function getRateHealth(realHourly: number | null, currency: string) {
@@ -53,7 +56,7 @@ function getRateHealth(realHourly: number | null, currency: string) {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("projects");
-  const status = getStatusBadge(project.progressPercent, project.isActive);
+  const status = getStatusBadge(project.status ?? (project.isActive ? "active" : "paused"), project.progressPercent, t);
   const health = getRateHealth(project.realHourly, project.currency);
 
   return (
@@ -72,7 +75,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               )}
             </div>
             <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${status.color}`}>
-              {status.emoji} {status.label}
+              {status.label}
             </span>
           </div>
         </CardHeader>

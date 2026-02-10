@@ -11,9 +11,13 @@ export async function GET(req: Request) {
   try {
     const user = await requireUser();
     const { searchParams } = new URL(req.url);
+    const statusParam = searchParams.get("status");
     const activeParam = searchParams.get("active");
-    const opts =
-      activeParam !== null ? { active: activeParam === "true" } : undefined;
+    const opts = statusParam
+      ? { status: statusParam }
+      : activeParam !== null
+        ? { active: activeParam === "true" }
+        : undefined;
     const baseProjects = await getProjectsByUserId(user.id, opts);
 
     if (baseProjects.length === 0) {

@@ -41,3 +41,10 @@ export const messageToneEnum = pgEnum("message_tone", [
   "neutral",
   "firm",
 ]);
+
+export const projectStatusEnum = pgEnum("project_status", [
+  "active",
+  "completed",
+  "paused",
+  "cancelled",
+]);

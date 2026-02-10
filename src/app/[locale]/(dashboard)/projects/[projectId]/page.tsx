@@ -23,12 +23,16 @@ export default async function ProjectDetailPage({ params }: Props) {
       projectId={projectId}
       project={{
         name: project.name,
+        aliases: project.aliases,
         clientId: project.clientId,
         currency: project.currency,
         isActive: project.isActive,
+        status: project.status,
         progressPercent: project.progressPercent,
         expectedFee: project.expectedFee,
         expectedHours: project.expectedHours,
+        platformFeeRate: project.platformFeeRate,
+        taxRate: project.taxRate,
       }}
     />
   );
