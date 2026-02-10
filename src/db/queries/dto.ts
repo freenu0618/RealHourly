@@ -1,3 +1,5 @@
+import { getBaseUrl } from "@/lib/utils/get-base-url";
+
 type Row = Record<string, unknown>;
 
 function toISOString(val: unknown): string | null {
@@ -99,7 +101,7 @@ export function generatedMessageToDTO(row: Row) {
   };
 }
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+const SITE_URL = getBaseUrl();
 
 export function projectShareToDTO(row: Row) {
   const token = row.shareToken as string;
