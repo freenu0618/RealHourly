@@ -276,7 +276,7 @@ export function PublicReportClient({
           <p className="text-xs text-gray-400">
             Powered by{" "}
             <a
-              href="https://realhourly.ai"
+              href={process.env.NEXT_PUBLIC_SITE_URL || "/"}
               className="font-medium text-primary hover:underline"
               target="_blank"
               rel="noopener noreferrer"
@@ -318,7 +318,7 @@ function ErrorPage({ code }: { code: ErrorCode }) {
         <h1 className="text-2xl font-bold text-gray-800">{msg.title}</h1>
         <p className="text-gray-500 max-w-sm">{msg.desc}</p>
         <a
-          href="https://realhourly.ai"
+          href={process.env.NEXT_PUBLIC_SITE_URL || "/"}
           className="inline-block text-sm text-primary hover:underline mt-4"
         >
           Go to RealHourly

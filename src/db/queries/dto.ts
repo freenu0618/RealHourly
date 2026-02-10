@@ -99,7 +99,7 @@ export function generatedMessageToDTO(row: Row) {
   };
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://realhourly.ai";
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 
 export function projectShareToDTO(row: Row) {
   const token = row.shareToken as string;
