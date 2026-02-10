@@ -2,17 +2,22 @@
 
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { useDashboardData } from "./use-dashboard-data";
 import { computeMetrics } from "./types";
 import { DashboardKPICards } from "./DashboardKPICards";
-import { DashboardWeeklyChart } from "./DashboardWeeklyChart";
 import { DashboardRecentEntries } from "./DashboardRecentEntries";
 import { DashboardAlertBanner } from "./DashboardAlertBanner";
 import { DashboardBudgetWarning } from "./DashboardBudgetWarning";
 import { DashboardProfitabilityCard } from "./DashboardProfitabilityCard";
+
+const DashboardWeeklyChart = dynamic(
+  () => import("./DashboardWeeklyChart").then((m) => ({ default: m.DashboardWeeklyChart })),
+  { ssr: false, loading: () => <Skeleton className="h-[220px] rounded-[20px]" /> },
+);
 
 function getGreeting(t: (key: string) => string): { emoji: string; text: string } {
   const hour = new Date().getHours();

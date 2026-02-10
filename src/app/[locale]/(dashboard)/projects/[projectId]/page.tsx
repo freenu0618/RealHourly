@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { ProjectDetailClient } from "@/components/projects/ProjectDetailClient";
 import { getUser } from "@/lib/auth/server";
 import { getProjectById } from "@/db/queries/projects";
+import { getProjectMetrics } from "@/lib/metrics/get-project-metrics";
 
 type Props = {
   params: Promise<{ locale: string; projectId: string }>;
@@ -15,7 +16,12 @@ export default async function ProjectDetailPage({ params }: Props) {
   const user = await getUser();
   if (!user) notFound();
 
-  const project = await getProjectById(projectId, user.id);
+  // Parallel fetch: project data + metrics (eliminates client waterfall)
+  const [project, metricsResult] = await Promise.all([
+    getProjectById(projectId, user.id),
+    getProjectMetrics(projectId, user.id).catch(() => null),
+  ]);
+
   if (!project) notFound();
 
   return (
@@ -35,6 +41,8 @@ export default async function ProjectDetailPage({ params }: Props) {
         platformFeeRate: project.platformFeeRate,
         taxRate: project.taxRate,
       }}
+      initialMetrics={metricsResult?.metrics ?? null}
+      initialAlert={metricsResult?.pendingAlert ?? null}
     />
   );
 }

@@ -3,14 +3,27 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { ComparisonData } from "@/db/queries/analytics";
-import { HourlyRankingChart } from "./HourlyRankingChart";
-import { RevenueTimeScatter } from "./RevenueTimeScatter";
-import { CategoryStackedBar } from "./CategoryStackedBar";
 import { ClientSummaryCards } from "./ClientSummaryCards";
 import { InsightCards } from "./InsightCards";
+
+const ChartSkeleton = () => <Skeleton className="h-[260px] w-full rounded-xl" />;
+const HourlyRankingChart = dynamic(
+  () => import("./HourlyRankingChart").then((m) => ({ default: m.HourlyRankingChart })),
+  { ssr: false, loading: ChartSkeleton },
+);
+const RevenueTimeScatter = dynamic(
+  () => import("./RevenueTimeScatter").then((m) => ({ default: m.RevenueTimeScatter })),
+  { ssr: false, loading: ChartSkeleton },
+);
+const CategoryStackedBar = dynamic(
+  () => import("./CategoryStackedBar").then((m) => ({ default: m.CategoryStackedBar })),
+  { ssr: false, loading: ChartSkeleton },
+);
 
 export function AnalyticsClient() {
   const t = useTranslations("analytics");

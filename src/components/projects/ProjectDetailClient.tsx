@@ -3,12 +3,21 @@
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import dynamic from "next/dynamic";
 import { Lightbulb } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { HourlyRateBar } from "@/components/charts/HourlyRateBar";
-import { CostBreakdownPie } from "@/components/charts/CostBreakdownPie";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ScopeAlertModal } from "@/components/alerts/ScopeAlertModal";
+
+const HourlyRateBar = dynamic(
+  () => import("@/components/charts/HourlyRateBar").then((m) => ({ default: m.HourlyRateBar })),
+  { ssr: false, loading: () => <Skeleton className="h-[200px] w-full rounded-xl" /> },
+);
+const CostBreakdownPie = dynamic(
+  () => import("@/components/charts/CostBreakdownPie").then((m) => ({ default: m.CostBreakdownPie })),
+  { ssr: false, loading: () => <Skeleton className="h-[200px] w-full rounded-xl" /> },
+);
 import { formatCurrency } from "@/lib/money/currency";
 import type { ProjectMetricsDTO } from "@/lib/metrics/get-project-metrics";
 import { InvoiceDialog } from "./InvoiceDialog";
@@ -45,26 +54,30 @@ interface ProjectDetailClientProps {
     platformFeeRate: number | null;
     taxRate: number | null;
   };
+  initialMetrics?: ProjectMetricsDTO | null;
+  initialAlert?: AlertDTO | null;
 }
 
 export function ProjectDetailClient({
   projectId,
   project: initialProject,
+  initialMetrics = null,
+  initialAlert = null,
 }: ProjectDetailClientProps) {
   const t = useTranslations("metrics");
   const tAlerts = useTranslations("alerts");
   const router = useRouter();
 
   const [project, setProject] = useState(initialProject);
-  const [metrics, setMetrics] = useState<ProjectMetricsDTO | null>(null);
-  const [pendingAlert, setPendingAlert] = useState<AlertDTO | null>(null);
-  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [metrics, setMetrics] = useState<ProjectMetricsDTO | null>(initialMetrics);
+  const [pendingAlert, setPendingAlert] = useState<AlertDTO | null>(initialAlert);
+  const [showAlertModal, setShowAlertModal] = useState(!!initialAlert);
   const [invoiceType, setInvoiceType] = useState<"estimate" | "invoice">("estimate");
   const [showInvoice, setShowInvoice] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialMetrics);
 
   const isEditable = project.status === "active" || project.status === "paused";
 
@@ -85,7 +98,8 @@ export function ProjectDetailClient({
     }
   }, [projectId]);
 
-  useEffect(() => { fetchMetrics(); }, [fetchMetrics]);
+  // Skip initial fetch if metrics were provided by the server
+  useEffect(() => { if (!initialMetrics) fetchMetrics(); }, [fetchMetrics, initialMetrics]);
 
   const handleStatusChanged = (newStatus: string) => {
     setProject((p) => ({ ...p, status: newStatus }));
