@@ -46,16 +46,28 @@ export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
       },
     });
 
+  const CATEGORY_EMOJI: Record<Category, string> = {
+    planning: "\uD83D\uDCCB",
+    design: "\uD83C\uDFA8",
+    development: "\uD83D\uDCBB",
+    meeting: "\uD83E\uDD1D",
+    revision: "\uD83D\uDD04",
+    admin: "\uD83D\uDCC2",
+    email: "\uD83D\uDCE7",
+    research: "\uD83D\uDD0D",
+    other: "\uD83D\uDCE6",
+  };
+
   const categoryLabelMap: Record<Category, string> = {
-    planning: t("categoryPlanning"),
-    design: t("categoryDesign"),
-    development: t("categoryDevelopment"),
-    meeting: t("categoryMeeting"),
-    revision: t("categoryRevision"),
-    admin: t("categoryAdmin"),
-    email: t("categoryEmail"),
-    research: t("categoryResearch"),
-    other: t("categoryOther"),
+    planning: `${CATEGORY_EMOJI.planning} ${t("categoryPlanning")}`,
+    design: `${CATEGORY_EMOJI.design} ${t("categoryDesign")}`,
+    development: `${CATEGORY_EMOJI.development} ${t("categoryDevelopment")}`,
+    meeting: `${CATEGORY_EMOJI.meeting} ${t("categoryMeeting")}`,
+    revision: `${CATEGORY_EMOJI.revision} ${t("categoryRevision")}`,
+    admin: `${CATEGORY_EMOJI.admin} ${t("categoryAdmin")}`,
+    email: `${CATEGORY_EMOJI.email} ${t("categoryEmail")}`,
+    research: `${CATEGORY_EMOJI.research} ${t("categoryResearch")}`,
+    other: `${CATEGORY_EMOJI.other} ${t("categoryOther")}`,
   };
 
   async function onSubmit(values: ManualEntryValues) {

@@ -155,7 +155,7 @@ export default function CalendarView({
                   {cell.day}
                 </span>
                 {cell.isToday && (
-                  <span className="text-[9px] font-semibold text-primary">{todayLabel}</span>
+                  <span className="rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold text-primary-foreground">{todayLabel}</span>
                 )}
               </div>
               {cell.minutes > 0 && (

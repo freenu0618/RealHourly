@@ -7,6 +7,7 @@ import { Pencil, Trash2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { CATEGORY_EMOJI, getCategoryEmoji } from "@/lib/utils/category-emoji";
 
 interface HistoryEntry {
   id: string;
@@ -35,18 +36,6 @@ interface HistoryListProps {
   onDelete: (entryId: string) => Promise<void>;
   locale: string;
 }
-
-const CATEGORY_EMOJI: Record<string, string> = {
-  planning: "📋",
-  design: "🎨",
-  development: "💻",
-  meeting: "🤝",
-  revision: "🔄",
-  admin: "📁",
-  email: "📧",
-  research: "🔍",
-  other: "📌",
-};
 
 /**
  * HistoryList
@@ -272,7 +261,7 @@ function HistoryEntryCard({
             )}
           </div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm">{CATEGORY_EMOJI[entry.category]}</span>
+            <span className="text-sm">{getCategoryEmoji(entry.category)}</span>
             <span className="text-xs text-muted-foreground">
               {categoryLabel}
             </span>

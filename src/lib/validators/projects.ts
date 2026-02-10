@@ -18,6 +18,7 @@ export const PRESET_RATES: Record<string, number> = {
 
 export const CreateProjectSchema = z.object({
   clientId: z.string().uuid().nullable().optional().default(null),
+  clientName: z.string().max(200).optional(),
   name: z.string().min(1).max(200),
   aliases: z.array(z.string()).optional().default([]),
   expectedFee: z.number().min(0),

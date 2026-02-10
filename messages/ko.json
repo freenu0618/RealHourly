@@ -103,8 +103,10 @@
     "archived": "보관됨",
     "noProjects": "프로젝트가 없습니다",
     "createFirst": "첫 프로젝트를 생성하여 추적을 시작하세요",
-    "aliases": "별칭",
-    "aliasesHint": "AI 매칭을 위한 대체 이름",
+    "clientName": "클라이언트명 (선택)",
+    "aliases": "프로젝트 별칭 (선택)",
+    "aliasesPlaceholder": "쉼표로 구분: ABC, 리브랜딩",
+    "aliasesHint": "AI 파싱 시 프로젝트 자동 매칭에 사용됩니다",
     "platformFee": "플랫폼 수수료",
     "monthlyFixedCost": "월 고정 비용",
     "details": "프로젝트 상세",
@@ -125,6 +127,8 @@
     "statusCompleted": "완료",
     "statusPaused": "일시정지",
     "statusCancelled": "취소",
+    "statusAlmostDone": "거의 완료",
+    "statusInProgress": "진행 중",
     "completeProject": "프로젝트를 완료할까요?",
     "completeSummary": "최종 요약",
     "completeConfirm": "완료하기",
@@ -301,7 +305,14 @@
     "voiceNetworkError": "연결 문제가 있어요. 잠시 후 다시 시도해주세요",
     "voiceMaxSoon": "곧 최대 시간이에요",
     "voiceStop": "녹음 중지",
-    "voiceNoSpeech": "음성이 감지되지 않았어요"
+    "voiceNoSpeech": "음성이 감지되지 않았어요",
+    "progressHintTitle": "진행률도 업데이트할까요?",
+    "progressHintDesc": "AI가 \"{reason}\"을(를) 감지했어요.",
+    "progressUpdate": "업데이트",
+    "progressLater": "나중에",
+    "progressUpdated": "진행률을 {percent}%로 업데이트했어요",
+    "progressUpdateFailed": "진행률 업데이트에 실패했어요",
+    "selectProjectFirst": "먼저 프로젝트를 선택해주세요"
   },
   "history": {
     "title": "시간 기록 히스토리",
@@ -503,7 +514,9 @@
     "weekend": "주말",
     "hours": "시간",
     "minutes": "분",
-    "scopeAlerts": "주의가 필요한 프로젝트"
+    "scopeAlerts": "주의가 필요한 프로젝트",
+    "showMore": "더 보기",
+    "noEntries": "기록 없음"
   },
   "landing": {
     "nav": {

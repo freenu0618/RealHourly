@@ -57,9 +57,17 @@ export interface ParseSummary {
   blocking: number;
 }
 
+export interface ParsedProgressHint {
+  detected: boolean;
+  suggestedProgress: number | null;
+  reason: string;
+  projectNameRaw: string | null;
+}
+
 export interface ParsedResponse {
   entries: ParsedEntry[];
   parseSummary: ParseSummary;
+  progressHint: ParsedProgressHint | null;
 }
 
 // ── LLM raw output types ──
@@ -76,8 +84,16 @@ export interface LLMEntry {
   intent: Intent;
 }
 
+export interface ProgressHint {
+  detected: boolean;
+  suggested_progress: number | null;
+  reason: string;
+  project_name_raw: string | null;
+}
+
 export interface LLMParseResponse {
   entries: LLMEntry[];
+  progress_hint: ProgressHint | null;
 }
 
 // ── Project matching helper type ──

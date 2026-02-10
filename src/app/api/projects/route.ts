@@ -113,6 +113,35 @@ export async function POST(req: Request) {
   try {
     const user = await requireUser();
     const body = CreateProjectSchema.parse(await req.json());
+
+    // If clientName is provided but no clientId, find or create client
+    if (body.clientName && !body.clientId) {
+      const trimmed = body.clientName.trim();
+      if (trimmed) {
+        const existing = await db
+          .select({ id: clients.id })
+          .from(clients)
+          .where(
+            and(
+              eq(clients.userId, user.id),
+              sql`LOWER(${clients.name}) = LOWER(${trimmed})`,
+              isNull(clients.deletedAt),
+            ),
+          )
+          .limit(1);
+
+        if (existing.length > 0) {
+          body.clientId = existing[0].id;
+        } else {
+          const [newClient] = await db
+            .insert(clients)
+            .values({ userId: user.id, name: trimmed })
+            .returning({ id: clients.id });
+          body.clientId = newClient.id;
+        }
+      }
+    }
+
     const data = await createProject(user.id, body);
     return NextResponse.json({ data }, { status: 201 });
   } catch (error) {

@@ -149,8 +149,19 @@ export function normalizeEntries(
 
   const blocking = entries.filter((e) => e.needsUserAction).length;
 
+  // Convert LLM progress_hint (snake_case) to camelCase
+  const progressHint = raw.progress_hint?.detected
+    ? {
+        detected: true,
+        suggestedProgress: raw.progress_hint.suggested_progress,
+        reason: raw.progress_hint.reason,
+        projectNameRaw: raw.progress_hint.project_name_raw,
+      }
+    : null;
+
   return {
     entries,
     parseSummary: { total: entries.length, blocking },
+    progressHint,
   };
 }

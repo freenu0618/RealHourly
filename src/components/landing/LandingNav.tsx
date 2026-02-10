@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
-import { Menu, X } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function LandingNav() {
@@ -12,6 +13,7 @@ export function LandingNav() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -62,9 +64,18 @@ export function LandingNav() {
         <div className="hidden items-center gap-3 md:flex">
           <button
             type="button"
-            onClick={toggleLocale}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-muted-foreground hover:bg-muted"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Toggle theme"
           >
+            {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={toggleLocale}
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <Globe className="size-3.5" />
             {locale === "ko" ? "KR" : "EN"}
           </button>
           <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">
@@ -93,7 +104,12 @@ export function LandingNav() {
                 {link.label}
               </a>
             ))}
-            <button type="button" onClick={toggleLocale} className="text-left text-sm text-muted-foreground hover:text-foreground">
+            <button type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground">
+              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
+            <button type="button" onClick={toggleLocale} className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground">
+              <Globe className="size-4" />
               {locale === "ko" ? "English" : "한국어"}
             </button>
             <Link href="/login" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">

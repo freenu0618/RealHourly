@@ -57,5 +57,6 @@ export function mockParseTimeInput(_input: string): ParsedResponse {
   return {
     entries,
     parseSummary: { total: entries.length, blocking },
+    progressHint: null,
   };
 }

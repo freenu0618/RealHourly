@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { startOfWeek, subWeeks, addDays } from "date-fns";
 import { formatDate } from "@/lib/date";
+import { ChevronDown } from "lucide-react";
+
+const INITIAL_WEEKS = 8;
+const MAX_WEEKS = 20;
 
 interface ReportRow {
   id: string;
@@ -20,6 +24,7 @@ export function ReportsListClient() {
   const [reports, setReports] = useState<ReportRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchReports();
@@ -55,8 +60,7 @@ export function ReportsListClient() {
     }
   }
 
-  // Generate last 12 weeks
-  const weeks = Array.from({ length: 12 }, (_, i) => {
+  const weeks = Array.from({ length: MAX_WEEKS }, (_, i) => {
     const monday = startOfWeek(subWeeks(new Date(), i + 1), {
       weekStartsOn: 1,
     });
@@ -70,6 +74,7 @@ export function ReportsListClient() {
   });
 
   const reportMap = new Map(reports.map((r) => [r.weekStart, r]));
+  const visibleWeeks = showAll ? weeks : weeks.slice(0, INITIAL_WEEKS);
 
   if (loading) {
     return (
@@ -90,27 +95,36 @@ export function ReportsListClient() {
       </div>
 
       <div className="space-y-3">
-        {weeks.map((week) => {
+        {visibleWeeks.map((week) => {
           const report = reportMap.get(week.weekStart);
           const isGenerating = generating === week.weekStart;
+          const hasData = report && (report.data?.entryCount ?? 0) > 0;
 
           return (
             <div
               key={week.weekStart}
-              className="flex items-center justify-between rounded-[16px] border border-border/50 bg-card px-5 py-4"
+              className={`flex items-center justify-between rounded-[16px] border px-5 py-4 ${
+                hasData
+                  ? "border-border/50 bg-card"
+                  : "border-border/30 bg-muted/30"
+              }`}
             >
               <div className="flex items-center gap-3">
-                <span className="text-xl">{"📋"}</span>
+                <span className="text-xl">{hasData ? "\uD83D\uDCCB" : "\uD83D\uDCC4"}</span>
                 <div>
-                  <p className="text-sm font-medium">
+                  <p className={`text-sm font-medium ${!hasData ? "text-muted-foreground" : ""}`}>
                     {week.mondayDisplay} ~ {week.sundayDisplay}
                   </p>
-                  {report && (
+                  {hasData ? (
                     <p className="text-xs text-muted-foreground">
                       {Math.round(
                         ((report.data?.totalMinutes ?? 0) / 60) * 10,
                       ) / 10}
                       {t("hours")} | {t("entries", { count: String(report.data?.entryCount ?? 0) })}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground/60">
+                      {t("noEntries")}
                     </p>
                   )}
                 </div>
@@ -142,6 +156,20 @@ export function ReportsListClient() {
           );
         })}
       </div>
+
+      {!showAll && weeks.length > INITIAL_WEEKS && (
+        <div className="flex justify-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 rounded-xl text-xs text-muted-foreground"
+            onClick={() => setShowAll(true)}
+          >
+            <ChevronDown className="size-3.5" />
+            {t("showMore")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

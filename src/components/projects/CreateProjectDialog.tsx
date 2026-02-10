@@ -25,6 +25,8 @@ import {
 
 interface FormValues {
   name: string;
+  clientName: string;
+  aliasesText: string;
   expectedFee: number;
   expectedHours: number;
   currency: string;
@@ -52,13 +54,15 @@ export function CreateProjectDialog() {
     useForm<FormValues>({
       defaultValues: {
         name: "",
+        clientName: "",
+        aliasesText: "",
         expectedFee: 0,
         expectedHours: 0,
         currency: "USD",
         platformFeePreset: "none",
         platformFeeRate: 0,
         taxEnabled: true,
-        taxRate: 0.033,
+        taxRate: 3.3,
         fixedCostAmount: 0,
       },
     });
@@ -68,18 +72,25 @@ export function CreateProjectDialog() {
 
   async function onSubmit(values: FormValues) {
     try {
+      const aliases = values.aliasesText
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+
       const res = await fetch("/api/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: values.name,
+          clientName: values.clientName || undefined,
+          aliases: aliases.length > 0 ? aliases : undefined,
           expectedFee: values.expectedFee,
           expectedHours: values.expectedHours,
           currency: values.currency,
           platformFeePreset: values.platformFeePreset,
           platformFeeRate: values.platformFeeRate,
           taxEnabled: values.taxEnabled,
-          taxRate: values.taxRate,
+          taxRate: values.taxRate / 100,
           fixedCostAmount: values.fixedCostAmount > 0 ? values.fixedCostAmount : undefined,
           fixedCostType: values.fixedCostAmount > 0 ? "misc" : undefined,
         }),
@@ -117,6 +128,29 @@ export function CreateProjectDialog() {
               className="rounded-xl"
               placeholder="e.g. Website Redesign"
             />
+          </div>
+
+          {/* Client Name (optional) */}
+          <div className="space-y-1.5">
+            <Label>{t("clientName")}</Label>
+            <Input
+              {...register("clientName")}
+              className="rounded-xl"
+              placeholder="e.g. ABC Corp"
+            />
+          </div>
+
+          {/* Aliases (optional) */}
+          <div className="space-y-1.5">
+            <Label>{t("aliases")}</Label>
+            <Input
+              {...register("aliasesText")}
+              className="rounded-xl"
+              placeholder={t("aliasesPlaceholder")}
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("aliasesHint")}
+            </p>
           </div>
 
           {/* Fee + Hours + Currency */}
@@ -195,15 +229,17 @@ export function CreateProjectDialog() {
             />
             <Label htmlFor="taxEnabled">{t("taxEnabled")}</Label>
             {taxEnabled && (
-              <Input
-                type="number"
-                step="0.001"
-                min={0}
-                max={1}
-                placeholder="0.033 = 3.3%"
-                {...register("taxRate", { valueAsNumber: true })}
-                className="w-28 rounded-xl"
-              />
+              <div className="flex items-center gap-1">
+                <Input
+                  type="number"
+                  step="0.1"
+                  min={0}
+                  max={100}
+                  {...register("taxRate", { valueAsNumber: true })}
+                  className="w-20 rounded-xl"
+                />
+                <span className="text-sm text-muted-foreground">%</span>
+              </div>
             )}
           </div>
 

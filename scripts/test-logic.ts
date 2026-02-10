@@ -350,7 +350,7 @@ async function main() {
           duration_source: "explicit",
           category: "design",
           intent: "done",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );
@@ -370,7 +370,7 @@ async function main() {
           duration_source: "missing",
           category: "meeting",
           intent: "done",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );
@@ -391,7 +391,7 @@ async function main() {
           duration_source: "ambiguous",
           category: "development",
           intent: "done",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );
@@ -412,7 +412,7 @@ async function main() {
           duration_source: "explicit",
           category: "development",
           intent: "planned",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );
@@ -432,7 +432,7 @@ async function main() {
           duration_source: "explicit",
           category: "development",
           intent: "done",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );
@@ -453,7 +453,7 @@ async function main() {
           duration_source: "explicit",
           category: "design",
           intent: "done",
-        }] },
+        }], progress_hint: null },
         projects,
         "Asia/Seoul",
       );

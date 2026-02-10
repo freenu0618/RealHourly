@@ -11,6 +11,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/money/currency";
 import { useCountUp } from "@/lib/hooks/use-count-up";
+import { getCategoryEmoji } from "@/lib/utils/category-emoji";
 
 /* ── Types ── */
 
@@ -61,18 +63,7 @@ interface DashboardData {
   weeklyMinutes: { date: string; minutes: number }[];
 }
 
-/* ── Category emoji map ── */
-const CATEGORY_EMOJI: Record<string, string> = {
-  planning: "\uD83D\uDCCB",
-  design: "\uD83C\uDFA8",
-  development: "\uD83D\uDCBB",
-  meeting: "\uD83D\uDDE3\uFE0F",
-  revision: "\uD83D\uDD04",
-  admin: "\uD83D\uDCC2",
-  email: "\uD83D\uDCE7",
-  research: "\uD83D\uDD0D",
-  other: "\uD83D\uDCCC",
-};
+/* ── Category emoji (shared util) ── */
 
 /* ── Greeting helper ── */
 function getGreeting(t: (key: string) => string): { emoji: string; text: string } {
@@ -256,13 +247,22 @@ function WeeklySummary({
   const hours = Math.floor(totalWeeklyMinutes / 60);
   const minutes = totalWeeklyMinutes % 60;
 
-  // Format dates for display (day of week)
-  const chartData = weeklyMinutes.map((d) => {
-    const date = new Date(d.date + "T00:00:00");
+  // Build a map of existing data
+  const minutesMap = new Map(weeklyMinutes.map((d) => [d.date, d.minutes]));
+
+  // Generate all 7 days (today and 6 days back)
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const chartData = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - 6 + i);
+    const dateStr = date.toISOString().slice(0, 10);
     const dayName = date.toLocaleDateString(undefined, { weekday: "short" });
+    const minutes = minutesMap.get(dateStr) ?? 0;
     return {
       name: dayName,
-      hours: Math.round((d.minutes / 60) * 10) / 10,
+      hours: Math.round((minutes / 60) * 10) / 10,
+      isToday: dateStr === todayStr,
     };
   });
 
@@ -285,7 +285,7 @@ function WeeklySummary({
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={chartData} margin={{ left: 0, right: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E6DDD3" />
-              <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#8C7A6B" }} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#8C7A6B" }} interval={0} />
               <YAxis hide />
               <Tooltip
                 formatter={(value) => [`${value}h`, ""]}
@@ -295,7 +295,11 @@ function WeeklySummary({
                   backgroundColor: "#FFF8EE",
                 }}
               />
-              <Bar dataKey="hours" fill="#7EB5A6" radius={[6, 6, 0, 0]} barSize={28} />
+              <Bar dataKey="hours" radius={[6, 6, 0, 0]} barSize={28}>
+                {chartData.map((d, i) => (
+                  <Cell key={i} fill={d.isToday ? "#5A9E8F" : "#7EB5A6"} stroke={d.isToday ? "#3D7A6E" : "none"} strokeWidth={d.isToday ? 2 : 0} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -347,7 +351,7 @@ function RecentEntriesSection({
               key={entry.id}
               className="flex items-center gap-3 rounded-xl bg-muted/40 p-3 transition-colors hover:bg-muted/60"
             >
-              <span className="text-lg">{CATEGORY_EMOJI[entry.category] ?? "\uD83D\uDCCC"}</span>
+              <span className="text-lg">{getCategoryEmoji(entry.category)}</span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{entry.taskDescription || entry.projectName}</p>
                 <p className="text-xs text-muted-foreground">

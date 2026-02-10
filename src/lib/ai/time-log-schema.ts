@@ -65,8 +65,40 @@ export const timeLogJsonSchema = {
           additionalProperties: false,
         },
       },
+      progress_hint: {
+        type: ["object", "null"] as const,
+        description:
+          "If the user mentions project completion status (e.g. '완료', '끝남', '80%'), include a hint. null if not detected.",
+        properties: {
+          detected: {
+            type: "boolean" as const,
+            description: "Whether progress-related language was detected",
+          },
+          suggested_progress: {
+            type: ["integer", "null"] as const,
+            description: "Suggested progress 0-100. null if unclear.",
+          },
+          reason: {
+            type: "string" as const,
+            description:
+              "Brief reason for the suggestion (e.g. '사용자가 완료라고 언급')",
+          },
+          project_name_raw: {
+            type: ["string", "null"] as const,
+            description:
+              "The project name the progress refers to, if identifiable",
+          },
+        },
+        required: [
+          "detected",
+          "suggested_progress",
+          "reason",
+          "project_name_raw",
+        ],
+        additionalProperties: false,
+      },
     },
-    required: ["entries"],
+    required: ["entries", "progress_hint"],
     additionalProperties: false,
   },
 } as const;

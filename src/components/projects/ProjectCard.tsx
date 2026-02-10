@@ -26,8 +26,8 @@ function getStatusBadge(status: string, progress: number, t: (key: string) => st
   if (status === "completed") return { label: t("statusCompleted"), color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
   if (status === "paused") return { label: t("statusPaused"), color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
   if (status === "cancelled") return { label: t("statusCancelled"), color: "text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/30" };
-  if (progress >= 80) return { label: "Almost Done", color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
-  if (progress >= 40) return { label: "In Progress", color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
+  if (progress >= 80) return { label: t("statusAlmostDone"), color: "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" };
+  if (progress >= 40) return { label: t("statusInProgress"), color: "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30" };
   return { label: t("statusActive"), color: "text-primary bg-primary/10" };
 }
 

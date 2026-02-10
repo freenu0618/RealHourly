@@ -36,6 +36,14 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   const [preferredProjectId, setPreferredProjectId] = useState<string>("");
   const [showManual, setShowManual] = useState(false);
   const [showThinking, setShowThinking] = useState(false);
+  const [progressHint, setProgressHint] = useState<{
+    detected: boolean;
+    suggestedProgress: number | null;
+    reason: string;
+    projectNameRaw: string | null;
+  } | null>(null);
+  const [suggestedProgress, setSuggestedProgress] = useState(0);
+  const [showProgressHint, setShowProgressHint] = useState(false);
 
   const { entries, isLoading, setEntries, setLoading, setError } =
     useDraftStore();
@@ -119,6 +127,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
       await sleep(1000);
       setShowThinking(false);
       setEntries(data.entries);
+
+      // Check for progress hint
+      if (data.progressHint?.detected) {
+        setProgressHint(data.progressHint);
+        setSuggestedProgress(data.progressHint.suggestedProgress ?? 50);
+        setShowProgressHint(true);
+      }
     } catch {
       toast.error(t("parseFailed"));
       setError(t("parseFailed"));
@@ -134,9 +149,36 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
     textareaRef.current?.focus();
   }
 
+  async function handleUpdateProgress() {
+    if (!progressHint || suggestedProgress === null) return;
+    // Find the matched project from entries
+    const matchedEntry = entries.find((e) => e.matchedProjectId);
+    const projectId = matchedEntry?.matchedProjectId;
+    if (!projectId) {
+      toast.error(t("selectProjectFirst"));
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ progressPercent: suggestedProgress }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success(t("progressUpdated", { percent: String(suggestedProgress) }));
+      setShowProgressHint(false);
+      setProgressHint(null);
+    } catch {
+      toast.error(t("progressUpdateFailed"));
+    }
+  }
+
   function handleSaved() {
     setInput("");
     setPreferredProjectId("");
+    setShowProgressHint(false);
+    setProgressHint(null);
   }
 
   return (
@@ -228,6 +270,53 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
           isComplete={thinking.isComplete}
           completionText={thinking.completionText}
         />
+      )}
+
+      {/* Progress Hint */}
+      {showProgressHint && progressHint && !showThinking && (
+        <div className="rounded-[20px] border border-primary/20 bg-primary/5 p-5">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-base">{"\uD83D\uDCA1"}</span>
+            <span className="text-sm font-semibold">{t("progressHintTitle")}</span>
+          </div>
+          <p className="mb-4 text-xs text-muted-foreground">
+            {t("progressHintDesc", { reason: progressHint.reason })}
+          </p>
+          <div className="mb-4 flex items-center gap-3">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={suggestedProgress}
+              onChange={(e) => setSuggestedProgress(Number(e.target.value))}
+              className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-primary"
+            />
+            <span className="w-12 text-right text-sm font-bold text-primary">
+              {suggestedProgress}%
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              className="rounded-xl"
+              onClick={handleUpdateProgress}
+            >
+              {t("progressUpdate")}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="rounded-xl text-muted-foreground"
+              onClick={() => {
+                setShowProgressHint(false);
+                setProgressHint(null);
+              }}
+            >
+              {t("progressLater")}
+            </Button>
+          </div>
+        </div>
       )}
 
       {/* HITL Draft Cards */}

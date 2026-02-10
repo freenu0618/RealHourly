@@ -103,8 +103,10 @@
     "archived": "Archived",
     "noProjects": "No projects yet",
     "createFirst": "Create your first project to start tracking",
-    "aliases": "Aliases",
-    "aliasesHint": "Alternative names for AI matching",
+    "clientName": "Client Name (optional)",
+    "aliases": "Project Aliases (optional)",
+    "aliasesPlaceholder": "Comma separated: ABC, rebrand",
+    "aliasesHint": "Used for automatic AI matching when logging time",
     "platformFee": "Platform Fee",
     "monthlyFixedCost": "Monthly Fixed Cost",
     "details": "Project Details",
@@ -125,6 +127,8 @@
     "statusCompleted": "Completed",
     "statusPaused": "Paused",
     "statusCancelled": "Cancelled",
+    "statusAlmostDone": "Almost Done",
+    "statusInProgress": "In Progress",
     "completeProject": "Complete this project?",
     "completeSummary": "Final Summary",
     "completeConfirm": "Complete",
@@ -301,7 +305,14 @@
     "voiceNetworkError": "Connection issue. Please try again later",
     "voiceMaxSoon": "Approaching max recording time",
     "voiceStop": "Stop recording",
-    "voiceNoSpeech": "No speech detected"
+    "voiceNoSpeech": "No speech detected",
+    "progressHintTitle": "Update progress too?",
+    "progressHintDesc": "AI detected \"{reason}\".",
+    "progressUpdate": "Update",
+    "progressLater": "Later",
+    "progressUpdated": "Progress updated to {percent}%",
+    "progressUpdateFailed": "Failed to update progress",
+    "selectProjectFirst": "Please select a project first"
   },
   "history": {
     "title": "Time History",
@@ -503,7 +514,9 @@
     "weekend": "Weekend",
     "hours": "hours",
     "minutes": "min",
-    "scopeAlerts": "Projects needing attention"
+    "scopeAlerts": "Projects needing attention",
+    "showMore": "Show More",
+    "noEntries": "No entries"
   },
   "landing": {
     "nav": {
