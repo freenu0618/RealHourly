@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/money/currency";
+import { formatCurrency, getDominantCurrency } from "@/lib/money/currency";
 import type { ProjectSummary } from "./types";
 
 interface DashboardProfitabilityCardProps {
@@ -22,7 +22,7 @@ export function DashboardProfitabilityCard({
   // Compute weighted average real rate across all active projects
   let totalNet = 0;
   let totalHours = 0;
-  const currency = projects[0]?.currency ?? "USD";
+  const currency = getDominantCurrency(projects);
 
   for (const p of projects) {
     const gross = p.expectedFee;

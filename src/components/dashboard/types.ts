@@ -46,6 +46,8 @@ export interface DashboardMetrics {
   currency: string;
 }
 
+import { getDominantCurrency } from "@/lib/money/currency";
+
 export function computeMetrics(projects: ProjectSummary[]): DashboardMetrics {
   let totalRevenue = 0;
   let totalNet = 0;
@@ -73,6 +75,6 @@ export function computeMetrics(projects: ProjectSummary[]): DashboardMetrics {
     totalCost,
     totalHours: Math.round(totalHours * 10) / 10,
     avgRealRate: totalHours > 0 ? Math.round((totalNet / totalHours) * 100) / 100 : null,
-    currency: projects[0]?.currency ?? "USD",
+    currency: getDominantCurrency(projects),
   };
 }

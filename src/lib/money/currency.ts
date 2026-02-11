@@ -6,6 +6,18 @@ const CURRENCY_MAP: Record<string, { locale: string; currency: string }> = {
   JPY: { locale: "ja-JP", currency: "JPY" },
 };
 
+/** Returns the most frequently used currency among items, falling back to "USD". */
+export function getDominantCurrency(
+  items: { currency: string }[],
+): string {
+  if (items.length === 0) return "USD";
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    counts.set(item.currency, (counts.get(item.currency) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+}
+
 export function formatCurrency(
   amount: number,
   currency: string,

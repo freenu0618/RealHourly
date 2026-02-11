@@ -138,7 +138,7 @@ function buildDataDrivenResponse(ctx: ChatContext, query: string): string {
       );
     }
     lines.push(
-      `전체 평균 실제 시급: ${ctx.avgRealHourly?.toLocaleString() ?? "N/A"}/h`,
+      `전체 평균 실제 시급: ${ctx.profile.currency} ${ctx.avgRealHourly?.toLocaleString() ?? "N/A"}/h`,
     );
     if (best.realHourly && best.nominalHourly) {
       const gap = Math.round(
@@ -195,7 +195,7 @@ function buildDataDrivenResponse(ctx: ChatContext, query: string): string {
   const lines = [
     `현재 ${ctx.totalActiveProjects}개 프로젝트가 진행 중이에요.`,
     `총 작업 시간: ${ctx.totalHours}시간, 이번 주: ${ctx.weeklyHours}시간`,
-    `평균 실제 시급: ${ctx.avgRealHourly?.toLocaleString() ?? "N/A"}/h`,
+    `평균 실제 시급: ${ctx.profile.currency} ${ctx.avgRealHourly?.toLocaleString() ?? "N/A"}/h`,
   ];
   if (ctx.activeAlertCount > 0) {
     lines.push(`${ctx.activeAlertCount}개 경고가 있어요. 확인해보세요!`);

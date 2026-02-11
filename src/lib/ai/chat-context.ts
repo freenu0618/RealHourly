@@ -108,8 +108,8 @@ export function chatContextToPromptString(ctx: ChatContext): string {
   lines.push(`활성 프로젝트: ${ctx.totalActiveProjects}개`);
   lines.push(`총 작업시간: ${ctx.totalHours}시간`);
   lines.push(`이번 주 작업: ${ctx.weeklyHours}시간`);
-  lines.push(`평균 실제 시급: ${ctx.avgRealHourly ?? "N/A"}`);
-  lines.push(`총 순수익: ${ctx.totalRevenue}`);
+  lines.push(`평균 실제 시급: ${ctx.avgRealHourly ?? "N/A"} ${ctx.profile.currency}`);
+  lines.push(`총 순수익: ${ctx.totalRevenue} ${ctx.profile.currency}`);
   lines.push(`활성 경고: ${ctx.activeAlertCount}개`);
 
   if (ctx.projects.length > 0) {
@@ -120,8 +120,8 @@ export function chatContextToPromptString(ctx: ChatContext): string {
       if (p.clientName) parts.push(`클라이언트: ${p.clientName}`);
       parts.push(`진행: ${p.progressPercent}%`);
       parts.push(`작업: ${p.totalHours}h/${p.expectedHours}h`);
-      if (p.nominalHourly !== null) parts.push(`명목시급: ${p.nominalHourly}`);
-      if (p.realHourly !== null) parts.push(`실제시급: ${p.realHourly}`);
+      if (p.nominalHourly !== null) parts.push(`명목시급: ${p.currency} ${p.nominalHourly}`);
+      if (p.realHourly !== null) parts.push(`실제시급: ${p.currency} ${p.realHourly}`);
       if (p.revisionPercent > 0) parts.push(`수정비율: ${p.revisionPercent}%`);
       if (p.hasActiveAlert) parts.push(`⚠️경고`);
       lines.push(`- ${parts.join(" | ")}`);

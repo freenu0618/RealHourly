@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ComparisonData } from "@/db/queries/analytics";
+import { getDominantCurrency } from "@/lib/money/currency";
 import { ClientSummaryCards } from "./ClientSummaryCards";
 import { InsightCards } from "./InsightCards";
 
@@ -91,7 +92,7 @@ export function AnalyticsClient() {
           avgRealHourly={data.avgRealHourly}
           totalRevenue={data.totalRevenue}
           totalHours={data.totalHours}
-          currency={data.projects[0].currency}
+          currency={getDominantCurrency(data.projects)}
         />
       )}
 
@@ -133,7 +134,7 @@ export function AnalyticsClient() {
           </h2>
           <ClientSummaryCards
             clients={data.byClient}
-            currency={data.projects[0].currency}
+            currency={getDominantCurrency(data.projects)}
           />
         </section>
       )}
