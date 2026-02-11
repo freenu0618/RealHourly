@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -135,9 +136,9 @@ export function ProgressUpdateDialog({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("title")}</DialogTitle>
-            <p className="text-sm text-muted-foreground">
+            <DialogDescription>
               {t("description", { project: project.projectName })}
-            </p>
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
