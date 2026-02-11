@@ -3,11 +3,12 @@ import { requireUser } from "@/lib/auth/server";
 import { handleApiError } from "@/lib/api/handler";
 import { GenerateWeeklyReportSchema } from "@/lib/validators/reports";
 import { collectWeeklyData } from "@/lib/reports/collect-weekly-data";
-import { generateWeeklyInsight } from "@/lib/ai/generate-weekly-insight";
+import { generateWeeklyInsight, parseWeeklyInsight } from "@/lib/ai/generate-weekly-insight";
 import {
   getWeeklyReport,
   createWeeklyReport,
 } from "@/db/queries/weekly-reports";
+import { createAiAction } from "@/db/queries/ai-actions";
 import { startOfWeek, subWeeks } from "date-fns";
 import { formatDate } from "@/lib/date";
 import { reportRateLimit } from "@/lib/api/rate-limit";
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
     // Collect data
     const data = await collectWeeklyData(user.id, weekStartDate);
 
-    // Generate AI insight
+    // Generate AI insight (structured JSON string)
     const aiInsight = await generateWeeklyInsight(data);
 
     // Save to DB
@@ -52,6 +53,29 @@ export async function POST(req: Request) {
       data,
       aiInsight,
     );
+
+    // Save recommended actions to ai_actions (non-blocking)
+    try {
+      const insight = parseWeeklyInsight(aiInsight);
+      if (insight && insight.actions.length > 0) {
+        await Promise.all(
+          insight.actions.map((action) =>
+            createAiAction(user.id, {
+              projectId: null,
+              type: "weekly_report",
+              title: action.text,
+              message: `주간 리포트 (${data.period.start} ~ ${data.period.end})에서 제안된 액션`,
+              payload: {
+                weekStart: data.period.start,
+                projectName: action.projectName,
+              },
+            }),
+          ),
+        );
+      }
+    } catch {
+      console.error("[WeeklyReport] Failed to save ai_actions");
+    }
 
     return NextResponse.json({ data: report }, { status: 201 });
   } catch (error) {

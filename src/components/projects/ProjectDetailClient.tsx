@@ -32,6 +32,7 @@ import { ShareManagementSection } from "./ShareManagementSection";
 import { TimeEntriesSection } from "./TimeEntriesSection";
 import { BudgetProgressBar } from "./BudgetProgressBar";
 import { RevisionTracker } from "./RevisionTracker";
+import { ClientAnalysisCard } from "./ClientAnalysisCard";
 
 interface AlertDTO {
   id: string;
@@ -198,6 +199,10 @@ export function ProjectDetailClient({
         <Card><CardHeader><CardTitle className="text-base">{t("hourlyComparison")}</CardTitle></CardHeader><CardContent><HourlyRateBar nominalHourly={metrics.nominalHourly} realHourly={metrics.realHourly} currency={currency} net={metrics.net} /></CardContent></Card>
         <Card><CardHeader><CardTitle className="text-base">{t("costBreakdown")}</CardTitle></CardHeader><CardContent><CostBreakdownPie costBreakdown={metrics.costBreakdown} currency={currency} /></CardContent></Card>
       </div>
+
+      {project.clientId && (
+        <ClientAnalysisCard clientId={project.clientId} />
+      )}
 
       <TimeEntriesSection projectId={projectId} />
 

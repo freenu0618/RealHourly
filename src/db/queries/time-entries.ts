@@ -174,6 +174,44 @@ export async function getTimeHistory(
   };
 }
 
+export async function getRecentCategoriesByProject(
+  projectId: string,
+  limit = 10,
+): Promise<string[]> {
+  const rows = await db
+    .select({ category: timeEntries.category })
+    .from(timeEntries)
+    .where(
+      and(
+        eq(timeEntries.projectId, projectId),
+        eq(timeEntries.intent, "done"),
+        isNull(timeEntries.deletedAt),
+      ),
+    )
+    .orderBy(desc(timeEntries.createdAt))
+    .limit(limit);
+  return rows.map((r) => r.category);
+}
+
+export async function getDayTotalMinutes(
+  projectIds: string[],
+  date: string,
+): Promise<number> {
+  if (projectIds.length === 0) return 0;
+  const [result] = await db
+    .select({ total: sql<number>`COALESCE(SUM(${timeEntries.minutes}), 0)` })
+    .from(timeEntries)
+    .where(
+      and(
+        inArray(timeEntries.projectId, projectIds),
+        eq(timeEntries.date, date),
+        eq(timeEntries.intent, "done"),
+        isNull(timeEntries.deletedAt),
+      ),
+    );
+  return Number(result.total);
+}
+
 export async function updateTimeEntry(
   entryId: string,
   userId: string,

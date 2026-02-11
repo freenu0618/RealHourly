@@ -556,7 +556,12 @@
     "minutes": "min",
     "scopeAlerts": "Projects needing attention",
     "showMore": "Show More",
-    "noEntries": "No entries"
+    "noEntries": "No entries",
+    "aiSummary": "Summary",
+    "projectBreakdown": "By Project",
+    "aiInsights": "Insights",
+    "recommendedActions": "Recommended Actions",
+    "actionDone": "Done"
   },
   "landing": {
     "nav": {
@@ -731,17 +736,20 @@
   },
   "profitabilityPreview": {
     "title": "Profitability Preview",
-    "grossFee": "Contract Amount",
-    "platformFee": "Platform Fee",
+    "grossFee": "Expected Revenue",
+    "platformFee": "Commission",
     "tax": "Tax",
     "fixedCost": "Fixed Cost",
-    "estimatedNet": "Estimated Net",
-    "estimatedRate": "Estimated Rate",
-    "basedOnHours": "Based on {hours}h",
-    "rateDropPercent": "{percent}% decrease",
-    "rateDropWarning": "Over 30% decrease",
-    "noCosts": "No additional costs",
-    "deficit": "Deficit Project",
+    "netIncome": "Net Income",
+    "expectedHoursLabel": "Expected Hours",
+    "realHourlyRate": "Est. Real Hourly Rate",
+    "severity_danger": "Very unfavorable",
+    "severity_warning": "Low profitability",
+    "severity_good": "Reasonable",
+    "severity_great": "Great deal!",
+    "comparison": "Past projects avg rate: {avg} — {diff}% {direction}",
+    "comparisonHigher": "higher",
+    "comparisonLower": "lower",
     "checklistTitle": "Pre-project Checklist",
     "checkRevisionScope": "Have you agreed on revision limits?",
     "checkMilestonePayment": "Have you discussed milestone payments?",
@@ -878,5 +886,33 @@
       "followup_reminder": "Follow-up Reminder",
       "weekly_report": "Weekly Report"
     }
+  },
+  "suggestions": {
+    "title": "Suggestions",
+    "dismissAll": "Dismiss all",
+    "updateProgress": "Update progress",
+    "profitabilityTitle": "{project} — Profitability warning",
+    "profitabilityDesc": "Real hourly rate is only {ratio}% of nominal rate. Consider reviewing your cost structure.",
+    "scopeCreepTitle": "{project} — Scope creep detected",
+    "scopeCreepDesc": "{count} consecutive revision entries logged. Consider discussing scope with your client.",
+    "dailySummaryTitle": "{hours}h worked today",
+    "dailySummaryDesc": "You've put in a solid day of work! Remember to take breaks.",
+    "progressTitle": "{project} — Update progress?",
+    "progressDesc": "You logged development/design work. Current progress is {percent}%."
+  },
+  "clientAnalysis": {
+    "title": "Client Analysis",
+    "titleWithName": "Client Analysis: {name}",
+    "collecting": "Collecting data ({count} project(s), need 2+)",
+    "totalProjects": "Total projects",
+    "projectCount": "{count}",
+    "avgRevisionRate": "Avg revision rate",
+    "avgTimeOverrun": "Avg time overrun",
+    "avgRealHourly": "Avg real hourly",
+    "insight_revision_heavy": "High revision rate. Strengthen initial spec reviews.",
+    "insight_time_overrun": "Frequent time overruns. Set more generous time estimates.",
+    "insight_low_profitability": "Low profitability. Consider adjusting your rates.",
+    "recommendedRate": "Recommended rate for next project",
+    "perHour": "/hr"
   }
 }

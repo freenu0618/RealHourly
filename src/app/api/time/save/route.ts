@@ -3,9 +3,20 @@ import { requireUser } from "@/lib/auth/server";
 import { handleApiError } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
 import { SaveTimeSchema } from "@/lib/validators/time";
-import { saveTimeEntries, getSumMinutesByProject } from "@/db/queries/time-entries";
+import {
+  saveTimeEntries,
+  getSumMinutesByProject,
+  getRecentCategoriesByProject,
+  getDayTotalMinutes,
+} from "@/db/queries/time-entries";
 import { getProjectsByUserId } from "@/db/queries/projects";
 import { getSumFixedCostsByProject } from "@/db/queries/cost-entries";
+import {
+  computePostLogSuggestions,
+  type PostLogSuggestion,
+  type ProjectSuggestionContext,
+  type DailySuggestionContext,
+} from "@/lib/metrics/post-log-suggestions";
 
 interface ProjectFeedback {
   projectName: string;
@@ -99,8 +110,53 @@ export async function POST(req: Request) {
       })
       .filter((p): p is ProjectProgress => p !== null);
 
+    // Compute post-log suggestions (non-critical)
+    let suggestions: PostLogSuggestion[] = [];
+    try {
+      const projectCtxs: ProjectSuggestionContext[] = await Promise.all(
+        affectedProjectIds.map(async (pid) => {
+          const project = projectMap.get(pid)!;
+          const savedCats = body.entries
+            .filter((e) => e.projectId === pid)
+            .map((e) => e.category);
+          const recentCats = await getRecentCategoriesByProject(pid, 10);
+          const expectedHours = Number(project.expectedHours) || 0;
+          const gross = Number(project.expectedFee) || 0;
+          const nominalHourly =
+            expectedHours > 0
+              ? Math.round((gross / expectedHours) * 100) / 100
+              : null;
+          const fb = feedback.find((f) => f.projectName === project.name);
+
+          return {
+            projectId: pid,
+            projectName: project.name,
+            realHourly: fb?.realHourly ?? null,
+            nominalHourly,
+            currency: project.currency,
+            progressPercent: project.progressPercent ?? 0,
+            savedCategories: savedCats,
+            recentCategories: recentCats,
+          };
+        }),
+      );
+
+      const allProjectIds = userProjects.map((p) => p.id);
+      const savedDates = [...new Set(body.entries.map((e) => e.date))];
+      const dailyCtxs: DailySuggestionContext[] = await Promise.all(
+        savedDates.map(async (date) => ({
+          date,
+          totalMinutes: await getDayTotalMinutes(allProjectIds, date),
+        })),
+      );
+
+      suggestions = computePostLogSuggestions(projectCtxs, dailyCtxs);
+    } catch {
+      // Suggestions are non-critical
+    }
+
     return NextResponse.json(
-      { data: { inserted: saved.length, feedback, projectProgress } },
+      { data: { inserted: saved.length, feedback, projectProgress, suggestions } },
       { status: 201 },
     );
   } catch (error) {

@@ -25,6 +25,7 @@ import { ProgressUpdateDialog } from "./ProgressUpdateDialog";
 import { ManualEntryForm } from "./ManualEntryForm";
 import { VoiceInput } from "./VoiceInput";
 import { QuickTimer } from "./QuickTimer";
+import { PostLogSuggestions, type PostLogSuggestion } from "./PostLogSuggestions";
 import type { TimerResult } from "@/store/use-timer-store";
 import { generateId } from "@/lib/utils/nanoid";
 import type { Category } from "@/types/time-log";
@@ -49,6 +50,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   } | null>(null);
   const [suggestedProgress, setSuggestedProgress] = useState(0);
   const [showProgressHint, setShowProgressHint] = useState(false);
+  const [suggestions, setSuggestions] = useState<PostLogSuggestion[]>([]);
   const [progressDialogOpen, setProgressDialogOpen] = useState(false);
   const [progressProjects, setProgressProjects] = useState<
     { projectId: string; projectName: string; currentProgress: number }[]
@@ -188,6 +190,19 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
     setPreferredProjectId("");
     setShowProgressHint(false);
     setProgressHint(null);
+  }
+
+  function handleSuggestions(s: PostLogSuggestion[]) {
+    setSuggestions(s);
+  }
+
+  function handleSuggestionProgressUpdate(
+    projectId: string,
+    projectName: string,
+    currentProgress: number,
+  ) {
+    setProgressProjects([{ projectId, projectName, currentProgress }]);
+    setProgressDialogOpen(true);
   }
 
   function handleProgressPrompt(
@@ -371,8 +386,17 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
             </span>
           </div>
           <DraftCardList projects={projects} />
-          <SaveAllButton onSaved={handleSaved} onProgressPrompt={handleProgressPrompt} />
+          <SaveAllButton onSaved={handleSaved} onProgressPrompt={handleProgressPrompt} onSuggestions={handleSuggestions} />
         </>
+      )}
+
+      {/* Post-log suggestions */}
+      {suggestions.length > 0 && !showThinking && entries.length === 0 && (
+        <PostLogSuggestions
+          suggestions={suggestions}
+          onDismiss={() => setSuggestions([])}
+          onProgressUpdate={handleSuggestionProgressUpdate}
+        />
       )}
 
       {/* Manual entry fallback */}

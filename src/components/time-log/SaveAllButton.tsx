@@ -21,12 +21,20 @@ interface ProjectProgress {
   currentProgress: number;
 }
 
+interface PostLogSuggestion {
+  type: string;
+  severity: "high" | "info" | "low";
+  projectName?: string;
+  data: Record<string, unknown>;
+}
+
 interface SaveAllButtonProps {
   onSaved: () => void;
   onProgressPrompt?: (projects: ProjectProgress[]) => void;
+  onSuggestions?: (suggestions: PostLogSuggestion[]) => void;
 }
 
-export function SaveAllButton({ onSaved, onProgressPrompt }: SaveAllButtonProps) {
+export function SaveAllButton({ onSaved, onProgressPrompt, onSuggestions }: SaveAllButtonProps) {
   const t = useTranslations("timeLog");
   const tFeedback = useTranslations("profitabilityFeedback");
   const tProgress = useTranslations("progress");
@@ -77,6 +85,12 @@ export function SaveAllButton({ onSaved, onProgressPrompt }: SaveAllButtonProps)
             );
           }
         }
+      }
+
+      // Post-log suggestions
+      const suggestions = data.suggestions as PostLogSuggestion[] | undefined;
+      if (suggestions && suggestions.length > 0 && onSuggestions) {
+        onSuggestions(suggestions);
       }
 
       // Show progress update prompt (max 1 toast, 8s duration)

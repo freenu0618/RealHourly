@@ -556,7 +556,12 @@
     "minutes": "분",
     "scopeAlerts": "주의가 필요한 프로젝트",
     "showMore": "더 보기",
-    "noEntries": "기록 없음"
+    "noEntries": "기록 없음",
+    "aiSummary": "요약",
+    "projectBreakdown": "프로젝트별",
+    "aiInsights": "인사이트",
+    "recommendedActions": "추천 액션",
+    "actionDone": "완료"
   },
   "landing": {
     "nav": {
@@ -731,17 +736,20 @@
   },
   "profitabilityPreview": {
     "title": "수익성 프리뷰",
-    "grossFee": "계약 금액",
-    "platformFee": "플랫폼 수수료",
+    "grossFee": "예상 수입",
+    "platformFee": "수수료",
     "tax": "세금",
     "fixedCost": "고정 비용",
-    "estimatedNet": "예상 실수령",
-    "estimatedRate": "예상 시급",
-    "basedOnHours": "{hours}시간 기준",
-    "rateDropPercent": "{percent}% 감소",
-    "rateDropWarning": "30% 이상 감소",
-    "noCosts": "추가 비용 없음",
-    "deficit": "적자 프로젝트",
+    "netIncome": "순수입",
+    "expectedHoursLabel": "예상 시간",
+    "realHourlyRate": "예상 실제 시급",
+    "severity_danger": "매우 불리합니다",
+    "severity_warning": "수익성이 낮습니다",
+    "severity_good": "적정 수준",
+    "severity_great": "좋은 조건!",
+    "comparison": "이전 프로젝트 평균 실제 시급: {avg} 대비 {diff}% {direction}",
+    "comparisonHigher": "높음",
+    "comparisonLower": "낮음",
     "checklistTitle": "프로젝트 시작 전 체크리스트",
     "checkRevisionScope": "수정 횟수/범위를 합의했나요?",
     "checkMilestonePayment": "마일스톤별 분할 지급을 협의했나요?",
@@ -878,5 +886,33 @@
       "followup_reminder": "후속 리마인더",
       "weekly_report": "주간 리포트"
     }
+  },
+  "suggestions": {
+    "title": "제안",
+    "dismissAll": "모두 닫기",
+    "updateProgress": "진행률 업데이트",
+    "profitabilityTitle": "{project} — 수익성 경고",
+    "profitabilityDesc": "실질 시급이 명목 시급의 {ratio}%입니다. 비용 구조를 점검해보세요.",
+    "scopeCreepTitle": "{project} — 스코프 크리프 감지",
+    "scopeCreepDesc": "최근 {count}건 연속 수정 작업이 기록됐어요. 클라이언트와 범위를 재논의하는 걸 추천해요.",
+    "dailySummaryTitle": "오늘 {hours}시간 작업 완료",
+    "dailySummaryDesc": "오늘 하루 열심히 일했어요! 충분한 휴식도 중요합니다.",
+    "progressTitle": "{project} — 진행률 업데이트 제안",
+    "progressDesc": "개발/디자인 작업을 기록했어요. 현재 진행률은 {percent}%입니다."
+  },
+  "clientAnalysis": {
+    "title": "클라이언트 분석",
+    "titleWithName": "클라이언트 분석: {name}",
+    "collecting": "데이터 수집 중 (현재 {count}건, 2건 이상 필요)",
+    "totalProjects": "총 프로젝트",
+    "projectCount": "{count}건",
+    "avgRevisionRate": "평균 수정 비율",
+    "avgTimeOverrun": "평균 시간 초과율",
+    "avgRealHourly": "평균 실제 시급",
+    "insight_revision_heavy": "수정 비율이 높습니다. 초기 스펙 확인을 강화하세요.",
+    "insight_time_overrun": "시간 초과가 잦습니다. 예상 시간을 넉넉하게 잡으세요.",
+    "insight_low_profitability": "수익성이 낮습니다. 단가 조정을 검토하세요.",
+    "recommendedRate": "다음 프로젝트 권장 시급",
+    "perHour": "/시간"
   }
 }

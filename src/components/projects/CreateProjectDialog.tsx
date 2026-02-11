@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -51,6 +51,28 @@ export function CreateProjectDialog() {
   const t = useTranslations("projects");
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [avgRealHourly, setAvgRealHourly] = useState<number | null>(null);
+
+  const fetchAvgRate = useCallback(async () => {
+    try {
+      const res = await fetch("/api/projects");
+      if (!res.ok) return;
+      const { data } = await res.json();
+      const withRate = (data as { expectedFee: number; expectedHours: number; platformFeeRate: number; taxRate: number }[])
+        .filter((p) => p.expectedFee > 0 && p.expectedHours > 0);
+      if (withRate.length === 0) return;
+      const avg = withRate.reduce((sum, p) => {
+        const afterComm = p.expectedFee * (1 - p.platformFeeRate);
+        const afterTax = afterComm * (1 - p.taxRate);
+        return sum + afterTax / p.expectedHours;
+      }, 0) / withRate.length;
+      setAvgRealHourly(Math.round(avg * 100) / 100);
+    } catch { /* non-critical */ }
+  }, []);
+
+  useEffect(() => {
+    if (open) fetchAvgRate();
+  }, [open, fetchAvgRate]);
 
   const { register, handleSubmit, watch, setValue, formState } =
     useForm<FormValues>({
@@ -302,6 +324,7 @@ export function CreateProjectDialog() {
               taxRate={effectiveTaxRate}
               fixedCostAmount={watchedFixedCost || 0}
               currency={watchedCurrency}
+              avgRealHourly={avgRealHourly}
             />
           )}
 
