@@ -1,9 +1,10 @@
-import { getProjectById } from "@/db/queries/projects";
+import { getProjectById, getClientNameByProjectId } from "@/db/queries/projects";
 import { getSumMinutesByProject, getTimeEntriesByProject } from "@/db/queries/time-entries";
 import { getSumFixedCostsByProject } from "@/db/queries/cost-entries";
 import { getActiveAlertByProject, createAlert } from "@/db/queries/alerts";
 import { ApiError } from "@/lib/api/errors";
 import { checkScopeCreep } from "./scope-rules";
+import { generateBillingAction } from "@/lib/ai/generate-billing-action";
 
 export interface CostBreakdownItem {
   type: "platform_fee" | "tax" | "fixed";
@@ -82,6 +83,26 @@ export async function getProjectMetrics(
       firstRule,
       scopeResult.metadata,
     );
+
+    // Fire-and-forget: generate billing suggestion ai_action
+    getClientNameByProjectId(projectId).then((clientName) =>
+      generateBillingAction({
+        userId,
+        projectId,
+        projectName: project.name,
+        clientName,
+        expectedFee: gross,
+      expectedHours: project.expectedHours ?? 0,
+      totalHours: Math.round(totalHours * 10) / 10,
+      progressPercent: project.progressPercent,
+      currency: project.currency,
+      nominalHourly: nominalHourly !== null ? Math.round(nominalHourly * 100) / 100 : null,
+      realHourly: realHourly !== null ? Math.round(realHourly * 100) / 100 : null,
+      actualRevisionCount: timeEntries.filter((e) => e.category === "revision").length,
+      triggeredRules: scopeResult.triggered,
+      metadata: scopeResult.metadata,
+    }),
+    ).catch(() => {});
   }
 
   return {

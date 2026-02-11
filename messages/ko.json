@@ -395,7 +395,18 @@
     "tone": "톤",
     "polite": "정중한",
     "neutral": "중립적",
-    "firm": "단호한"
+    "firm": "단호한",
+    "sendEmail": "이메일로 보내기",
+    "emailSent": "이메일 클라이언트가 열렸어요",
+    "scopeMetrics": "프로젝트 현황",
+    "expectedHours": "예상 시간",
+    "actualHours": "실제 시간",
+    "overHours": "초과 시간",
+    "revisionCount": "수정 횟수",
+    "realRate": "실제 시급",
+    "nominalRate": "명목 시급",
+    "progressLabel": "진행률",
+    "selectAction": "액션 선택"
   },
   "settings": {
     "title": "설정",

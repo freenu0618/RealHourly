@@ -395,7 +395,18 @@
     "tone": "Tone",
     "polite": "Polite",
     "neutral": "Neutral",
-    "firm": "Firm"
+    "firm": "Firm",
+    "sendEmail": "Send via Email",
+    "emailSent": "Email client opened",
+    "scopeMetrics": "Project Status",
+    "expectedHours": "Expected Hours",
+    "actualHours": "Actual Hours",
+    "overHours": "Over Hours",
+    "revisionCount": "Revision Count",
+    "realRate": "Real Rate",
+    "nominalRate": "Nominal Rate",
+    "progressLabel": "Progress",
+    "selectAction": "Select Action"
   },
   "settings": {
     "title": "Settings",

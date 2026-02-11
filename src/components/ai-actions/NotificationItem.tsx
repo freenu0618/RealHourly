@@ -28,11 +28,13 @@ export function NotificationItem({
   acting,
   onApprove,
   onDismiss,
+  onClick,
 }: {
   action: AiAction;
   acting: boolean;
   onApprove: () => void;
   onDismiss: () => void;
+  onClick?: () => void;
 }) {
   const t = useTranslations("aiActions");
   const icon = TYPE_ICONS[action.type] ?? "🤖";
@@ -43,17 +45,22 @@ export function NotificationItem({
       <span className="mt-0.5 text-lg leading-none">{icon}</span>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
+          <button
+            type="button"
+            className="min-w-0 text-left"
+            onClick={onClick}
+            disabled={!onClick}
+          >
             <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               {typeLabel}
             </span>
-            <p className="text-sm font-medium leading-snug">{action.title}</p>
+            <p className={`text-sm font-medium leading-snug ${onClick ? "hover:text-primary transition-colors" : ""}`}>{action.title}</p>
             {action.message && (
               <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                 {action.message}
               </p>
             )}
-          </div>
+          </button>
         </div>
         <div className="mt-2 flex items-center justify-between">
           {action.createdAt && (

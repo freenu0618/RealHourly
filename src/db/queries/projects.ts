@@ -168,3 +168,17 @@ export async function getActiveProjectsForMatching(
     .limit(limit);
   return rows;
 }
+
+export async function getClientNameByProjectId(
+  projectId: string,
+): Promise<string> {
+  const [row] = await db
+    .select({ clientName: clients.name })
+    .from(projects)
+    .leftJoin(
+      clients,
+      and(eq(projects.clientId, clients.id), isNull(clients.deletedAt)),
+    )
+    .where(eq(projects.id, projectId));
+  return row?.clientName ?? "";
+}

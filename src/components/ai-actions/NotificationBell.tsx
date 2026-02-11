@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Bell, Check, X, Loader2 } from "lucide-react";
+import { Bell, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { NotificationItem } from "./NotificationItem";
+import { ScopeAlertActionModal } from "./ScopeAlertActionModal";
 
 type AiAction = {
   id: string;
@@ -18,7 +19,25 @@ type AiAction = {
   status: string;
   title: string;
   message: string | null;
+  payload: Record<string, unknown> | null;
   createdAt: string | null;
+};
+
+type ScopePayload = {
+  messages: { tone: string; subject: string; body: string }[];
+  metrics: {
+    expectedHours: number;
+    totalHours: number;
+    overHours: number;
+    progressPercent: number;
+    nominalHourly: number | null;
+    realHourly: number | null;
+    actualRevisionCount: number;
+    currency: string;
+  };
+  triggeredRules: string[];
+  clientName: string;
+  projectName: string;
 };
 
 export function NotificationBell() {
@@ -28,6 +47,7 @@ export function NotificationBell() {
   const [pendingCount, setPendingCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [acting, setActing] = useState<string | null>(null);
+  const [modalAction, setModalAction] = useState<AiAction | null>(null);
 
   const fetchActions = useCallback(async () => {
     setLoading(true);
@@ -48,6 +68,11 @@ export function NotificationBell() {
     return () => clearInterval(interval);
   }, [fetchActions]);
 
+  const removeAction = (actionId: string) => {
+    setActions((prev) => prev.filter((a) => a.id !== actionId));
+    setPendingCount((prev) => Math.max(0, prev - 1));
+  };
+
   const handleAction = async (actionId: string, status: "approved" | "dismissed") => {
     setActing(actionId);
     try {
@@ -58,8 +83,7 @@ export function NotificationBell() {
       });
       if (!res.ok) throw new Error();
       toast.success(status === "approved" ? t("actionApproved") : t("actionDismissed"));
-      setActions((prev) => prev.filter((a) => a.id !== actionId));
-      setPendingCount((prev) => Math.max(0, prev - 1));
+      removeAction(actionId);
     } catch {
       toast.error(t("actionFailed"));
     } finally {
@@ -67,50 +91,86 @@ export function NotificationBell() {
     }
   };
 
+  const handleClick = (action: AiAction) => {
+    if (action.type === "billing_suggestion" && action.payload) {
+      setOpen(false);
+      setModalAction(action);
+    }
+  };
+
+  const handleModalDismiss = () => {
+    if (modalAction) {
+      handleAction(modalAction.id, "dismissed");
+    }
+    setModalAction(null);
+  };
+
+  const handleModalExecute = () => {
+    if (modalAction) {
+      handleAction(modalAction.id, "approved");
+    }
+    setModalAction(null);
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="size-4" />
-          {pendingCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white">
-              {pendingCount > 9 ? "9+" : pendingCount}
-            </span>
-          )}
-          <span className="sr-only">{t("notifications")}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0">
-        <div className="border-b px-4 py-3">
-          <h3 className="text-sm font-semibold">{t("notifications")}</h3>
-          {pendingCount > 0 && (
-            <p className="text-xs text-muted-foreground">
-              {t("pendingCount", { count: pendingCount })}
-            </p>
-          )}
-        </div>
-        <div className="max-h-80 overflow-y-auto">
-          {loading && actions.length === 0 ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="size-5 animate-spin text-muted-foreground" />
-            </div>
-          ) : actions.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              {t("noNotifications")}
-            </p>
-          ) : (
-            actions.map((action) => (
-              <NotificationItem
-                key={action.id}
-                action={action}
-                acting={acting === action.id}
-                onApprove={() => handleAction(action.id, "approved")}
-                onDismiss={() => handleAction(action.id, "dismissed")}
-              />
-            ))
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="size-4" />
+            {pendingCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white">
+                {pendingCount > 9 ? "9+" : pendingCount}
+              </span>
+            )}
+            <span className="sr-only">{t("notifications")}</span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-80 p-0">
+          <div className="border-b px-4 py-3">
+            <h3 className="text-sm font-semibold">{t("notifications")}</h3>
+            {pendingCount > 0 && (
+              <p className="text-xs text-muted-foreground">
+                {t("pendingCount", { count: pendingCount })}
+              </p>
+            )}
+          </div>
+          <div className="max-h-80 overflow-y-auto">
+            {loading && actions.length === 0 ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : actions.length === 0 ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                {t("noNotifications")}
+              </p>
+            ) : (
+              actions.map((action) => (
+                <NotificationItem
+                  key={action.id}
+                  action={action}
+                  acting={acting === action.id}
+                  onApprove={() => handleAction(action.id, "approved")}
+                  onDismiss={() => handleAction(action.id, "dismissed")}
+                  onClick={() => handleClick(action)}
+                />
+              ))
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
+
+      {modalAction?.type === "billing_suggestion" && (
+        <ScopeAlertActionModal
+          action={{
+            id: modalAction.id,
+            title: modalAction.title,
+            payload: modalAction.payload as ScopePayload | null,
+          }}
+          onDismiss={handleModalDismiss}
+          onExecute={handleModalExecute}
+        />
+      )}
+    </>
   );
 }
