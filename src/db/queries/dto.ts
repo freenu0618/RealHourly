@@ -102,15 +102,13 @@ export function generatedMessageToDTO(row: Row) {
   };
 }
 
-const SITE_URL = getBaseUrl();
-
 export function projectShareToDTO(row: Row) {
   const token = row.shareToken as string;
   return {
     id: row.id as string,
     projectId: row.projectId as string,
     shareToken: token,
-    shareUrl: `${SITE_URL}/report/${token}`,
+    shareUrl: `${getBaseUrl()}/report/${token}`,
     label: (row.label as string) ?? null,
     expiresAt: toISOString(row.expiresAt),
     showTimeDetails: row.showTimeDetails as boolean,

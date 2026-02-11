@@ -149,7 +149,7 @@ export function DraftCard({ entry, projects }: DraftCardProps) {
               variant="outline"
               className="rounded-full border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400"
             >
-              {t("preferredFallback")}
+              {"\uD83D\uDCCC"} {t("preferredFallback")}
             </Badge>
           )}
         </div>

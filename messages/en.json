@@ -252,6 +252,7 @@
     "title": "Time Log",
     "inputPlaceholder": "e.g., Yesterday ABC rebrand planning 2h, meeting 30m, emails 20m",
     "preferredProject": "(Optional) Main project you worked on",
+    "noPreference": "No preference",
     "parse": "Magic Parse",
     "parsing": "AI is analyzing your time log…",
     "saveAll": "Save All",

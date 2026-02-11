@@ -224,13 +224,14 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
           {t("preferredProject")}
         </Label>
         <Select
-          value={preferredProjectId}
-          onValueChange={setPreferredProjectId}
+          value={preferredProjectId || "__none__"}
+          onValueChange={(val) => setPreferredProjectId(val === "__none__" ? "" : val)}
         >
           <SelectTrigger className="h-9 rounded-xl">
             <SelectValue placeholder={t("selectProject")} />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="__none__">{t("noPreference")}</SelectItem>
             {projects.map((p) => (
               <SelectItem key={p.id} value={p.id}>
                 {p.name}

@@ -1,7 +1,7 @@
 "use client";
 
-import { Fragment } from "react";
 import { useTranslations } from "next-intl";
+import { X, Check } from "lucide-react";
 
 export function ComparisonSection() {
   const t = useTranslations("landing");
@@ -14,33 +14,65 @@ export function ComparisonSection() {
   ] as const;
 
   return (
-    <section className="bg-card/50 px-6 py-20" data-animate>
+    <section className="bg-card/50 px-6 py-20" data-animate data-animation="animate-slideInLeft">
       <h2 className="mb-12 text-center text-2xl font-bold">
         {t("comparisonTitle")}
       </h2>
 
-      <div className="mx-auto grid max-w-3xl gap-y-0 text-center text-sm md:grid-cols-3">
-        {/* Header row */}
-        <div />
-        <div className="py-3 font-bold text-muted-foreground">
-          {t("compHeaderOld")}
+      <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+        {/* Before card */}
+        <div className="rounded-[20px] border border-destructive/20 bg-destructive/5 p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/15">
+              <X className="size-4 text-destructive" />
+            </div>
+            <h3 className="font-bold text-destructive/80">
+              {t("compHeaderOld")}
+            </h3>
+          </div>
+          <ul className="space-y-4">
+            {rows.map((row) => (
+              <li key={row.oldKey} className="flex items-start gap-3">
+                <X className="mt-0.5 size-4 shrink-0 text-destructive/50" />
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {t(row.labelKey)}
+                  </span>
+                  <p className="text-sm text-destructive/70 line-through decoration-destructive/30">
+                    {t(row.oldKey)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="py-3 font-bold text-primary">{t("compHeaderNew")}</div>
 
-        {/* Data rows */}
-        {rows.map((row) => (
-          <Fragment key={row.labelKey}>
-            <div className="border-t py-3 font-medium text-foreground">
-              {t(row.labelKey)}
+        {/* After card */}
+        <div className="rounded-[20px] border border-primary/20 bg-primary/5 p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
+              <Check className="size-4 text-primary" />
             </div>
-            <div className="border-t py-3 text-muted-foreground">
-              {t(row.oldKey)}
-            </div>
-            <div className="border-t py-3 font-medium text-primary">
-              {t(row.newKey)}
-            </div>
-          </Fragment>
-        ))}
+            <h3 className="font-bold text-primary">
+              {t("compHeaderNew")}
+            </h3>
+          </div>
+          <ul className="space-y-4">
+            {rows.map((row) => (
+              <li key={row.newKey} className="flex items-start gap-3">
+                <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {t(row.labelKey)}
+                  </span>
+                  <p className="text-sm font-medium text-primary">
+                    {t(row.newKey)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

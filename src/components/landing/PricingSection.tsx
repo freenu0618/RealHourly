@@ -2,6 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { Sparkles, Clock, Globe, Zap } from "lucide-react";
+
+const ITEM_ICONS = [Sparkles, Clock, Globe, Zap];
 
 export function PricingSection() {
   const t = useTranslations("landing");
@@ -14,7 +17,7 @@ export function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="px-6 py-20" data-animate>
+    <section id="pricing" className="px-6 py-20" data-animate data-animation="animate-scaleUp">
       <h2 className="mb-4 text-center text-2xl font-bold">
         {t("pricingTitle")}
       </h2>
@@ -22,8 +25,8 @@ export function PricingSection() {
         {t("pricingSubtitle")}
       </p>
 
-      <div className="mx-auto max-w-sm rounded-[24px] border bg-card p-8 text-center shadow-sm">
-        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">
+      <div className="mx-auto max-w-sm rounded-[24px] border bg-card p-8 text-center shadow-sm transition-shadow hover:shadow-md">
+        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
           {t("pricingBadge")}
         </span>
         <div className="mb-1 mt-4 text-4xl font-bold">
@@ -34,11 +37,17 @@ export function PricingSection() {
         </div>
 
         <ul className="mt-6 space-y-3 text-left text-sm">
-          {items.map((item, i) => (
-            <li key={i} className="flex items-center gap-2">
-              <span className="text-primary">{"\u2713"}</span> {item}
-            </li>
-          ))}
+          {items.map((item, i) => {
+            const Icon = ITEM_ICONS[i];
+            return (
+              <li key={i} className="flex items-center gap-2.5">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <Icon className="size-3.5 text-primary" />
+                </div>
+                {item}
+              </li>
+            );
+          })}
         </ul>
 
         <Link

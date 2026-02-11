@@ -32,6 +32,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
     if (!data) throw new ApiError("NOT_FOUND", 404, "Project not found");
     return NextResponse.json({ data });
   } catch (error) {
+    console.error("[PATCH /api/projects/:id]", error);
     return handleApiError(error);
   }
 }

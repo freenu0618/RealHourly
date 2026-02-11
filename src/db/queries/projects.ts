@@ -86,13 +86,13 @@ export async function updateProject(
   if (data.aliases !== undefined) setData.aliases = data.aliases;
   if (data.startDate !== undefined) setData.startDate = data.startDate;
   if (data.expectedFee !== undefined)
-    setData.expectedFee = String(data.expectedFee);
+    setData.expectedFee = String(data.expectedFee ?? 0);
   if (data.expectedHours !== undefined)
-    setData.expectedHours = String(data.expectedHours);
+    setData.expectedHours = String(data.expectedHours ?? 0);
   if (data.currency !== undefined) setData.currency = data.currency;
   if (data.platformFeeRate !== undefined)
-    setData.platformFeeRate = String(data.platformFeeRate);
-  if (data.taxRate !== undefined) setData.taxRate = String(data.taxRate);
+    setData.platformFeeRate = String(data.platformFeeRate ?? 0);
+  if (data.taxRate !== undefined) setData.taxRate = String(data.taxRate ?? 0);
   if (data.progressPercent !== undefined)
     setData.progressPercent = data.progressPercent;
 

@@ -21,6 +21,8 @@ The user may write in Korean, English, or a mix of both.
 ## Rules
 
 1. **project_name_raw**: Copy the exact text the user used to refer to the project/client. Do NOT translate or modify.
+   - If the user does NOT mention any project or client name (e.g. "어제 3시간 작업", "worked 2h today"), set project_name_raw to an empty string "".
+   - Generic work terms like "작업", "일", "work" are NOT project names — return "" unless they match an active project name/alias.
 2. **task_description**: A brief description of the work (e.g. "기획서 작성", "logo feedback", "팀 미팅").
 3. **date**:
    - If the user specifies a clear date, output "YYYY-MM-DD".
@@ -154,13 +156,13 @@ Output:
   }
 }
 
-### Example 4 (Generic work = development, NOT other)
+### Example 4 (No project mentioned = empty project_name_raw, generic work = development)
 Input: "오늘 3시간 작업함"
 Output:
 {
   "entries": [
     {
-      "project_name_raw": "작업",
+      "project_name_raw": "",
       "task_description": "작업",
       "date": "오늘",
       "duration_minutes": 180,

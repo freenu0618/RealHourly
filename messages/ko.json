@@ -252,6 +252,7 @@
     "title": "시간 기록",
     "inputPlaceholder": "예: 어제 ABC 리브랜딩 기획 2시간, 미팅 30분, 이메일 20분",
     "preferredProject": "(선택) 주로 작업한 프로젝트",
+    "noPreference": "선택 안 함",
     "parse": "Magic Parse",
     "parsing": "AI가 타임로그를 분석 중…",
     "saveAll": "모두 저장",
