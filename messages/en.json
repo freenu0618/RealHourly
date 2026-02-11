@@ -89,7 +89,13 @@
     "emptyDescription": "Create a project and log your first working time",
     "createProject": "Create Project",
     "minutesShort": "m",
-    "hoursShort": "h"
+    "hoursShort": "h",
+    "briefingTitle": "Today's Briefing",
+    "briefingLoading": "Generating briefing...",
+    "briefingError": "Could not load briefing",
+    "briefingRetry": "Retry",
+    "briefingNoProjects": "No active projects yet.",
+    "briefingDismissed": "Briefing dismissed"
   },
   "projects": {
     "title": "Projects",
@@ -841,5 +847,25 @@
     "completeDescription": "Setting {project} to 100% will mark it as completed.",
     "completeConfirm": "Complete",
     "completeCancel": "Cancel"
+  },
+  "aiActions": {
+    "notifications": "Notifications",
+    "noNotifications": "No new notifications",
+    "pendingCount": "{count} pending",
+    "approve": "Approve",
+    "dismiss": "Dismiss",
+    "approved": "Approved",
+    "dismissed": "Dismissed",
+    "actionApproved": "Action approved",
+    "actionDismissed": "Action dismissed",
+    "actionFailed": "Failed to process action",
+    "types": {
+      "briefing": "Briefing",
+      "scope_alert": "Scope Alert",
+      "billing_suggestion": "Billing Suggestion",
+      "profitability_warning": "Profitability Warning",
+      "followup_reminder": "Follow-up Reminder",
+      "weekly_report": "Weekly Report"
+    }
   }
 }

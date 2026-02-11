@@ -1,6 +1,7 @@
 import {
   format,
   formatRelative as _formatRelative,
+  formatDistanceToNow as _formatDistanceToNow,
   parse,
   isValid,
   toDate,
@@ -31,6 +32,16 @@ export function formatRelative(
   locale?: string,
 ): string {
   return _formatRelative(toDate(date), baseDate, {
+    locale: getLocale(locale),
+  });
+}
+
+export function formatDistanceToNow(
+  date: Date | string | number,
+  locale?: string,
+): string {
+  return _formatDistanceToNow(toDate(date), {
+    addSuffix: true,
     locale: getLocale(locale),
   });
 }

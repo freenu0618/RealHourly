@@ -102,6 +102,21 @@ export function generatedMessageToDTO(row: Row) {
   };
 }
 
+export function aiActionToDTO(row: Row) {
+  return {
+    id: row.id as string,
+    userId: row.userId as string,
+    projectId: (row.projectId as string) ?? null,
+    type: row.type as string,
+    status: row.status as string,
+    title: row.title as string,
+    message: (row.message as string) ?? null,
+    payload: (row.payload as Record<string, unknown>) ?? null,
+    createdAt: toISOString(row.createdAt),
+    actedAt: toISOString(row.actedAt),
+  };
+}
+
 export function projectShareToDTO(row: Row) {
   const token = row.shareToken as string;
   return {

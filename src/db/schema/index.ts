@@ -8,3 +8,4 @@ export * from "./alerts";
 export * from "./generated-messages";
 export * from "./weekly-reports";
 export * from "./project-shares";
+export * from "./ai-actions";

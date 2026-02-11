@@ -49,3 +49,19 @@ export const projectStatusEnum = pgEnum("project_status", [
   "paused",
   "cancelled",
 ]);
+
+export const aiActionTypeEnum = pgEnum("ai_action_type", [
+  "briefing",
+  "scope_alert",
+  "billing_suggestion",
+  "profitability_warning",
+  "followup_reminder",
+  "weekly_report",
+]);
+
+export const aiActionStatusEnum = pgEnum("ai_action_status", [
+  "pending",
+  "approved",
+  "dismissed",
+  "executed",
+]);
