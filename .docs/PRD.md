@@ -665,6 +665,27 @@ Consistent visual language.
 | Toast notifications (sonner) | Done | Success/error feedback |
 | Responsive layout | Done | Mobile-friendly |
 
+### F14. AI Chat Assistant — Done
+
+Conversational AI assistant available across all dashboard pages.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Floating chat button (bottom-right) | Done | Fixed position, z-40 |
+| Slide-in chat panel (400px desktop, full mobile) | Done | Custom fixed panel with animation |
+| Full user context injection | Done | Projects, metrics, alerts, recent entries via Promise.all |
+| LLM conversational response | Done | Free-text, 3-5 sentences, Korean/English |
+| Quick action chips | Done | 5 presets: week summary, profit compare, scope risks, next action, billing msg |
+| Conversation history (session-only) | Done | Last 10 pairs, no DB persistence |
+| Rate limiting (15/min) | Done | In-memory sliding window |
+| Typing indicator | Done | Animated dots during API call |
+| Keyboard support | Done | Enter to send, Escape to close |
+| Mobile responsive | Done | Full-width panel on mobile |
+
+**API**: `POST /api/ai/chat`
+**Components**: `src/components/chat/` (4 files: AIChatWrapper, AIChatPanel, ChatMessage, QuickActionChips)
+**Backend**: `src/lib/ai/chat-context.ts`, `chat-prompt.ts`, `generate-chat-response.ts`
+
 ---
 
 ## 7. Database Schema
@@ -881,7 +902,7 @@ export async function POST(req: Request) {
 }
 ```
 
-### 8.3 Endpoints (25 routes)
+### 8.3 Endpoints (26 routes)
 
 #### Health
 | Method | Path | Response |
@@ -954,6 +975,11 @@ export async function POST(req: Request) {
 | POST | `/api/reports/weekly/generate` | — | `{ data: WeeklyReport }` |
 | GET | `/api/reports/weekly/:reportId` | `{ data: WeeklyReport }` |
 
+#### AI Chat
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/ai/chat` | `{ message, conversationHistory? }` | `{ data: { reply } }` |
+
 #### Settings
 | Method | Path | Body | Response |
 |--------|------|------|----------|
@@ -977,6 +1003,7 @@ export async function POST(req: Request) {
 | Clients | `lib/validators/clients.ts` |
 | LLM Parse | `lib/ai/time-log-schema.ts` |
 | LLM Message | `lib/ai/message-schema.ts` |
+| Chat | `lib/validators/chat.ts` — `ChatMessageSchema` |
 
 ---
 

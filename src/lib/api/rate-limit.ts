@@ -52,3 +52,4 @@ export const messageRateLimit = rateLimit({ limit: 10, windowMs: 60_000 });
 export const reportRateLimit = rateLimit({ limit: 5, windowMs: 60_000 });
 export const transcribeRateLimit = rateLimit({ limit: 10, windowMs: 60_000 });
 export const publicReportRateLimit = rateLimit({ limit: 60, windowMs: 60_000 });
+export const chatRateLimit = rateLimit({ limit: 15, windowMs: 60_000 });

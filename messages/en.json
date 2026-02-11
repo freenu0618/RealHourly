@@ -914,5 +914,18 @@
     "insight_low_profitability": "Low profitability. Consider adjusting your rates.",
     "recommendedRate": "Recommended rate for next project",
     "perHour": "/hr"
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "placeholder": "Ask a question...",
+    "send": "Send",
+    "emptyState": "Ask me anything! Project profitability, time analysis, billing messages, etc.",
+    "errorMessage": "Could not generate a response. Please try again.",
+    "rateLimited": "Too many requests. Please wait a moment.",
+    "chipWeekSummary": "Week summary",
+    "chipProfitCompare": "Profit compare",
+    "chipScopeRisk": "Scope risks",
+    "chipNextAction": "Next action",
+    "chipBillingMsg": "Billing message"
   }
 }

@@ -28,6 +28,7 @@
 11. **Project Lifecycle** — Status management (active/completed/paused/cancelled), progress tracking
 12. **Settings** — Profile, preferences (currency/timezone/locale), data export
 13. **Marketing Landing** — Full landing page with hero carousel, features, pricing, FAQ
+14. **AI Chat Assistant** — Floating chat panel with full user context, conversational Q&A about projects/profitability/time
 
 ## Tech Stack
 
@@ -60,9 +61,11 @@
 | Message generation (default) | gpt-5-mini | `LLM_MODEL_GENERATE` | Working |
 | Weekly insight generation | gpt-5-mini | `LLM_MODEL_GENERATE` | Working |
 | Invoice item generation | gpt-5-mini | `LLM_MODEL_GENERATE` | Working |
+| AI Chat assistant | gpt-5-mini | `LLM_MODEL_GENERATE` | Working |
+| Daily briefing | gpt-5-mini | `LLM_MODEL_GENERATE` | Working |
 | Message generation (premium) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | Not used |
 
-- All LLM calls use **OpenAI Structured Outputs** (`json_schema`, `strict: true`)
+- Most LLM calls use **OpenAI Structured Outputs** (`json_schema`, `strict: true`). Chat uses free-text.
 - LLM role is minimal: extract/structure only. Server handles validation/matching/normalization.
 
 #### GPT-5 Model API Rules
@@ -133,6 +136,8 @@ src/
 │  │  ├─ analytics/comparison/route.ts
 │  │  ├─ reports/weekly/route.ts
 │  │  ├─ reports/weekly/generate/route.ts
+│  │  ├─ ai/chat/route.ts
+│  │  ├─ ai/daily-briefing/route.ts
 │  │  ├─ settings/profile/route.ts
 │  │  ├─ settings/preferences/route.ts
 │  │  ├─ settings/export/route.ts
@@ -150,10 +155,11 @@ src/
 │  ├─ alerts/                # ScopeAlertModal (1)
 │  ├─ dashboard/             # DashboardClient (1)
 │  ├─ settings/              # Profile, preferences, account, data (5)
+│  ├─ chat/                  # AI chat assistant (4)
 │  ├─ landing/               # Marketing landing page sections (15)
 │  └─ app-sidebar.tsx        # Navigation sidebar
 ├─ lib/
-│  ├─ ai/                    # LLM integrations (11 files)
+│  ├─ ai/                    # LLM integrations (14 files)
 │  ├─ metrics/               # Real hourly calc + scope rules (2)
 │  ├─ money/                 # Currency formatting (2)
 │  ├─ pdf/                   # Invoice/estimate PDF (2)
@@ -162,7 +168,7 @@ src/
 │  ├─ auth/                  # getUser(), requireUser(), auth-actions (2)
 │  ├─ supabase/              # Server, client, middleware (3)
 │  ├─ api/                   # Error handling, response wrapper, rate-limit (3)
-│  ├─ validators/            # Zod schemas (9 files)
+│  ├─ validators/            # Zod schemas (10 files)
 │  ├─ hooks/                 # useCountUp, useStepLoader, useThinkingLog, useAudioRecorder (4)
 │  └─ utils/                 # cn, nanoid, clipboard, category-emoji (5)
 ├─ db/

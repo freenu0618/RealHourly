@@ -914,5 +914,18 @@
     "insight_low_profitability": "수익성이 낮습니다. 단가 조정을 검토하세요.",
     "recommendedRate": "다음 프로젝트 권장 시급",
     "perHour": "/시간"
+  },
+  "chat": {
+    "title": "AI 어시스턴트",
+    "placeholder": "질문을 입력하세요...",
+    "send": "전송",
+    "emptyState": "무엇이든 물어보세요! 프로젝트 수익성, 시간 분석, 메시지 작성 등",
+    "errorMessage": "답변을 생성하지 못했습니다. 다시 시도해주세요.",
+    "rateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+    "chipWeekSummary": "이번 주 요약",
+    "chipProfitCompare": "수익성 비교",
+    "chipScopeRisk": "스코프 위험",
+    "chipNextAction": "다음 할 일",
+    "chipBillingMsg": "청구 메시지"
   }
 }
