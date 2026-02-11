@@ -406,7 +406,8 @@
     "realRate": "실제 시급",
     "nominalRate": "명목 시급",
     "progressLabel": "진행률",
-    "selectAction": "액션 선택"
+    "selectAction": "액션 선택",
+    "close": "닫기"
   },
   "settings": {
     "title": "설정",

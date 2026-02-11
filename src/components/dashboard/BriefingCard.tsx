@@ -46,14 +46,16 @@ export function BriefingCard() {
     if (!briefing) return;
     setDismissed(true);
     try {
-      await fetch(`/api/ai-actions/${briefing.id}`, {
+      const res = await fetch(`/api/ai-actions/${briefing.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "dismissed" }),
       });
+      if (!res.ok) throw new Error();
       toast.success(t("briefingDismissed"));
     } catch {
-      // Dismiss optimistically — no need to revert
+      setDismissed(false);
+      toast.error(t("briefingError"));
     }
   };
 

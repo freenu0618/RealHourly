@@ -380,7 +380,7 @@ export function ScopeAlertModal({
                         <p className="whitespace-pre-wrap text-sm leading-relaxed">
                           {message.body}
                         </p>
-                        <div className="absolute bottom-3 right-3 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="absolute bottom-3 right-3 opacity-100 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
                           <Button
                             variant="outline"
                             size="sm"

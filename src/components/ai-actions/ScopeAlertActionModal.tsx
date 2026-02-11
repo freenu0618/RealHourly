@@ -219,7 +219,7 @@ export function ScopeAlertActionModal({
               className="text-muted-foreground"
             >
               <X className="mr-1 size-3.5" />
-              닫기
+              {t("close")}
             </Button>
           </div>
         </div>

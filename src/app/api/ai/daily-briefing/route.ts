@@ -29,7 +29,12 @@ export async function GET() {
     // 3. Generate new briefing
     const { title, message } = await generateDailyBriefing(user.id);
 
-    // 4. Save to ai_actions
+    // 4. Save to ai_actions (re-check to prevent race condition)
+    const recheck = await getTodayBriefing(user.id);
+    if (recheck) {
+      return NextResponse.json({ data: recheck, cached: true });
+    }
+
     const action = await createAiAction(user.id, {
       type: "briefing",
       title,

@@ -406,7 +406,8 @@
     "realRate": "Real Rate",
     "nominalRate": "Nominal Rate",
     "progressLabel": "Progress",
-    "selectAction": "Select Action"
+    "selectAction": "Select Action",
+    "close": "Close"
   },
   "settings": {
     "title": "Settings",
