@@ -27,7 +27,12 @@ export function TimeEntriesSection({ projectId }: TimeEntriesSectionProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/time/history?projectId=${projectId}`)
+    const today = new Date();
+    const yearAgo = new Date(today);
+    yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+    const from = yearAgo.toISOString().split("T")[0];
+    const to = today.toISOString().split("T")[0];
+    fetch(`/api/time/history?projectId=${projectId}&from=${from}&to=${to}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((json) => {
         if (json?.data) {
