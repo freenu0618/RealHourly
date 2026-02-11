@@ -28,8 +28,8 @@ export async function generateChatResponse(
   const contextString = chatContextToPromptString(context);
   const systemPrompt = buildChatSystemPrompt(contextString);
 
-  // Keep last 10 conversation pairs (20 messages)
-  const recentHistory = conversationHistory.slice(-20);
+  // Keep last 5 conversation pairs (10 messages) to save token budget
+  const recentHistory = conversationHistory.slice(-10);
 
   try {
     const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
@@ -49,11 +49,14 @@ export async function generateChatResponse(
     const completion = await getOpenAI().chat.completions.create({
       model,
       messages,
-      max_completion_tokens: 500,
+      max_completion_tokens: 1500,
     });
 
     const content = completion.choices[0]?.message?.content;
-    if (!content) throw new Error("LLM returned empty response");
+    if (!content || content.trim() === "") {
+      console.error("[AI Chat] Empty response despite increased tokens");
+      return "데이터를 분석 중입니다. 질문을 더 간결하게 다시 해주세요.";
+    }
 
     return content.trim();
   } catch (error) {

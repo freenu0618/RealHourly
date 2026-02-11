@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -82,6 +83,7 @@ export function CreateShareDialog({
           <DialogTitle className="text-base font-bold">
             {t("createLink")}
           </DialogTitle>
+          <DialogDescription className="sr-only">{t("createLink")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-1.5">

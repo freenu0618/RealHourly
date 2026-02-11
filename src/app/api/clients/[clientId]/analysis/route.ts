@@ -199,7 +199,7 @@ export async function GET(_req: Request, { params }: Ctx) {
 
     // Recommended rate: targetRate × avgOverrunRate / (1 - commission) / (1 - tax)
     const targetRate = getTargetRate(currency);
-    const overrunMultiplier = avgTimeOverrun > 0 ? avgTimeOverrun / 100 : 1;
+    const overrunMultiplier = Math.max(avgTimeOverrun / 100, 1);
     const commissionDivisor = 1 - avgCommission;
     const taxDivisor = 1 - avgTax;
     const recommendedHourlyRate =

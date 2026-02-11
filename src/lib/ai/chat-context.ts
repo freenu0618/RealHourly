@@ -68,8 +68,8 @@ export async function buildChatContext(userId: string): Promise<ChatContext> {
         10,
     ) / 10;
 
-  // Recent activity from dashboard
-  const recentActivity = dashboard.recentEntries.map((e) => ({
+  // Recent activity from dashboard (cap at 20 to save token budget)
+  const recentActivity = dashboard.recentEntries.slice(0, 20).map((e) => ({
     projectName: e.projectName,
     date: e.date,
     minutes: e.minutes,

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -108,6 +109,7 @@ export function InvoiceDialog({
             <FileText className="size-5" />
             {t("title")}
           </DialogTitle>
+          <DialogDescription className="sr-only">{t("title")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

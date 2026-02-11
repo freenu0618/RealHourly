@@ -21,6 +21,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -247,6 +248,7 @@ export function CostEntriesSection({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("addCost")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("addCost")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">

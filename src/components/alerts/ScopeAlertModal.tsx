@@ -9,6 +9,7 @@ import { useThinkingLog, sleep } from "@/lib/hooks/use-thinking-log";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -70,7 +71,12 @@ export function ScopeAlertModal({
   // Fetch related entries on mount
   useEffect(() => {
     const isRevisionRule = alert.alertType === "scope_rule2" || alert.alertType === "scope_rule3" || alert.alertType === "scope_rule4";
-    const params = new URLSearchParams({ projectId });
+    const today = new Date();
+    const yearAgo = new Date(today);
+    yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+    const from = yearAgo.toISOString().split("T")[0];
+    const to = today.toISOString().split("T")[0];
+    const params = new URLSearchParams({ projectId, from, to });
     if (isRevisionRule) params.set("category", "revision");
     fetch(`/api/time/history?${params}`)
       .then((res) => (res.ok ? res.json() : null))
@@ -255,9 +261,9 @@ export function ScopeAlertModal({
             <p className="mt-1 text-sm font-medium text-[#8C7A6B] dark:text-[#B0A395]">
               {projectName}
             </p>
-            <p className="mt-2 text-sm text-[#8C7A6B] dark:text-[#B0A395]">
+            <DialogDescription className="mt-2 text-sm text-[#8C7A6B] dark:text-[#B0A395]">
               {tAlerts("modalDescription")}
-            </p>
+            </DialogDescription>
           </DialogHeader>
         </div>
 

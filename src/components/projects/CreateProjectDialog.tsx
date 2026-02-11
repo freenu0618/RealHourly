@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -163,6 +164,7 @@ export function CreateProjectDialog() {
       <DialogContent className="max-h-[90vh] overflow-y-auto rounded-[24px] sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">{"\uD83D\uDCC1"} {t("create")}</DialogTitle>
+          <DialogDescription className="sr-only">{t("create")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Name */}

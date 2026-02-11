@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, RefreshCw, Loader2, Bot } from "lucide-react";
+import { X, RefreshCw, Loader2, Bot, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/date";
+import { Link } from "@/i18n/navigation";
 
 interface Briefing {
   id: string;
@@ -104,6 +105,12 @@ export function BriefingCard() {
 
   const today = formatDate(new Date(), "yyyy.MM.dd");
 
+  // Parse recommended action line (👉 ...) from briefing
+  const lines = briefing.message.split("\n");
+  const actionLine = lines.find((l) => l.trim().startsWith("👉"));
+  const bodyLines = lines.filter((l) => !l.trim().startsWith("👉")).join("\n");
+  const actionText = actionLine?.replace(/^👉\s*/, "").trim();
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Subtle decorative element */}
@@ -128,8 +135,22 @@ export function BriefingCard() {
 
       {/* Body — preserve line breaks */}
       <div className="mt-3 text-sm leading-relaxed text-white/80 whitespace-pre-line">
-        {briefing.message}
+        {bodyLines}
       </div>
+
+      {/* Recommended action button */}
+      {actionText && (
+        <Link href="/projects">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-3 w-full justify-between rounded-xl border border-white/10 bg-white/5 text-xs text-white/90 hover:bg-white/10 hover:text-white"
+          >
+            <span className="truncate text-left">👉 {actionText}</span>
+            <ArrowRight className="ml-2 size-3.5 shrink-0" />
+          </Button>
+        </Link>
+      )}
     </div>
   );
 }

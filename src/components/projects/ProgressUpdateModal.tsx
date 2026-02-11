@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -81,6 +82,7 @@ export function ProgressUpdateModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("progressAfterSave")}</DialogTitle>
+          <DialogDescription className="sr-only">{t("progressAfterSave")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">

@@ -747,7 +747,7 @@
     "severity_danger": "매우 불리합니다",
     "severity_warning": "수익성이 낮습니다",
     "severity_good": "적정 수준",
-    "severity_great": "좋은 조건!",
+    "severity_great": "우수",
     "comparison": "이전 프로젝트 평균 실제 시급: {avg} 대비 {diff}% {direction}",
     "comparisonHigher": "높음",
     "comparisonLower": "낮음",

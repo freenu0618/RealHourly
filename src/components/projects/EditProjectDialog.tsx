@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -144,6 +145,7 @@ export function EditProjectDialog({
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("editProject")}</DialogTitle>
+          <DialogDescription className="sr-only">{t("editProject")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

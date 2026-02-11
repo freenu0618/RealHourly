@@ -45,10 +45,10 @@ const SEVERITY_CONFIG: Record<Severity, { border: string; bg: string; text: stri
     badge: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
   },
   great: {
-    border: "border-emerald-400 dark:border-emerald-600",
-    bg: "bg-emerald-50 dark:bg-emerald-950/20",
-    text: "text-emerald-600 dark:text-emerald-400",
-    badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+    border: "border-blue-400 dark:border-blue-600",
+    bg: "bg-blue-50 dark:bg-blue-950/20",
+    text: "text-blue-600 dark:text-blue-400",
+    badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
   },
 };
 

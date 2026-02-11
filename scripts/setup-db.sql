@@ -13,6 +13,9 @@ ALTER TABLE time_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cost_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE generated_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_actions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE weekly_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_shares ENABLE ROW LEVEL SECURITY;
 
 -- 2. profiles: id = auth.uid()
 CREATE POLICY "profiles_select" ON profiles
@@ -144,15 +147,60 @@ CREATE POLICY "generated_messages_delete" ON generated_messages
     )
   );
 
--- 9. Auto-create profile on user signup (trigger)
+-- 9. ai_actions: user_id = auth.uid()
+CREATE POLICY "ai_actions_select" ON ai_actions
+  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "ai_actions_insert" ON ai_actions
+  FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "ai_actions_update" ON ai_actions
+  FOR UPDATE USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "ai_actions_delete" ON ai_actions
+  FOR DELETE USING (user_id = auth.uid());
+
+-- 10. weekly_reports: user_id = auth.uid()
+CREATE POLICY "weekly_reports_select" ON weekly_reports
+  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "weekly_reports_insert" ON weekly_reports
+  FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "weekly_reports_update" ON weekly_reports
+  FOR UPDATE USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "weekly_reports_delete" ON weekly_reports
+  FOR DELETE USING (user_id = auth.uid());
+
+-- 11. project_shares: via project.user_id = auth.uid()
+--     Note: public read access via share_token is handled by the API route (no auth required)
+CREATE POLICY "project_shares_select" ON project_shares
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
+  );
+CREATE POLICY "project_shares_insert" ON project_shares
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
+  );
+CREATE POLICY "project_shares_update" ON project_shares
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
+  ) WITH CHECK (
+    EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
+  );
+CREATE POLICY "project_shares_delete" ON project_shares
+  FOR DELETE USING (
+    EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
+  );
+
+-- 12. Auto-create profile on user signup (trigger)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.profiles (id)
   VALUES (NEW.id);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

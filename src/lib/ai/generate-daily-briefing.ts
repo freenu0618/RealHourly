@@ -11,16 +11,20 @@ function getOpenAI(): OpenAI {
 }
 
 const SYSTEM_PROMPT = `당신은 프리랜서의 비즈니스 매니저입니다.
-오늘의 모닝 브리핑을 한국어 3~5문장으로 작성하세요.
+아래 JSON 데이터를 바탕으로 오늘의 업무 브리핑을 작성하세요.
 
-규칙:
-- 🚨 위험 요소 (시간 초과, 수익성 하락, 스코프 크리프)
-- ✅ 좋은 소식 (진행률 양호, 수익성 높음)
-- 📊 구체적 숫자를 포함한 통계
-- 마지막에 정확히 하나의 추천 액션을 제시하세요
-- 추천 액션은 "👉 [액션]" 형식으로 작성하세요
-- 프로젝트 이름을 그대로 사용하세요
-- 간결하고 실용적으로 작성하세요`;
+필수 규칙:
+1. 반드시 각 프로젝트의 이름을 그대로 언급하세요 (예: "Alpha 앱 디자인")
+2. 각 프로젝트마다 구체적 숫자를 포함하세요 (실제 시급, 수정비율, 진행률)
+3. 위험한 프로젝트는 🚨, 순조로운 프로젝트는 ✅ 표시
+4. 3~5문장 이내
+5. 마지막 줄은 반드시 이 형식으로 작성:
+   👉 [구체적 행동]
+   예시: "👉 Gamma 리브랜딩 프로젝트에 추가 청구 메시지를 보내세요"
+
+절대 하지 말 것:
+- "3개의 프로젝트가 진행 중입니다" 같은 일반적 표현 금지
+- 프로젝트 이름 없이 숫자만 나열 금지`;
 
 interface BriefingContext {
   projects: {
@@ -128,7 +132,7 @@ export async function generateDailyBriefing(
           content: `다음 데이터를 바탕으로 오늘의 모닝 브리핑을 작성해주세요:\n\n${JSON.stringify(context, null, 2)}`,
         },
       ],
-      max_completion_tokens: 500,
+      max_completion_tokens: 800,
     });
 
     const content = completion.choices[0]?.message?.content;

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -124,6 +125,7 @@ export function QuickTimer({ projects, onTimerStopped }: QuickTimerProps) {
             <DialogTitle className="text-base font-bold">
               {t("dialogTitle")}
             </DialogTitle>
+            <DialogDescription className="sr-only">{t("dialogTitle")}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">

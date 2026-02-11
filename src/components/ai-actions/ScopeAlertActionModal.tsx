@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -91,9 +92,9 @@ export function ScopeAlertActionModal({
             <DialogTitle className="text-lg font-bold">
               {payload.projectName}
             </DialogTitle>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <DialogDescription className="mt-1 text-sm text-muted-foreground">
               {action.title}
-            </p>
+            </DialogDescription>
           </DialogHeader>
         </div>
 

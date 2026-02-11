@@ -747,7 +747,7 @@
     "severity_danger": "Very unfavorable",
     "severity_warning": "Low profitability",
     "severity_good": "Reasonable",
-    "severity_great": "Great deal!",
+    "severity_great": "Excellent",
     "comparison": "Past projects avg rate: {avg} — {diff}% {direction}",
     "comparisonHigher": "higher",
     "comparisonLower": "lower",

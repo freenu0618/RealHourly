@@ -49,7 +49,7 @@ export async function parseReceipt(
   imageBase64: string,
   userCurrency: string,
 ): Promise<ParsedReceipt> {
-  const model = process.env.LLM_MODEL_PARSE || "gpt-4o-mini";
+  const model = process.env.LLM_MODEL_VISION || "gpt-4o-mini";
 
   const completion = await getOpenAI().chat.completions.create({
     model,
