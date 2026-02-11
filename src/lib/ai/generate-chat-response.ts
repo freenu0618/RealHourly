@@ -31,36 +31,72 @@ export async function generateChatResponse(
   // Keep last 5 conversation pairs (10 messages) to save token budget
   const recentHistory = conversationHistory.slice(-10);
 
+  const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
+
+  const messages: OpenAI.ChatCompletionMessageParam[] = [
+    { role: "system", content: systemPrompt },
+    ...recentHistory.map(
+      (m) =>
+        ({
+          role: m.role,
+          content: m.content,
+        }) as OpenAI.ChatCompletionMessageParam,
+    ),
+    { role: "user", content: userMessage },
+  ];
+
+  // First attempt
+  const result = await callLLM(model, messages);
+  if (result) return result;
+
+  // Retry with reduced context (fewer activities, shorter history)
+  console.warn("[AI Chat] Retrying with reduced context...");
+  const reducedContext = chatContextToPromptString({
+    ...context,
+    recentActivity: context.recentActivity.slice(0, 5),
+  });
+  const reducedMessages: OpenAI.ChatCompletionMessageParam[] = [
+    { role: "system", content: buildChatSystemPrompt(reducedContext) },
+    ...recentHistory.slice(-4),
+    { role: "user", content: userMessage },
+  ];
+
+  const retryResult = await callLLM(model, reducedMessages);
+  if (retryResult) return retryResult;
+
+  return FALLBACK_MESSAGE;
+}
+
+async function callLLM(
+  model: string,
+  messages: OpenAI.ChatCompletionMessageParam[],
+): Promise<string | null> {
   try {
-    const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
-
-    const messages: OpenAI.ChatCompletionMessageParam[] = [
-      { role: "system", content: systemPrompt },
-      ...recentHistory.map(
-        (m) =>
-          ({
-            role: m.role,
-            content: m.content,
-          }) as OpenAI.ChatCompletionMessageParam,
-      ),
-      { role: "user", content: userMessage },
-    ];
-
     const completion = await getOpenAI().chat.completions.create({
       model,
       messages,
-      max_completion_tokens: 1500,
+      max_completion_tokens: 2000,
     });
 
-    const content = completion.choices[0]?.message?.content;
+    const choice = completion.choices[0];
+    const content = choice?.message?.content;
+
+    if (choice?.finish_reason && choice.finish_reason !== "stop") {
+      console.warn(
+        `[AI Chat] Non-stop finish_reason=${choice.finish_reason}, usage=${JSON.stringify(completion.usage)}`,
+      );
+    }
+
     if (!content || content.trim() === "") {
-      console.error("[AI Chat] Empty response despite increased tokens");
-      return "데이터를 분석 중입니다. 질문을 더 간결하게 다시 해주세요.";
+      console.error(
+        `[AI Chat] Empty content. finish_reason=${choice?.finish_reason}, model=${model}, usage=${JSON.stringify(completion.usage)}`,
+      );
+      return null;
     }
 
     return content.trim();
   } catch (error) {
-    console.error("[AI Chat] Generation failed:", error);
-    return FALLBACK_MESSAGE;
+    console.error("[AI Chat] API call failed:", error);
+    return null;
   }
 }
