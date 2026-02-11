@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/server";
 import { handleApiError } from "@/lib/api/handler";
-import { getTodayBriefing, createAiAction } from "@/db/queries/ai-actions";
+import { getTodayBriefing, createAiAction, deleteTodayBriefings } from "@/db/queries/ai-actions";
 import { generateDailyBriefing } from "@/lib/ai/generate-daily-briefing";
 import { rateLimit } from "@/lib/api/rate-limit";
 
@@ -11,9 +11,9 @@ export async function GET() {
   try {
     const user = await requireUser();
 
-    // 1. Check for cached briefing today
+    // 1. Check for cached briefing today (skip dismissed ones)
     const existing = await getTodayBriefing(user.id);
-    if (existing) {
+    if (existing && existing.status !== "dismissed") {
       return NextResponse.json({ data: existing, cached: true });
     }
 
@@ -31,7 +31,7 @@ export async function GET() {
 
     // 4. Save to ai_actions (re-check to prevent race condition)
     const recheck = await getTodayBriefing(user.id);
-    if (recheck) {
+    if (recheck && recheck.status !== "dismissed") {
       return NextResponse.json({ data: recheck, cached: true });
     }
 
@@ -44,6 +44,16 @@ export async function GET() {
     });
 
     return NextResponse.json({ data: action, cached: false });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function DELETE() {
+  try {
+    const user = await requireUser();
+    const deleted = await deleteTodayBriefings(user.id);
+    return NextResponse.json({ data: { deleted } });
   } catch (error) {
     return handleApiError(error);
   }

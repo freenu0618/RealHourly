@@ -65,6 +65,20 @@ export async function createAiAction(
   return aiActionToDTO(row);
 }
 
+export async function deleteTodayBriefings(userId: string) {
+  const rows = await db
+    .delete(aiActions)
+    .where(
+      and(
+        eq(aiActions.userId, userId),
+        eq(aiActions.type, "briefing"),
+        sql`${aiActions.createdAt}::date = CURRENT_DATE`,
+      ),
+    )
+    .returning();
+  return rows.length;
+}
+
 export async function updateAiActionStatus(
   actionId: string,
   userId: string,
