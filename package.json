@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed-demo.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts",
     "test:logic": "tsx scripts/test-logic.ts",
     "test": "vitest",
     "test:run": "vitest run"
