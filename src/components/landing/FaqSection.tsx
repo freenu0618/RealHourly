@@ -9,14 +9,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+const FAQ_COUNT = 8;
+
 export function FaqSection() {
   const t = useTranslations("landing");
 
-  const faqs = [
-    { q: t("faq1Q"), a: t("faq1A") },
-    { q: t("faq2Q"), a: t("faq2A") },
-    { q: t("faq3Q"), a: t("faq3A") },
-  ];
+  const faqs = Array.from({ length: FAQ_COUNT }, (_, i) => ({
+    q: t(`faq${i + 1}Q`),
+    a: t(`faq${i + 1}A`),
+  }));
 
   return (
     <section id="faq" className="px-6 py-20">
@@ -27,24 +28,24 @@ export function FaqSection() {
       </FadeIn>
 
       <FadeIn>
-      <div className="mx-auto max-w-2xl">
-        <Accordion type="single" collapsible className="space-y-4">
-          {faqs.map((faq, i) => (
-            <AccordionItem
-              key={i}
-              value={`faq-${i}`}
-              className="rounded-xl border bg-card px-6"
-            >
-              <AccordionTrigger className="text-left text-sm font-medium hover:no-underline">
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+        <div className="mx-auto max-w-2xl">
+          <Accordion type="single" collapsible className="space-y-4">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="rounded-xl border bg-card px-6"
+              >
+                <AccordionTrigger className="text-left text-sm font-medium hover:no-underline">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </FadeIn>
     </section>
   );
