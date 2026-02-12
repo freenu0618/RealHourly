@@ -53,12 +53,12 @@ export function HourlyRateBar({
     {
       name: t("nominalHourly"),
       value: nominalHourly ?? 0,
-      fill: "#A4D4C8",
+      fill: "#60A5FA",
     },
     {
       name: t("realHourly"),
       value: realHourly,
-      fill: net < 0 ? "#D97706" : "#7EB5A6",
+      fill: net < 0 ? "#F59E0B" : "#2B6B93",
     },
   ];
 
@@ -66,20 +66,20 @@ export function HourlyRateBar({
     <div className="space-y-3">
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical" margin={{ left: 10, right: 40 }}>
-          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E6DDD3" />
+          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
           <XAxis type="number" hide />
           <YAxis
             type="category"
             dataKey="name"
             width={80}
-            tick={{ fontSize: 12, fill: "#8C7A6B" }}
+            tick={{ fontSize: 12, fill: "#64748B" }}
           />
           <Tooltip
             formatter={(value) => formatCurrency(Number(value), currency)}
             contentStyle={{
               borderRadius: "12px",
-              border: "1px solid #E6DDD3",
-              backgroundColor: "#FFF8EE",
+              border: "1px solid #E2E8F0",
+              backgroundColor: "#F8FAFC",
             }}
           />
           <Bar dataKey="value" radius={[0, 8, 8, 0]} barSize={32}>
@@ -90,7 +90,7 @@ export function HourlyRateBar({
               dataKey="value"
               position="right"
               formatter={(v) => formatCurrency(Number(v), currency)}
-              style={{ fontSize: 13, fontWeight: 600, fill: "#4A3728" }}
+              style={{ fontSize: 13, fontWeight: 600, fill: "#1E293B" }}
             />
           </Bar>
         </BarChart>

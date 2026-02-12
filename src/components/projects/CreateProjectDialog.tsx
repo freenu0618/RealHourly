@@ -156,7 +156,7 @@ export function CreateProjectDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 rounded-xl bg-primary font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#6CA395] hover:shadow-md">
+        <Button className="gap-2 rounded-xl bg-primary font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md">
           <span className="text-base">{"\u2728"}</span>
           {t("create")}
         </Button>
@@ -332,7 +332,7 @@ export function CreateProjectDialog() {
 
           <Button
             type="submit"
-            className="w-full rounded-xl bg-primary py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+            className="w-full rounded-xl bg-primary py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-primary/30 active:scale-[0.98]"
             disabled={formState.isSubmitting}
           >
             {t("create")}

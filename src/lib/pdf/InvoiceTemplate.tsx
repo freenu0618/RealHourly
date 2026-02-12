@@ -28,11 +28,11 @@ Font.register({
   ],
 });
 
-const PRIMARY = "#7EB5A6";
-const TEXT_DARK = "#3E2C23";
-const TEXT_MUTED = "#8B7B6E";
-const BORDER = "#E8DDD4";
-const BG_LIGHT = "#FAF7F4";
+const PRIMARY = "#2B6B93";
+const TEXT_DARK = "#1E293B";
+const TEXT_MUTED = "#64748B";
+const BORDER = "#E2E8F0";
+const BG_LIGHT = "#F8FAFC";
 
 const styles = StyleSheet.create({
   page: {

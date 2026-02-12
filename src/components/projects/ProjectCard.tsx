@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MagicCard } from "@/components/ui/magic-card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/money/currency";
 
 interface ProjectCardProps {
@@ -61,7 +62,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className="group rounded-[20px] border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+      <MagicCard
+        className="group rounded-[20px] border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
+        gradientColor="var(--primary)"
+        gradientOpacity={0.08}
+      >
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
@@ -167,7 +172,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             )}
           </div>
         </CardContent>
-      </Card>
+      </MagicCard>
     </Link>
   );
 }

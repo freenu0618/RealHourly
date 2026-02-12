@@ -44,7 +44,7 @@ export function DashboardClient() {
           <h1 className="text-2xl font-bold md:text-3xl">{t("emptyTitle")}</h1>
           <p className="max-w-sm text-muted-foreground">{t("emptyDescription")}</p>
         </div>
-        <Button asChild className="rounded-xl bg-primary px-6 py-3 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] active:scale-[0.98]">
+        <Button asChild className="rounded-xl bg-primary px-6 py-3 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]">
           <Link href="/projects">
             <Plus className="mr-2 size-5" />
             {t("createProject")}
@@ -58,7 +58,7 @@ export function DashboardClient() {
   const greeting = getGreeting(t);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
           {greeting.emoji} {greeting.text}
@@ -84,7 +84,7 @@ export function DashboardClient() {
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <div>
         <Skeleton className="h-9 w-64 rounded-xl" />
         <Skeleton className="mt-2 h-4 w-32 rounded-xl" />

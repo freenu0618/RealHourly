@@ -64,5 +64,5 @@ function createSupabaseMiddlewareClient(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|report|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|_vercel|report|timesheet-review|.*\\..*).*)"],
 };

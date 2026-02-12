@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -230,6 +230,34 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
     setEntries([...entries, entry]);
     toast.success(t("timerStopped"));
   }
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+Enter: Parse
+      if (e.ctrlKey && e.key === "Enter" && !e.shiftKey && !e.altKey) {
+        if (input.trim() && !isLoading) {
+          e.preventDefault();
+          handleParse();
+        }
+      }
+      // Ctrl+S: Save All
+      if (e.ctrlKey && e.key === "s" && !e.shiftKey && !e.altKey) {
+        const canSave = entries.length > 0 && entries.every((e) => e.matchedProjectId && e.durationMinutes);
+        if (canSave) {
+          e.preventDefault();
+          // Trigger SaveAllButton's save action
+          const saveButton = document.querySelector('[aria-label="' + t("saveAll") + '"]') as HTMLButtonElement;
+          if (saveButton && !saveButton.disabled) {
+            saveButton.click();
+          }
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [input, isLoading, entries, handleParse, t]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">

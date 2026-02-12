@@ -40,7 +40,7 @@ export function DashboardWeeklyChart({ weeklyMinutes, t }: DashboardWeeklyChartP
   });
 
   return (
-    <Card className="rounded-[20px] border-warm-border">
+    <Card className="rounded-[20px] border-border">
       <CardContent className="p-5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold">{"\uD83D\uDCC5"} {t("weeklySummary")}</h2>
@@ -57,19 +57,19 @@ export function DashboardWeeklyChart({ weeklyMinutes, t }: DashboardWeeklyChartP
         ) : (
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={chartData} margin={{ left: 0, right: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E6DDD3" />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#8C7A6B" }} interval={0} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#64748B" }} interval={0} />
               <Tooltip
                 formatter={(value) => [`${value}h`, ""]}
                 contentStyle={{
                   borderRadius: "12px",
-                  border: "1px solid #E6DDD3",
-                  backgroundColor: "#FFF8EE",
+                  border: "1px solid #E2E8F0",
+                  backgroundColor: "#F8FAFC",
                 }}
               />
               <Bar dataKey="hours" radius={[6, 6, 0, 0]} barSize={28}>
                 {chartData.map((d, i) => (
-                  <Cell key={i} fill={d.isToday ? "#5A9E8F" : "#7EB5A6"} stroke={d.isToday ? "#3D7A6E" : "none"} strokeWidth={d.isToday ? 2 : 0} />
+                  <Cell key={i} fill={d.isToday ? "#1E4F75" : "#2B6B93"} stroke={d.isToday ? "#1A3F5E" : "none"} strokeWidth={d.isToday ? 2 : 0} />
                 ))}
               </Bar>
             </BarChart>

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/fade-in";
 
 export function StepsSection() {
   const t = useTranslations("landing");
@@ -13,14 +14,16 @@ export function StepsSection() {
   ] as const;
 
   return (
-    <section id="how-it-works" className="bg-card/30 px-6 py-24" data-animate>
-      <h2 className="mb-16 text-center text-3xl font-bold">
-        {t("stepsTitle")}
-      </h2>
+    <section id="how-it-works" className="bg-card/30 px-6 py-24">
+      <FadeIn blur>
+        <h2 className="mb-16 text-center text-3xl font-bold">
+          {t("stepsTitle")}
+        </h2>
+      </FadeIn>
 
-      <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
+      <StaggerContainer className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
         {steps.map((item, i) => (
-          <div key={item.step} className="relative">
+          <StaggerItem key={item.step} className="relative">
             {/* Connector arrow (hidden on mobile, visible on md+) */}
             {i < steps.length - 1 && (
               <div className="absolute -right-5 top-3 z-10 hidden md:block">
@@ -44,9 +47,9 @@ export function StepsSection() {
                 {t(item.descKey)}
               </p>
             </div>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
 
       <div className="mt-10 flex justify-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">

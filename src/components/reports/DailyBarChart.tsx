@@ -62,7 +62,7 @@ export function DailyBarChart({ dailyBreakdown }: Props) {
           {data.map((d, i) => (
             <Cell
               key={i}
-              fill={d.isWeekend ? "#E89B48" : "#7EB5A6"}
+              fill={d.isWeekend ? "#E8882D" : "#2B6B93"}
               opacity={d.isWeekend ? 0.7 : 1}
             />
           ))}

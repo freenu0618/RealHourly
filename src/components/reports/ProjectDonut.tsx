@@ -11,13 +11,13 @@ import {
 import { useTranslations } from "next-intl";
 
 const COLORS = [
-  "#7EB5A6",
-  "#E89B48",
+  "#2B6B93",
+  "#E8882D",
   "#6366F1",
   "#EC4899",
-  "#D97706",
+  "#F59E0B",
   "#8B5CF6",
-  "#14B8A6",
+  "#60A5FA",
   "#F43F5E",
   "#3B82F6",
   "#22C55E",

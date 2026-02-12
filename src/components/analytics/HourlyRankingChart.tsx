@@ -15,7 +15,7 @@ import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/money/currency";
 import type { ProjectComparison } from "@/db/queries/analytics";
 
-const COLORS = ["#7EB5A6", "#A4D4C8", "#E89B48", "#D1EBE4", "#D97706"];
+const COLORS = ["#2B6B93", "#60A5FA", "#E8882D", "#93C5FD", "#F59E0B"];
 
 interface Props {
   projects: ProjectComparison[];

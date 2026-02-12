@@ -43,7 +43,7 @@ export function DashboardProfitabilityCard({
   const isPositive = avgRealRate > 0;
 
   return (
-    <Card className="rounded-[20px] border-warm-border transition-all hover:-translate-y-0.5 hover:shadow-lg">
+    <Card className="rounded-[20px] border-border transition-all hover:-translate-y-0.5 hover:shadow-lg">
       <CardContent className="flex items-center gap-4 p-5">
         <span className="text-3xl">
           {isPositive ? <TrendingUp className="size-8 text-green-600" /> : <TrendingDown className="size-8 text-red-500" />}

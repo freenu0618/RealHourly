@@ -81,6 +81,7 @@ AI 기반 프리랜서 수익성 대시보드:
 | Date | date-fns | 4.x | `lib/date/index.ts` 래퍼 통일 |
 | Clipboard | navigator.clipboard 래퍼 | — | `lib/utils/clipboard.ts` |
 | Temp IDs | nanoid | — | HITL 드래프트 아이템용 |
+| Animation | framer-motion | 12.x | Viewport-triggered FadeIn, Stagger |
 | Deploy | Vercel | — | Next.js 최적화 |
 | Package | pnpm | — | 속도 + 디스크 효율 |
 
@@ -94,6 +95,9 @@ AI 기반 프리랜서 수익성 대시보드:
 | 청구 메시지 생성 (프리미엄) | gpt-5.2 | `LLM_MODEL_GENERATE_PREMIUM` | 🔲 미사용 |
 | 주간 리포트 인사이트 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
 | 인보이스 라인아이템 생성 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| AI 채팅 어시스턴트 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| AI 컨설턴트 (5가지 역할) | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
+| 일일 브리핑 | gpt-5-mini | `LLM_MODEL_GENERATE` | ✅ 정상 동작 |
 | 음성 입력 (Whisper) | whisper-1 | — | ✅ 정상 동작 |
 
 > ⚠️ 초기 계획의 `gpt-5-nano`는 Structured Outputs 호환 이슈로 `gpt-5-mini`로 통일.
@@ -1164,7 +1168,7 @@ scripts/
 | i18n Keys | ~400+ per language |
 | Unit Tests | 68 cases |
 | Total Commits | 33 |
-| Build Output | 44 pages, 0 errors |
+| Build Output | 50 pages, 0 errors |
 
 ---
 

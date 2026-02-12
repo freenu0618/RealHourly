@@ -11,6 +11,7 @@ import type { ComparisonData } from "@/db/queries/analytics";
 import { getDominantCurrency } from "@/lib/money/currency";
 import { ClientSummaryCards } from "./ClientSummaryCards";
 import { InsightCards } from "./InsightCards";
+import { subDays, formatISO } from "date-fns";
 
 const ChartSkeleton = () => <Skeleton className="h-[260px] w-full rounded-xl" />;
 const HourlyRankingChart = dynamic(
@@ -26,15 +27,35 @@ const CategoryStackedBar = dynamic(
   { ssr: false, loading: ChartSkeleton },
 );
 
+type DateRangePreset = "7D" | "30D" | "3M" | "6M" | "All";
+
 export function AnalyticsClient() {
   const t = useTranslations("analytics");
   const [data, setData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedPreset, setSelectedPreset] = useState<DateRangePreset>("All");
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("/api/analytics/comparison");
+        const params = new URLSearchParams();
+
+        // Calculate date range based on preset
+        if (selectedPreset !== "All") {
+          const today = new Date();
+          const daysMap: Record<Exclude<DateRangePreset, "All">, number> = {
+            "7D": 7,
+            "30D": 30,
+            "3M": 90,
+            "6M": 180,
+          };
+          const from = subDays(today, daysMap[selectedPreset]);
+          params.set("from", formatISO(from, { representation: "date" }));
+          params.set("to", formatISO(today, { representation: "date" }));
+        }
+
+        const url = `/api/analytics/comparison${params.toString() ? `?${params.toString()}` : ""}`;
+        const res = await fetch(url);
         if (!res.ok) throw new Error("fetch failed");
         const json = await res.json();
         setData(json.data);
@@ -45,7 +66,7 @@ export function AnalyticsClient() {
       }
     }
     fetchData();
-  }, [t]);
+  }, [t, selectedPreset]);
 
   if (loading) {
     return (
@@ -77,12 +98,32 @@ export function AnalyticsClient() {
     );
   }
 
+  const presets: DateRangePreset[] = ["7D", "30D", "3M", "6M", "All"];
+
   return (
-    <div className="mx-auto max-w-4xl space-y-8 p-6">
+    <div className="mx-auto max-w-4xl space-y-5 p-4 md:p-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
+      </div>
+
+      {/* Date Range Selector */}
+      <div className="flex flex-wrap items-center gap-2">
+        {presets.map((preset) => (
+          <Button
+            key={preset}
+            size="sm"
+            variant={selectedPreset === preset ? "default" : "outline"}
+            onClick={() => {
+              setSelectedPreset(preset);
+              setLoading(true);
+            }}
+            className="rounded-xl"
+          >
+            {preset}
+          </Button>
+        ))}
       </div>
 
       {/* Insight Cards */}

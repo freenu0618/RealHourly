@@ -17,6 +17,9 @@ export async function PATCH(req: Request, ctx: Ctx) {
     if (!updated) {
       throw new ApiError("NOT_FOUND", 404, "Time entry not found");
     }
+    if ("locked" in updated) {
+      throw new ApiError("ENTRY_LOCKED", 403, "This entry has been approved and is locked");
+    }
 
     return NextResponse.json({ data: updated });
   } catch (error) {
@@ -29,8 +32,11 @@ export async function DELETE(_req: Request, ctx: Ctx) {
     const user = await requireUser();
     const { entryId } = await ctx.params;
 
-    const deleted = await softDeleteTimeEntry(entryId, user.id);
-    if (!deleted) {
+    const result = await softDeleteTimeEntry(entryId, user.id);
+    if (result === "locked") {
+      throw new ApiError("ENTRY_LOCKED", 403, "This entry has been approved and is locked");
+    }
+    if (!result) {
       throw new ApiError("NOT_FOUND", 404, "Time entry not found");
     }
 

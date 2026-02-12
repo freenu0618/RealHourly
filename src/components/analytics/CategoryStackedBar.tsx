@@ -14,15 +14,15 @@ import { useTranslations } from "next-intl";
 import type { ProjectComparison } from "@/db/queries/analytics";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  planning: "#7EB5A6",
-  design: "#A4D4C8",
-  development: "#5A9E8F",
-  meeting: "#E89B48",
-  revision: "#D97706",
-  admin: "#D1EBE4",
-  email: "#8CB4A8",
-  research: "#B8D8CE",
-  other: "#C4B5A5",
+  planning: "#2B6B93",
+  design: "#60A5FA",
+  development: "#3B82F6",
+  meeting: "#E8882D",
+  revision: "#F59E0B",
+  admin: "#94A3B8",
+  email: "#CBD5E1",
+  research: "#8B5CF6",
+  other: "#D1D5DB",
 };
 
 interface Props {
@@ -113,7 +113,7 @@ export function CategoryStackedBar({ projects }: Props) {
             key={cat}
             dataKey={cat}
             stackId="a"
-            fill={CATEGORY_COLORS[cat] ?? "#C4B5A5"}
+            fill={CATEGORY_COLORS[cat] ?? "#D1D5DB"}
             radius={
               cat === categories[categories.length - 1]
                 ? [4, 4, 0, 0]

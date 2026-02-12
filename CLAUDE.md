@@ -29,6 +29,7 @@
 12. **Settings** — Profile, preferences (currency/timezone/locale), data export
 13. **Marketing Landing** — Full landing page with hero carousel, features, pricing, FAQ
 14. **AI Chat Assistant** — Floating chat panel with full user context, conversational Q&A about projects/profitability/time
+15. **AI Consultant Page** — Dedicated full-page chat with 5 specialist roles (data analyst, business advisor, career guide, time coach, financial consultant)
 
 ## Tech Stack
 
@@ -51,6 +52,7 @@
 | Temp IDs | nanoid (HITL draft items) | |
 | Deploy | Vercel | |
 | Package | pnpm | |
+| Animation | framer-motion | 12.x |
 
 ### LLM Strategy (OpenAI, Tiered)
 
@@ -105,6 +107,7 @@ src/
 │  │  │  ├─ reports/[weekStart]/page.tsx     # Report detail
 │  │  │  ├─ settings/page.tsx                # Profile + preferences
 │  │  │  ├─ clients/page.tsx                 # Client management
+│  │  │  ├─ chat/page.tsx                  # AI Consultant (5 roles)
 │  │  │  └─ layout.tsx
 │  │  ├─ (marketing)/
 │  │  │  ├─ page.tsx                         # Landing page
@@ -146,7 +149,7 @@ src/
 │  ├─ report/[shareToken]/page.tsx            # Public report page (no locale)
 │  └─ middleware.ts                          # next-intl + Supabase auth
 ├─ components/
-│  ├─ ui/                    # shadcn/ui (26 components)
+│  ├─ ui/                    # shadcn/ui + fade-in animation (27 components)
 │  ├─ time-log/              # NLP input, HITL cards, history, calendar (15)
 │  ├─ projects/              # Cards, forms, lifecycle, cost entries, shares (18)
 │  ├─ analytics/             # Charts, insights, comparison (6)
@@ -155,8 +158,9 @@ src/
 │  ├─ alerts/                # ScopeAlertModal (1)
 │  ├─ dashboard/             # DashboardClient (1)
 │  ├─ settings/              # Profile, preferences, account, data (5)
-│  ├─ chat/                  # AI chat assistant (4)
+│  ├─ chat/                  # AI chat + consultant page (5)
 │  ├─ landing/               # Marketing landing page sections (15)
+│  ├─ layout/                # PageHeader (1)
 │  └─ app-sidebar.tsx        # Navigation sidebar
 ├─ lib/
 │  ├─ ai/                    # LLM integrations (14 files)
@@ -291,6 +295,25 @@ nominal_hourly = expected_hours > 0 ? gross / expected_hours : null
 > Blocking Save = project unmatched/ambiguous OR duration missing (pre-filled 60min, user confirms).
 > Warnings only (save allowed) = date ambiguous, duration ambiguous, category ambiguous, future intent.
 
+## Design System
+
+### Brand Colors
+- **Primary (Blue)**: `#2B6B93` — Logo clock + "Real" text (trust, professionalism)
+- **Accent (Orange)**: `#E8882D` — Logo dollar + "Hourly" text (energy, revenue)
+- **Light mode background**: `#FFFFFF` (clean white)
+- **Dark mode background**: `#0F0F0F` (deep gray)
+
+### Semantic Status Colors
+- Success: `#16A34A` / dark `#4ADE80`
+- Warning: `#E8882D` / dark `#FB923C`
+- Danger: `#DC2626` / dark `#F87171`
+- Info: `#2B6B93` / dark `#5BA3CF`
+
+### Animation System
+- **Library**: framer-motion (viewport-triggered)
+- **Components**: `FadeIn` (blur optional), `StaggerContainer`, `StaggerItem` in `components/ui/fade-in.tsx`
+- **Accessibility**: All animations respect `prefers-reduced-motion: reduce`
+
 ## Environment Variables
 ```
 NEXT_PUBLIC_SUPABASE_URL=
@@ -313,7 +336,7 @@ LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
 ## Build & Deploy
 ```bash
 pnpm install
-pnpm build          # Next.js production build (44 pages)
+pnpm build          # Next.js production build (50 pages)
 pnpm test:run       # Vitest unit tests (88 tests)
 pnpm drizzle-kit push   # Push schema changes to DB
 pnpm seed           # Seed demo data (optional)

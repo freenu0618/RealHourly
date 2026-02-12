@@ -18,7 +18,7 @@ export async function GET() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #FFFDF7 0%, #FFF8EE 50%, #F0F7F4 100%)",
+          background: "linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 50%, #DBEAFE 100%)",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

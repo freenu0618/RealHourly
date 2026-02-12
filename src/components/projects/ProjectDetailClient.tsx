@@ -8,6 +8,7 @@ import { Lightbulb } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScopeAlertModal } from "@/components/alerts/ScopeAlertModal";
 
 const HourlyRateBar = dynamic(
@@ -69,6 +70,7 @@ export function ProjectDetailClient({
 }: ProjectDetailClientProps) {
   const t = useTranslations("metrics");
   const tAlerts = useTranslations("alerts");
+  const tDetail = useTranslations("projectDetail");
   const router = useRouter();
 
   const [project, setProject] = useState(initialProject);
@@ -173,42 +175,55 @@ export function ProjectDetailClient({
 
       <ProjectProgressSection projectId={projectId} initialProgress={metrics.progressPercent} isEditable={isEditable} onProgressUpdated={() => fetchMetrics()} />
 
-      {project.expectedHours != null && project.expectedHours > 0 && (
-        <BudgetProgressBar
-          expectedHours={project.expectedHours}
-          actualHours={metrics.totalHours}
-          progressPercent={metrics.progressPercent}
-        />
-      )}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">{tDetail("tabOverview")}</TabsTrigger>
+          <TabsTrigger value="timeCosts">{tDetail("tabTimeCosts")}</TabsTrigger>
+          <TabsTrigger value="shares">{tDetail("tabShares")}</TabsTrigger>
+        </TabsList>
 
-      {metrics.agreedRevisionCount != null && metrics.agreedRevisionCount > 0 && (
-        <RevisionTracker
-          agreedCount={metrics.agreedRevisionCount}
-          actualCount={metrics.actualRevisionCount}
-        />
-      )}
+        <TabsContent value="overview" className="space-y-6">
+          {project.expectedHours != null && project.expectedHours > 0 && (
+            <BudgetProgressBar
+              expectedHours={project.expectedHours}
+              actualHours={metrics.totalHours}
+              progressPercent={metrics.progressPercent}
+            />
+          )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <KPICard title={t("nominalHourly")} value={metrics.nominalHourly !== null ? formatCurrency(metrics.nominalHourly, currency) : "\u2014"} />
-        <KPICard title={t("realHourly")} value={metrics.realHourly !== null ? formatCurrency(metrics.realHourly, currency) : "\u2014"} highlight={metrics.realHourly !== null && metrics.nominalHourly !== null && metrics.realHourly < metrics.nominalHourly} />
-        <KPICard title={t("totalHours")} value={metrics.totalHours > 0 ? `${metrics.totalHours}h` : "0h"} />
-        <KPICard title={t("netRevenue")} value={formatCurrency(metrics.net, currency)} highlight={metrics.net < 0} />
-      </div>
+          {metrics.agreedRevisionCount != null && metrics.agreedRevisionCount > 0 && (
+            <RevisionTracker
+              agreedCount={metrics.agreedRevisionCount}
+              actualCount={metrics.actualRevisionCount}
+            />
+          )}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card><CardHeader><CardTitle className="text-base">{t("hourlyComparison")}</CardTitle></CardHeader><CardContent><HourlyRateBar nominalHourly={metrics.nominalHourly} realHourly={metrics.realHourly} currency={currency} net={metrics.net} /></CardContent></Card>
-        <Card><CardHeader><CardTitle className="text-base">{t("costBreakdown")}</CardTitle></CardHeader><CardContent><CostBreakdownPie costBreakdown={metrics.costBreakdown} currency={currency} /></CardContent></Card>
-      </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <KPICard title={t("nominalHourly")} value={metrics.nominalHourly !== null ? formatCurrency(metrics.nominalHourly, currency) : "\u2014"} />
+            <KPICard title={t("realHourly")} value={metrics.realHourly !== null ? formatCurrency(metrics.realHourly, currency) : "\u2014"} highlight={metrics.realHourly !== null && metrics.nominalHourly !== null && metrics.realHourly < metrics.nominalHourly} />
+            <KPICard title={t("totalHours")} value={metrics.totalHours > 0 ? `${metrics.totalHours}h` : "0h"} />
+            <KPICard title={t("netRevenue")} value={formatCurrency(metrics.net, currency)} highlight={metrics.net < 0} />
+          </div>
 
-      {project.clientId && (
-        <ClientAnalysisCard clientId={project.clientId} />
-      )}
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card><CardHeader><CardTitle className="text-base">{t("hourlyComparison")}</CardTitle></CardHeader><CardContent><HourlyRateBar nominalHourly={metrics.nominalHourly} realHourly={metrics.realHourly} currency={currency} net={metrics.net} /></CardContent></Card>
+            <Card><CardHeader><CardTitle className="text-base">{t("costBreakdown")}</CardTitle></CardHeader><CardContent><CostBreakdownPie costBreakdown={metrics.costBreakdown} currency={currency} /></CardContent></Card>
+          </div>
 
-      <TimeEntriesSection projectId={projectId} />
+          {project.clientId && (
+            <ClientAnalysisCard clientId={project.clientId} />
+          )}
+        </TabsContent>
 
-      <CostEntriesSection projectId={projectId} currency={currency} isEditable={isEditable} />
+        <TabsContent value="timeCosts" className="space-y-6">
+          <TimeEntriesSection projectId={projectId} />
+          <CostEntriesSection projectId={projectId} currency={currency} isEditable={isEditable} />
+        </TabsContent>
 
-      <ShareManagementSection projectId={projectId} />
+        <TabsContent value="shares" className="space-y-6">
+          <ShareManagementSection projectId={projectId} />
+        </TabsContent>
+      </Tabs>
 
       <InvoiceDialog open={showInvoice} onOpenChange={setShowInvoice} projectId={projectId} defaultType={invoiceType} />
       <CompleteProjectDialog open={showComplete} onOpenChange={setShowComplete} projectId={projectId} metrics={metrics ? { totalHours: metrics.totalHours, realHourly: metrics.realHourly, net: metrics.net, currency } : null} onCompleted={() => { handleStatusChanged("completed"); setShowComplete(false); }} />

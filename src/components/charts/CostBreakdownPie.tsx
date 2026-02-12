@@ -17,9 +17,9 @@ interface CostBreakdownPieProps {
 }
 
 const COLORS: Record<string, string> = {
-  platform_fee: "#7EB5A6",
-  tax: "#E89B48",
-  fixed: "#A4D4C8",
+  platform_fee: "#2B6B93",
+  tax: "#E8882D",
+  fixed: "#60A5FA",
 };
 
 const TYPE_KEYS: Record<string, string> = {
@@ -39,7 +39,7 @@ export function CostBreakdownPie({
     .map((c) => ({
       name: t(TYPE_KEYS[c.type] ?? c.type),
       value: Math.round(c.amount * 100) / 100,
-      color: COLORS[c.type] ?? "#D1EBE4",
+      color: COLORS[c.type] ?? "#93C5FD",
     }));
 
   if (data.length === 0) {
@@ -72,8 +72,8 @@ export function CostBreakdownPie({
           formatter={(value) => formatCurrency(Number(value), currency)}
           contentStyle={{
             borderRadius: "12px",
-            border: "1px solid #E6DDD3",
-            backgroundColor: "#FFF8EE",
+            border: "1px solid #E2E8F0",
+            backgroundColor: "#F8FAFC",
           }}
         />
         <Legend

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { FolderKanban, RefreshCw } from "lucide-react";
+import { FolderKanban, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FadeIn } from "@/components/ui/fade-in";
 import { CreateProjectDialog } from "./CreateProjectDialog";
 import { ProjectCard } from "./ProjectCard";
 
@@ -35,6 +37,7 @@ export function ProjectsListClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [filter, setFilter] = useState<FilterTab>("active");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchProjects = useCallback(async (status: FilterTab) => {
     setLoading(true);
@@ -72,6 +75,16 @@ export function ProjectsListClient() {
     }
   };
 
+  // Filter projects by search query (debounced by input value change)
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery.trim()) return projects;
+    const query = searchQuery.toLowerCase();
+    return projects.filter((p) =>
+      p.name.toLowerCase().includes(query) ||
+      (p.clientName && p.clientName.toLowerCase().includes(query))
+    );
+  }, [projects, searchQuery]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -79,15 +92,28 @@ export function ProjectsListClient() {
         <CreateProjectDialog />
       </div>
 
-      <Tabs value={filter} onValueChange={handleFilterChange}>
-        <TabsList className="rounded-xl">
-          {FILTER_TABS.map((tab) => (
-            <TabsTrigger key={tab} value={tab} className="rounded-lg text-xs">
-              {filterLabel(tab)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <Tabs value={filter} onValueChange={handleFilterChange}>
+          <TabsList className="rounded-xl">
+            {FILTER_TABS.map((tab) => (
+              <TabsTrigger key={tab} value={tab} className="rounded-lg text-xs">
+                {filterLabel(tab)}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder={tCommon("search")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+      </div>
 
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -109,10 +135,17 @@ export function ProjectsListClient() {
           <p className="text-muted-foreground">{t("noProjects")}</p>
           <p className="text-sm text-muted-foreground">{t("createFirst")}</p>
         </div>
+      ) : filteredProjects.length === 0 ? (
+        <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed p-12 text-center">
+          <Search className="size-12 text-muted-foreground/50" />
+          <p className="text-muted-foreground">{tCommon("noResults")}</p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
-            <ProjectCard key={p.id} project={p} />
+          {filteredProjects.map((p, i) => (
+            <FadeIn key={p.id} delay={i * 0.05}>
+              <ProjectCard project={p} />
+            </FadeIn>
           ))}
         </div>
       )}

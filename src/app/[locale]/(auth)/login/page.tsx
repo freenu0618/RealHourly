@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { BorderBeam } from "@/components/ui/border-beam";
 import {
   signInWithGoogle,
   signInWithEmail,
@@ -23,7 +25,8 @@ export default function LoginPage() {
   const [view, setView] = useState<View>("login");
 
   return (
-    <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
+    <main className="relative w-full max-w-[480px] overflow-hidden rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
+      <BorderBeam size={200} duration={10} colorFrom="#2B6B93" colorTo="#E8882D" className="opacity-40" />
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-2">
         <Image
@@ -217,13 +220,16 @@ function LoginView({
             {t("forgotPassword")}
           </button>
         </div>
-        <Button
+        <ShimmerButton
           type="submit"
           disabled={loading}
-          className="h-12 w-full rounded-xl bg-primary text-base font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+          shimmerColor="#4ade80"
+          background="var(--primary)"
+          borderRadius="12px"
+          className="h-12 w-full text-base font-bold shadow-lg shadow-primary/20"
         >
           {loading ? <Loader2 className="size-5 animate-spin" /> : t("loginWithEmail")}
-        </Button>
+        </ShimmerButton>
       </form>
 
       {/* Footer */}
@@ -232,7 +238,7 @@ function LoginView({
         <button
           type="button"
           onClick={onSwitch}
-          className="ml-1 font-bold text-primary transition-all hover:text-[#6CA395] hover:underline"
+          className="ml-1 font-bold text-primary transition-all hover:text-primary/80 hover:underline"
         >
           {t("signUpTab")}
         </button>
@@ -352,13 +358,16 @@ function SignUpView({
           autoComplete="new-password"
           className={inputClass}
         />
-        <Button
+        <ShimmerButton
           type="submit"
           disabled={loading}
-          className="h-12 w-full rounded-xl bg-primary text-base font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+          shimmerColor="#4ade80"
+          background="var(--primary)"
+          borderRadius="12px"
+          className="h-12 w-full text-base font-bold shadow-lg shadow-primary/20"
         >
           {loading ? <Loader2 className="size-5 animate-spin" /> : t("signUp")}
-        </Button>
+        </ShimmerButton>
       </form>
 
       {/* Footer */}
@@ -367,7 +376,7 @@ function SignUpView({
         <button
           type="button"
           onClick={onSwitch}
-          className="ml-1 font-bold text-primary transition-all hover:text-[#6CA395] hover:underline"
+          className="ml-1 font-bold text-primary transition-all hover:text-primary/80 hover:underline"
         >
           {t("loginTab")}
         </button>
@@ -435,13 +444,16 @@ function ResetView({
           autoComplete="email"
           className={inputClass}
         />
-        <Button
+        <ShimmerButton
           type="submit"
           disabled={loading}
-          className="h-12 w-full rounded-xl bg-primary text-base font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+          shimmerColor="#4ade80"
+          background="var(--primary)"
+          borderRadius="12px"
+          className="h-12 w-full text-base font-bold shadow-lg shadow-primary/20"
         >
           {loading ? <Loader2 className="size-5 animate-spin" /> : t("sendResetLink")}
-        </Button>
+        </ShimmerButton>
       </form>
       <div className="mt-6 text-center">
         <button

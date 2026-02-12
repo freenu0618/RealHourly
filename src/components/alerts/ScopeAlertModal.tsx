@@ -251,17 +251,17 @@ export function ScopeAlertModal({
     <Dialog open={true} onOpenChange={handleDismiss}>
       <DialogContent className="overflow-hidden rounded-[24px] p-0 sm:max-w-[520px]">
         {/* Warm pastel header */}
-        <div className="relative overflow-hidden bg-[#FFF0E0] px-8 pb-6 pt-8 text-center dark:bg-[#4A3B2A]">
+        <div className="relative overflow-hidden bg-blue-50 px-8 pb-6 pt-8 text-center dark:bg-blue-950/40">
           <div className="pointer-events-none absolute left-1/2 top-[-20px] h-32 w-32 -translate-x-1/2 rounded-full bg-white/40 blur-xl dark:bg-white/5" />
           <span className="relative z-10 mb-3 block text-6xl drop-shadow-sm">{"\uD83D\uDCA1"}</span>
           <DialogHeader className="relative z-10">
-            <DialogTitle className="text-xl font-bold text-[#3E342B] dark:text-[#EAE0D5]">
+            <DialogTitle className="text-xl font-bold text-[#1A1A2E] dark:text-[#F1F5F9]">
               {tAlerts("scopeCreepDetected")}
             </DialogTitle>
-            <p className="mt-1 text-sm font-medium text-[#8C7A6B] dark:text-[#B0A395]">
+            <p className="mt-1 text-sm font-medium text-[#64748B] dark:text-[#94A3B8]">
               {projectName}
             </p>
-            <DialogDescription className="mt-2 text-sm text-[#8C7A6B] dark:text-[#B0A395]">
+            <DialogDescription className="mt-2 text-sm text-[#64748B] dark:text-[#94A3B8]">
               {tAlerts("modalDescription")}
             </DialogDescription>
           </DialogHeader>
@@ -339,7 +339,7 @@ export function ScopeAlertModal({
                 </Button>
                 <Button
                   onClick={handleGenerateMessages}
-                  className="rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] active:scale-[0.98]"
+                  className="rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                 >
                   {tAlerts("generateMessage")} {"\u2709\uFE0F"}
                 </Button>
@@ -403,7 +403,7 @@ export function ScopeAlertModal({
                       </div>
                       <Button
                         onClick={() => handleCopy(message)}
-                        className="w-full rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] active:scale-[0.98]"
+                        className="w-full rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                       >
                         {copiedId === message.id ? (
                           <><Check className="mr-2 h-4 w-4" /> {tMessages("copied")}</>

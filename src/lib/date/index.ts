@@ -5,6 +5,8 @@ import {
   parse,
   isValid,
   toDate,
+  startOfWeek as _startOfWeek,
+  endOfWeek as _endOfWeek,
   type Locale,
 } from "date-fns";
 import { ko, enUS } from "date-fns/locale";
@@ -73,6 +75,20 @@ export function parseLocalDate(dateStr: string): Date {
 /**
  * Format a Date to yyyy-MM-dd string in a specific timezone.
  */
+export function startOfWeek(
+  date: Date,
+  opts?: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 },
+): Date {
+  return _startOfWeek(date, opts);
+}
+
+export function endOfWeek(
+  date: Date,
+  opts?: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 },
+): Date {
+  return _endOfWeek(date, opts);
+}
+
 export function toDateString(
   date: Date = new Date(),
   timezone: string = "Asia/Seoul",

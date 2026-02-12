@@ -30,10 +30,10 @@ export default function VerifyPage() {
   }
 
   return (
-    <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
+    <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(43,107,147,0.15)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-2">
-        <div className="mb-2 flex size-16 items-center justify-center rounded-2xl border border-[#F5E6D3] bg-gradient-to-br from-[#FFF8E7] to-[#FFF0E0] shadow-sm dark:border-[#4A3B2A] dark:from-[#2c3633] dark:to-[#1e2624]">
+        <div className="mb-2 flex size-16 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm dark:border-blue-900 dark:from-[#1A1A1A] dark:to-[#141414]">
           <span className="text-3xl drop-shadow-sm">{"\u2615"}</span>
         </div>
         <h2 className="text-xl font-bold tracking-tight text-muted-foreground">RealHourly</h2>

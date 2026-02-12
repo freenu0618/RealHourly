@@ -225,11 +225,18 @@ export async function updateTimeEntry(
 ) {
   // Verify ownership through project
   const [entry] = await db
-    .select({ id: timeEntries.id, projectId: timeEntries.projectId })
+    .select({
+      id: timeEntries.id,
+      projectId: timeEntries.projectId,
+      lockedAt: timeEntries.lockedAt,
+    })
     .from(timeEntries)
     .where(and(eq(timeEntries.id, entryId), isNull(timeEntries.deletedAt)));
 
   if (!entry) return null;
+
+  // Block editing of locked (approved) entries
+  if (entry.lockedAt) return { locked: true as const };
 
   const [proj] = await db
     .select({ id: projects.id })
@@ -263,11 +270,18 @@ export async function updateTimeEntry(
 export async function softDeleteTimeEntry(entryId: string, userId: string) {
   // Verify ownership through project
   const [entry] = await db
-    .select({ id: timeEntries.id, projectId: timeEntries.projectId })
+    .select({
+      id: timeEntries.id,
+      projectId: timeEntries.projectId,
+      lockedAt: timeEntries.lockedAt,
+    })
     .from(timeEntries)
     .where(and(eq(timeEntries.id, entryId), isNull(timeEntries.deletedAt)));
 
   if (!entry) return false;
+
+  // Block deletion of locked (approved) entries
+  if (entry.lockedAt) return "locked" as const;
 
   const [proj] = await db
     .select({ id: projects.id })

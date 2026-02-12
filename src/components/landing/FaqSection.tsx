@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { FadeIn } from "@/components/ui/fade-in";
 import {
   Accordion,
   AccordionContent,
@@ -18,11 +19,14 @@ export function FaqSection() {
   ];
 
   return (
-    <section id="faq" className="px-6 py-20" data-animate>
-      <h2 className="mb-12 text-center text-2xl font-bold">
-        {t("faqTitle")}
-      </h2>
+    <section id="faq" className="px-6 py-20">
+      <FadeIn blur>
+        <h2 className="mb-12 text-center text-2xl font-bold">
+          {t("faqTitle")}
+        </h2>
+      </FadeIn>
 
+      <FadeIn>
       <div className="mx-auto max-w-2xl">
         <Accordion type="single" collapsible className="space-y-4">
           {faqs.map((faq, i) => (
@@ -41,6 +45,7 @@ export function FaqSection() {
           ))}
         </Accordion>
       </div>
+      </FadeIn>
     </section>
   );
 }

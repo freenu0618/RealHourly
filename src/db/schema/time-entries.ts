@@ -28,6 +28,9 @@ export const timeEntries = pgTable(
       .array()
       .notNull()
       .default(sql`'{}'::text[]`),
+    // Timesheet integration
+    timesheetId: uuid("timesheet_id"),
+    lockedAt: timestamp("locked_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -45,6 +48,9 @@ export const timeEntries = pgTable(
       .where(sql`${table.deletedAt} IS NULL`),
     index("idx_time_project_category")
       .on(table.projectId, table.category)
+      .where(sql`${table.deletedAt} IS NULL`),
+    index("idx_time_timesheet")
+      .on(table.timesheetId)
       .where(sql`${table.deletedAt} IS NULL`),
   ],
 );

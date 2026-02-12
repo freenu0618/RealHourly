@@ -45,94 +45,159 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
-  --color-ghibli-cream: #FFFBF5;
-  --color-ghibli-warm: #FFF0E0;
-  --color-warm-border: #F0E6D6;
-  --color-warning-soft: #E89B48;
-  --color-overage: #D97706;
-  --shadow-soft: 0 20px 40px -10px rgba(212, 184, 156, 0.4);
-}
+  /* Semantic status colors */
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  /* Brand colors (logo-derived) */
+  --color-brand-blue: #2B6B93;
+  --color-brand-orange: #E8882D;
+  --animate-shiny-text: shiny-text 8s infinite;
+  @keyframes shiny-text {
+  0%, 90%, 100% {
+    background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+  30%, 60% {
+    background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear
+;
+  @keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);}}
+  @keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);}
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);}
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);}
+  100% {
+    transform: translateZ(0) rotate(360deg);}}
+  --animate-pulse: pulse var(--duration) ease-out infinite;
+  @keyframes pulse {
+  0%, 100% {
+    boxShadow: 0 0 0 0 var(--pulse-color);}
+  50% {
+    boxShadow: 0 0 0 8px var(--pulse-color);}}
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);}
+  to {
+    transform: translateX(calc(-100% - var(--gap)));}}
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);}
+  to {
+    transform: translateY(calc(-100% - var(--gap)));}}}
 
-/* ===== Stitch Ghibli-Warm Light Theme ===== */
+/* ===== Blue-Orange Professional Light Theme ===== */
 :root {
   --radius: 1rem;
-  /* Background: Cream */
-  --background: #FFFBF5;
-  --foreground: #4A3728;
-  /* Card: Warm off-white */
-  --card: #FFF8EE;
-  --card-foreground: #4A3728;
+  /* Background: Clean white */
+  --background: #FFFFFF;
+  --foreground: #1A1A2E;
+  /* Card: Cool gray tint */
+  --card: #F8FAFC;
+  --card-foreground: #1A1A2E;
   /* Popover */
-  --popover: #FFF8EE;
-  --popover-foreground: #4A3728;
-  /* Primary: Sage Green */
-  --primary: #7EB5A6;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A2E;
+  /* Primary: Brand Blue (logo clock) */
+  --primary: #2B6B93;
   --primary-foreground: #FFFFFF;
-  /* Secondary: Ghibli Warm */
-  --secondary: #FFF0E0;
-  --secondary-foreground: #4A3728;
+  /* Secondary: Light gray */
+  --secondary: #F1F5F9;
+  --secondary-foreground: #475569;
   /* Muted */
-  --muted: #F5EDE3;
-  --muted-foreground: #8C7A6B;
-  /* Accent */
-  --accent: #FFF0E0;
-  --accent-foreground: #4A3728;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  /* Accent: Orange tint (logo dollar) */
+  --accent: #FFF7ED;
+  --accent-foreground: #9A3412;
   /* Destructive */
-  --destructive: #D97706;
+  --destructive: #DC2626;
   /* Border & Input */
-  --border: #E6DDD3;
-  --input: #E6DDD3;
-  --ring: #7EB5A6;
-  /* Chart: Warm sage palette */
-  --chart-1: #7EB5A6;
-  --chart-2: #A4D4C8;
-  --chart-3: #E89B48;
-  --chart-4: #D1EBE4;
-  --chart-5: #D97706;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #2B6B93;
+  /* Chart: Blue-Orange palette */
+  --chart-1: #2B6B93;
+  --chart-2: #60A5FA;
+  --chart-3: #E8882D;
+  --chart-4: #93C5FD;
+  --chart-5: #F59E0B;
   /* Sidebar */
-  --sidebar: #FFF8EE;
-  --sidebar-foreground: #4A3728;
-  --sidebar-primary: #7EB5A6;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A2E;
+  --sidebar-primary: #2B6B93;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FFF0E0;
-  --sidebar-accent-foreground: #4A3728;
-  --sidebar-border: #E6DDD3;
-  --sidebar-ring: #7EB5A6;
+  --sidebar-accent: #EFF6FF;
+  --sidebar-accent-foreground: #1A1A2E;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #2B6B93;
+  /* Semantic status */
+  --success: #16A34A;
+  --success-bg: #F0FDF4;
+  --warning: #E8882D;
+  --warning-bg: #FFF7ED;
+  --danger: #DC2626;
+  --danger-bg: #FEF2F2;
+  --info: #2B6B93;
+  --info-bg: #EFF6FF;
 }
 
-/* ===== Stitch Ghibli-Warm Dark Theme ===== */
+/* ===== Blue-Orange Professional Dark Theme ===== */
 .dark {
-  --background: #161c1a;
-  --foreground: #EAE0D5;
-  --card: #1e2624;
-  --card-foreground: #EAE0D5;
-  --popover: #1e2624;
-  --popover-foreground: #EAE0D5;
-  --primary: #7EB5A6;
-  --primary-foreground: #161c1a;
-  --secondary: #2c3633;
-  --secondary-foreground: #EAE0D5;
-  --muted: #2c3633;
-  --muted-foreground: #8C9E99;
-  --accent: #2c3633;
-  --accent-foreground: #EAE0D5;
-  --destructive: #E89B48;
-  --border: #2c3633;
-  --input: #2c3633;
-  --ring: #7EB5A6;
-  --chart-1: #7EB5A6;
-  --chart-2: #A4D4C8;
-  --chart-3: #E89B48;
-  --chart-4: #D1EBE4;
-  --chart-5: #D97706;
-  --sidebar: #1f2624;
-  --sidebar-foreground: #EAE0D5;
-  --sidebar-primary: #7EB5A6;
-  --sidebar-primary-foreground: #161c1a;
-  --sidebar-accent: #2c3633;
-  --sidebar-accent-foreground: #EAE0D5;
-  --sidebar-border: #2c3633;
-  --sidebar-ring: #7EB5A6;
+  --background: #0F0F0F;
+  --foreground: #F1F5F9;
+  --card: #1A1A1A;
+  --card-foreground: #F1F5F9;
+  --popover: #1A1A1A;
+  --popover-foreground: #F1F5F9;
+  --primary: #5BA3CF;
+  --primary-foreground: #0F0F0F;
+  --secondary: #262626;
+  --secondary-foreground: #CBD5E1;
+  --muted: #1F1F1F;
+  --muted-foreground: #94A3B8;
+  --accent: #2A1F14;
+  --accent-foreground: #FB923C;
+  --destructive: #EF4444;
+  --border: #2E2E2E;
+  --input: #2E2E2E;
+  --ring: #5BA3CF;
+  --chart-1: #5BA3CF;
+  --chart-2: #60A5FA;
+  --chart-3: #FB923C;
+  --chart-4: #93C5FD;
+  --chart-5: #FBBF24;
+  --sidebar: #141414;
+  --sidebar-foreground: #F1F5F9;
+  --sidebar-primary: #5BA3CF;
+  --sidebar-primary-foreground: #0F0F0F;
+  --sidebar-accent: #1A2332;
+  --sidebar-accent-foreground: #F1F5F9;
+  --sidebar-border: #2E2E2E;
+  --sidebar-ring: #5BA3CF;
+  /* Semantic status (dark) */
+  --success: #4ADE80;
+  --success-bg: #052E16;
+  --warning: #FB923C;
+  --warning-bg: #431407;
+  --danger: #F87171;
+  --danger-bg: #450A0A;
+  --info: #5BA3CF;
+  --info-bg: #0C2D48;
 }
 
 /* ===== Landing page animations ===== */
@@ -165,49 +230,28 @@
   animation: scrollDown 30s linear infinite;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-40px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(40px); }
-  to { opacity: 1; transform: translateX(0); }
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
 }
 
-@keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
-@keyframes blurIn {
-  from { opacity: 0; filter: blur(8px); }
-  to { opacity: 1; filter: blur(0); }
-}
-
-.animate-fadeUp { animation: fadeUp 0.7s ease-out forwards; }
-.animate-fadeIn { animation: fadeIn 0.7s ease-out forwards; }
-.animate-slideInLeft { animation: slideInLeft 0.7s ease-out forwards; }
-.animate-slideInRight { animation: slideInRight 0.7s ease-out forwards; }
-.animate-scaleUp { animation: scaleUp 0.7s ease-out forwards; }
-.animate-blurIn { animation: blurIn 0.7s ease-out forwards; }
-
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
   }
 }

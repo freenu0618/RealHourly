@@ -5,6 +5,7 @@ import { Check, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PulsatingButton } from "@/components/ui/pulsating-button";
 import { useDraftStore } from "@/store/use-draft-store";
 import { formatCurrency } from "@/lib/money/currency";
 
@@ -117,6 +118,42 @@ export function SaveAllButton({ onSaved, onProgressPrompt, onSuggestions }: Save
     }
   }
 
+  const content = saved ? (
+    <>
+      <Check className="size-4" />
+      {t("saved", { count: 0 }).replace("0", "✓")}
+    </>
+  ) : saving ? (
+    <>
+      <Loader2 className="size-4 animate-spin" />
+      {t("saving")}
+    </>
+  ) : (
+    <>
+      <Save className="size-4" />
+      {entries.length > 0
+        ? t("saveCount", { count: entries.length })
+        : t("saveAll")}
+    </>
+  );
+
+  const hasDrafts = entries.length > 0 && canSaveAll();
+
+  if (hasDrafts && !saved && !saving) {
+    return (
+      <PulsatingButton
+        onClick={handleSave}
+        disabled={!enabled}
+        pulseColor="var(--primary)"
+        duration="2s"
+        className={`gap-2 text-lg px-6 py-3`}
+        aria-label={t("saveAll")}
+      >
+        {content}
+      </PulsatingButton>
+    );
+  }
+
   return (
     <Button
       onClick={handleSave}
@@ -125,24 +162,7 @@ export function SaveAllButton({ onSaved, onProgressPrompt, onSuggestions }: Save
       className={`gap-2 transition-colors ${saved ? "bg-green-600 hover:bg-green-600" : ""}`}
       aria-label={t("saveAll")}
     >
-      {saved ? (
-        <>
-          <Check className="size-4" />
-          {t("saved", { count: 0 }).replace("0", "✓")}
-        </>
-      ) : saving ? (
-        <>
-          <Loader2 className="size-4 animate-spin" />
-          {t("saving")}
-        </>
-      ) : (
-        <>
-          <Save className="size-4" />
-          {entries.length > 0
-            ? t("saveCount", { count: entries.length })
-            : t("saveAll")}
-        </>
-      )}
+      {content}
     </Button>
   );
 }

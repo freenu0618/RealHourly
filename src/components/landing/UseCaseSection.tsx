@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { FadeIn } from "@/components/ui/fade-in";
 
 type UseCase = {
   emoji: string;
@@ -41,9 +42,11 @@ export function UseCaseSection() {
   const filtered = filter === "all" ? USE_CASES : USE_CASES.filter((uc) => uc.filter === filter);
 
   return (
-    <section className="px-6 py-24" data-animate data-animation="animate-slideInRight">
-      <h2 className="mb-4 text-center text-3xl font-bold">{t("ucTitle")}</h2>
-      <p className="mb-8 text-center text-muted-foreground">{t("ucSubtitle")}</p>
+    <section className="px-6 py-24">
+      <FadeIn blur>
+        <h2 className="mb-4 text-center text-3xl font-bold">{t("ucTitle")}</h2>
+        <p className="mb-8 text-center text-muted-foreground">{t("ucSubtitle")}</p>
+      </FadeIn>
 
       <div className="mb-10 flex justify-center gap-2">
         {tabs.map((tab) => (

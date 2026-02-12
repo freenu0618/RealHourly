@@ -43,10 +43,10 @@ export default function ResetPasswordPage() {
     "h-12 rounded-xl border-2 border-transparent bg-muted pl-4 pr-4 text-sm outline-none transition-all focus:border-primary/50 focus:bg-card focus:ring-4 focus:ring-primary/10";
 
   return (
-    <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
+    <main className="relative w-full max-w-[480px] rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(43,107,147,0.15)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-2">
-        <div className="mb-2 flex size-16 items-center justify-center rounded-2xl border border-[#F5E6D3] bg-gradient-to-br from-[#FFF8E7] to-[#FFF0E0] shadow-sm dark:border-[#4A3B2A] dark:from-[#2c3633] dark:to-[#1e2624]">
+        <div className="mb-2 flex size-16 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm dark:border-blue-900 dark:from-[#1A1A1A] dark:to-[#141414]">
           <span className="text-3xl drop-shadow-sm">{"\u2615"}</span>
         </div>
         <h2 className="text-xl font-bold tracking-tight text-muted-foreground">RealHourly</h2>
@@ -58,7 +58,7 @@ export default function ResetPasswordPage() {
           <h1 className="text-xl font-bold">{t("passwordChanged")}</h1>
           <Button
             onClick={() => router.push("/login")}
-            className="mt-2 rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] active:scale-[0.98]"
+            className="mt-2 rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
             {t("backToLogin")}
           </Button>
@@ -94,7 +94,7 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="h-12 w-full rounded-xl bg-primary text-base font-bold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] hover:shadow-primary/30 active:scale-[0.98]"
+              className="h-12 w-full rounded-xl bg-primary text-base font-bold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-primary/30 active:scale-[0.98]"
             >
               {loading ? <Loader2 className="size-5 animate-spin" /> : t("updatePassword")}
             </Button>

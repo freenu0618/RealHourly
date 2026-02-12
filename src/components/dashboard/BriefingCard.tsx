@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { formatDate } from "@/lib/date";
 import { Link } from "@/i18n/navigation";
 
@@ -113,6 +115,7 @@ export function BriefingCard() {
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <BorderBeam size={250} duration={12} delay={2} colorFrom="#4ade80" colorTo="#2B6B93" className="opacity-60" />
       {/* Subtle decorative element */}
       <div className="pointer-events-none absolute -right-8 -top-8 size-32 rounded-full bg-white/[0.03]" />
 
@@ -140,15 +143,17 @@ export function BriefingCard() {
 
       {/* Recommended action button */}
       {actionText && (
-        <Link href="/projects">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mt-3 w-full justify-between rounded-xl border border-white/10 bg-white/5 text-xs text-white/90 hover:bg-white/10 hover:text-white"
+        <Link href="/projects" className="mt-3 block">
+          <ShimmerButton
+            shimmerColor="#4ade80"
+            shimmerSize="0.08em"
+            background="rgba(255,255,255,0.05)"
+            borderRadius="12px"
+            className="w-full justify-between text-xs text-white/90 h-9 px-3"
           >
             <span className="truncate text-left">👉 {actionText}</span>
             <ArrowRight className="ml-2 size-3.5 shrink-0" />
-          </Button>
+          </ShimmerButton>
         </Link>
       )}
     </div>

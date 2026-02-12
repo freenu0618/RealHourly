@@ -200,7 +200,7 @@ export function ScopeAlertActionModal({
                       )}
                     </Button>
                     <Button
-                      className="flex-1 rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-[#6CA395] active:scale-[0.98]"
+                      className="flex-1 rounded-xl bg-primary font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                       onClick={() => handleEmail(msg)}
                     >
                       <Mail className="mr-1.5 size-4" /> {t("sendEmail")}

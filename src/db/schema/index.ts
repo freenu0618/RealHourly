@@ -9,3 +9,7 @@ export * from "./generated-messages";
 export * from "./weekly-reports";
 export * from "./project-shares";
 export * from "./ai-actions";
+export * from "./timesheets";
+export * from "./timesheet-approvals";
+export * from "./time-entry-versions";
+export * from "./entry-flags";
