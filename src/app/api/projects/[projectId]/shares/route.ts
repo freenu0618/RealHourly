@@ -7,6 +7,7 @@ import {
   getSharesByProject,
 } from "@/db/queries/project-shares";
 import { ApiError } from "@/lib/api/errors";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 export async function GET(
   _req: Request,
@@ -31,6 +32,7 @@ export async function POST(
 ) {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "shareLinks");
     const { projectId } = await params;
     const body = CreateShareSchema.parse(await req.json());
 

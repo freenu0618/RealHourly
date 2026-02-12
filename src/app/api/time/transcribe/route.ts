@@ -3,6 +3,7 @@ import OpenAI, { toFile } from "openai";
 import { requireUser } from "@/lib/auth/server";
 import { handleApiError } from "@/lib/api/handler";
 import { transcribeRateLimit } from "@/lib/api/rate-limit";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB (Whisper limit)
 
@@ -18,6 +19,7 @@ function getOpenAI(): OpenAI {
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "voiceInput");
 
     const { success, retryAfterMs } = await transcribeRateLimit.check(user.id);
     if (!success) {

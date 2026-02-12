@@ -12,10 +12,12 @@ import { createAiAction } from "@/db/queries/ai-actions";
 import { startOfWeek, subWeeks } from "date-fns";
 import { formatDate } from "@/lib/date";
 import { reportRateLimit } from "@/lib/api/rate-limit";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "weeklyInsight");
 
     const { success, retryAfterMs } = await reportRateLimit.check(user.id);
     if (!success) {

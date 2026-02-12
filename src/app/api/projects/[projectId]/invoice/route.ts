@@ -5,6 +5,7 @@ import { handleApiError } from "@/lib/api/handler";
 import { GenerateInvoiceSchema } from "@/lib/validators/invoice";
 import { buildInvoiceData } from "@/lib/pdf/build-invoice-data";
 import { createInvoiceDocument } from "@/lib/pdf/InvoiceTemplate";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 export async function POST(
   req: Request,
@@ -12,6 +13,7 @@ export async function POST(
 ) {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "pdfInvoice");
     const { projectId } = await params;
     const body = GenerateInvoiceSchema.parse(await req.json());
 

@@ -1,4 +1,4 @@
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { alerts, projects } from "@/db/schema";
 import { alertToDTO } from "./dto";
@@ -28,6 +28,16 @@ export async function createAlert(
     .values({ projectId, alertType, metadata })
     .returning();
   return alertToDTO(row);
+}
+
+/** Count distinct projects that have had alerts for a user */
+export async function countAlertProjectsByUser(userId: string): Promise<number> {
+  const [row] = await db
+    .select({ count: sql<number>`COUNT(DISTINCT ${alerts.projectId})::int` })
+    .from(alerts)
+    .innerJoin(projects, eq(alerts.projectId, projects.id))
+    .where(and(eq(projects.userId, userId), isNull(alerts.deletedAt)));
+  return row?.count ?? 0;
 }
 
 export async function dismissAlert(alertId: string, userId: string) {

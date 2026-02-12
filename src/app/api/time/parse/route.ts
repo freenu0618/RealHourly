@@ -7,10 +7,14 @@ import { normalizeEntries } from "@/lib/ai/normalize-parsed-entries";
 import { getActiveProjectsForMatching } from "@/db/queries/projects";
 import { parseRateLimit } from "@/lib/api/rate-limit";
 import { sanitizeForParse } from "@/lib/ai/sanitize-input";
+import { checkQuota, trackUsage } from "@/lib/polar/feature-gate";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    // Monthly quota check (before rate limit to give better error)
+    await checkQuota(user.id, "nlp_parse");
 
     const { success, retryAfterMs } = await parseRateLimit.check(user.id);
     if (!success) {
@@ -38,6 +42,9 @@ export async function POST(req: Request) {
       body.userTimezone,
       body.preferredProjectId,
     );
+
+    // Track usage after successful parse
+    await trackUsage(user.id, "nlp_parse");
 
     return NextResponse.json({ data });
   } catch (error) {

@@ -5,7 +5,8 @@ import { handleApiError } from "@/lib/api/handler";
 import { CreateProjectSchema } from "@/lib/validators/projects";
 import { getProjectsByUserId, createProject } from "@/db/queries/projects";
 import { db } from "@/db";
-import { timeEntries, costEntries, clients } from "@/db/schema";
+import { timeEntries, costEntries, clients, projects } from "@/db/schema";
+import { checkProjectLimit } from "@/lib/polar/feature-gate";
 
 export async function GET(req: Request) {
   try {
@@ -109,6 +110,20 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    // Check project count limit
+    const [countRow] = await db
+      .select({ count: sql<number>`COUNT(*)::int` })
+      .from(projects)
+      .where(
+        and(
+          eq(projects.userId, user.id),
+          isNull(projects.deletedAt),
+          sql`${projects.status} != 'cancelled'`,
+        ),
+      );
+    await checkProjectLimit(user.id, countRow?.count ?? 0);
+
     const body = CreateProjectSchema.parse(await req.json());
 
     // If clientName is provided but no clientId, find or create client

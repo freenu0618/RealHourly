@@ -5,10 +5,14 @@ import { ChatMessageSchema } from "@/lib/validators/chat";
 import { generateChatResponse } from "@/lib/ai/generate-chat-response";
 import { sanitizeForMessage } from "@/lib/ai/sanitize-input";
 import { chatRateLimit } from "@/lib/api/rate-limit";
+import { checkQuota, trackUsage } from "@/lib/polar/feature-gate";
 
 export async function POST(req: Request) {
   try {
     const user = await requireUser();
+
+    // Monthly quota check
+    await checkQuota(user.id, "ai_chat");
 
     const { success, retryAfterMs } = await chatRateLimit.check(user.id);
     if (!success) {
@@ -29,6 +33,9 @@ export async function POST(req: Request) {
       sanitizedMessage,
       body.conversationHistory,
     );
+
+    // Track usage after successful response
+    await trackUsage(user.id, "ai_chat");
 
     return NextResponse.json({ data: { reply } });
   } catch (error) {

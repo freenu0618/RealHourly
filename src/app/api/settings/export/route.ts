@@ -4,10 +4,12 @@ import { handleApiError } from "@/lib/api/handler";
 import { eq, and, isNull, inArray, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { timeEntries, projects } from "@/db/schema";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 export async function GET() {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "csvExport");
 
     const userProjects = await db
       .select({ id: projects.id, name: projects.name })

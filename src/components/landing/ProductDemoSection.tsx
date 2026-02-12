@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { Safari } from "@/components/ui/safari";
 import { FadeIn } from "@/components/ui/fade-in";
@@ -8,12 +8,11 @@ import { Link } from "@/i18n/navigation";
 
 export function ProductDemoSection() {
   const t = useTranslations("landing");
+  const locale = useLocale();
   const { resolvedTheme } = useTheme();
 
-  const imageSrc =
-    resolvedTheme === "dark"
-      ? "/images/screenshots/dashboard-dark.png"
-      : "/images/screenshots/dashboard-light.png";
+  const theme = resolvedTheme === "dark" ? "dark" : "light";
+  const imageSrc = `/images/screenshots/dashboard-${locale}-${theme}.png`;
 
   return (
     <section className="px-4 py-20">

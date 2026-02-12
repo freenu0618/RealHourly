@@ -1,10 +1,11 @@
 import { getProjectById, getClientNameByProjectId } from "@/db/queries/projects";
 import { getSumMinutesByProject, getTimeEntriesByProject } from "@/db/queries/time-entries";
 import { getSumFixedCostsByProject } from "@/db/queries/cost-entries";
-import { getActiveAlertByProject, createAlert } from "@/db/queries/alerts";
+import { getActiveAlertByProject, createAlert, countAlertProjectsByUser } from "@/db/queries/alerts";
 import { ApiError } from "@/lib/api/errors";
 import { checkScopeCreep } from "./scope-rules";
 import { generateBillingAction } from "@/lib/ai/generate-billing-action";
+import { getUserPlan } from "@/lib/polar/feature-gate";
 
 export interface CostBreakdownItem {
   type: "platform_fee" | "tax" | "fixed";
@@ -75,8 +76,27 @@ export async function getProjectMetrics(
 
   let pendingAlert = await getActiveAlertByProject(projectId);
 
-  // Create new alert if triggered and no active alert exists
+  // Create new alert if triggered and no active alert exists (respecting plan limits)
   if (scopeResult && !pendingAlert) {
+    const { limits } = await getUserPlan(userId);
+    const alertProjectCount = await countAlertProjectsByUser(userId);
+
+    // Skip alert creation if scope alert project limit reached
+    if (limits.scopeAlertProjects !== Infinity && alertProjectCount >= limits.scopeAlertProjects) {
+      return {
+        metrics: {
+          gross, net, totalHours: Math.round(totalHours * 10) / 10,
+          nominalHourly: nominalHourly !== null ? Math.round(nominalHourly * 100) / 100 : null,
+          realHourly: realHourly !== null ? Math.round(realHourly * 100) / 100 : null,
+          costBreakdown, progressPercent: project.progressPercent,
+          currency: project.currency,
+          agreedRevisionCount: project.agreedRevisionCount ?? null,
+          actualRevisionCount: timeEntries.filter((e) => e.category === "revision").length,
+        },
+        pendingAlert: null,
+      };
+    }
+
     const firstRule = scopeResult.triggered[0];
     pendingAlert = await createAlert(
       projectId,

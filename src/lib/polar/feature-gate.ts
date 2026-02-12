@@ -1,4 +1,6 @@
 import { getProfile } from "@/db/queries/profiles";
+import { getUsageCount, incrementUsage } from "@/db/queries/usage-counts";
+import { ApiError } from "@/lib/api/errors";
 
 export type PlanType = "free" | "pro";
 
@@ -73,4 +75,76 @@ export async function getUserPlan(userId: string): Promise<{
 export async function isProUser(userId: string): Promise<boolean> {
   const { plan } = await getUserPlan(userId);
   return plan === "pro";
+}
+
+// ─── Enforcement Helpers ───────────────────────────────────────────────
+
+/**
+ * Require a boolean feature. Throws 403 if not allowed on user's plan.
+ */
+export async function requireFeature(
+  userId: string,
+  feature: keyof FeatureLimits,
+): Promise<void> {
+  const { limits } = await getUserPlan(userId);
+  const value = limits[feature];
+  if (value === false) {
+    throw new ApiError(
+      "PLAN_LIMIT",
+      403,
+      `This feature requires a Pro plan. Upgrade to unlock.`,
+    );
+  }
+}
+
+/**
+ * Check a monthly quota feature. Throws 403 if quota exceeded.
+ * Does NOT increment — call trackUsage after the operation succeeds.
+ */
+export async function checkQuota(
+  userId: string,
+  feature: "nlp_parse" | "ai_chat",
+): Promise<void> {
+  const { limits } = await getUserPlan(userId);
+  const limitKey = feature === "nlp_parse" ? "nlpParsePerMonth" : "aiChatPerMonth";
+  const max = limits[limitKey];
+
+  if (max === Infinity) return; // Pro plan — unlimited
+
+  const current = await getUsageCount(userId, feature);
+  if (current >= max) {
+    throw new ApiError(
+      "QUOTA_EXCEEDED",
+      403,
+      `Monthly ${feature === "nlp_parse" ? "AI parsing" : "AI chat"} limit reached (${max}). Upgrade to Pro for unlimited access.`,
+    );
+  }
+}
+
+/**
+ * Increment monthly quota after successful operation.
+ */
+export async function trackUsage(
+  userId: string,
+  feature: "nlp_parse" | "ai_chat",
+): Promise<void> {
+  await incrementUsage(userId, feature);
+}
+
+/**
+ * Check project count limit. Throws 403 if at max.
+ */
+export async function checkProjectLimit(
+  userId: string,
+  currentActiveCount: number,
+): Promise<void> {
+  const { limits } = await getUserPlan(userId);
+  if (limits.maxProjects === Infinity) return;
+  if (currentActiveCount >= limits.maxProjects) {
+    throw new ApiError(
+      "PLAN_LIMIT",
+      403,
+      `Free plan allows up to ${limits.maxProjects} projects. Upgrade to Pro for unlimited projects.`,
+    );
+  }
 }

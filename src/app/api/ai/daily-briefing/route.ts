@@ -4,12 +4,14 @@ import { handleApiError } from "@/lib/api/handler";
 import { getTodayBriefing, createAiAction, deleteTodayBriefings } from "@/db/queries/ai-actions";
 import { generateDailyBriefing } from "@/lib/ai/generate-daily-briefing";
 import { rateLimit } from "@/lib/api/rate-limit";
+import { requireFeature } from "@/lib/polar/feature-gate";
 
 const briefingRateLimit = rateLimit({ limit: 3, windowMs: 60_000 });
 
 export async function GET() {
   try {
     const user = await requireUser();
+    await requireFeature(user.id, "dailyBriefing");
 
     // 1. Check for cached briefing today (skip dismissed ones)
     const existing = await getTodayBriefing(user.id);
