@@ -1,15 +1,6 @@
-import OpenAI from "openai";
+import { callStructuredLLM } from "./openai-client";
 import { messageJsonSchema, type LLMMessageResponse } from "./message-schema";
 import { buildMessagePrompt, type MessageContext } from "./message-prompt";
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-  }
-  return _openai;
-}
 
 export interface GeneratedMessage {
   tone: "polite" | "neutral" | "firm";
@@ -26,29 +17,11 @@ export async function generateMessages(
   messageLang?: "ko" | "en",
 ): Promise<GeneratedMessage[]> {
   try {
-    const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
+    const model = process.env.LLM_MODEL_GENERATE || "gpt-5-mini";
     const systemPrompt = buildMessagePrompt(ctx, messageLang);
+    const userPrompt = `Generate billing messages for this scope creep situation.`;
 
-    const completion = await getOpenAI().chat.completions.create({
-      model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: `Generate billing messages for this scope creep situation.`,
-        },
-      ],
-      response_format: {
-        type: "json_schema",
-        json_schema: messageJsonSchema,
-      },
-      max_completion_tokens: 4096,
-    });
-
-    const content = completion.choices[0]?.message?.content;
-    if (!content) throw new Error("LLM returned empty response");
-
-    const parsed = JSON.parse(content) as LLMMessageResponse;
+    const parsed = await callStructuredLLM<LLMMessageResponse>(model, systemPrompt, userPrompt, messageJsonSchema, 4096);
 
     if (!parsed.messages || parsed.messages.length < 3) {
       throw new Error("LLM returned insufficient messages");

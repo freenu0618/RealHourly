@@ -36,6 +36,7 @@ type TimesheetData = {
   projectName: string;
   projectCurrency: string;
   freelancerName: string;
+  locale: string;
   weekStart: string;
   weekEnd: string;
   status: string;
@@ -44,12 +45,62 @@ type TimesheetData = {
   entries: Entry[];
 };
 
-const flagLabels: Record<string, string> = {
-  weekend_work: "Weekend work",
-  late_night: "Late night",
-  long_session: "Long session (8h+)",
-  backdated: "Backdated entry",
-  round_number: "Round number pattern",
+// i18n for public review page (no next-intl available)
+type Translations = Record<string, string>;
+
+const i18n: Record<string, Translations> = {
+  en: {
+    title: "Timesheet Review",
+    categoryBreakdown: "Category Breakdown",
+    reviewed: "This timesheet has been reviewed",
+    status: "Status",
+    yourEmail: "Your Email (optional)",
+    comment: "Comment (optional)",
+    approve: "Approve",
+    reject: "Reject",
+    approved: "Timesheet approved",
+    rejected: "Timesheet rejected",
+    reviewFailed: "Failed to submit review",
+    invalidLink: "This review link is invalid or expired.",
+    emailPlaceholder: "reviewer@example.com",
+    commentPlaceholder: "Add a comment...",
+    poweredBy: "Transparent time tracking for freelancers",
+    flagWeekend: "Weekend work",
+    flagLateNight: "Late night",
+    flagLongSession: "Long session (8h+)",
+    flagBackdated: "Backdated entry",
+    flagRoundNumber: "Round number pattern",
+  },
+  ko: {
+    title: "타임시트 리뷰",
+    categoryBreakdown: "카테고리 분석",
+    reviewed: "이 타임시트는 리뷰가 완료되었습니다",
+    status: "상태",
+    yourEmail: "이메일 (선택사항)",
+    comment: "코멘트 (선택사항)",
+    approve: "승인",
+    reject: "거절",
+    approved: "타임시트가 승인되었습니다",
+    rejected: "타임시트가 거절되었습니다",
+    reviewFailed: "리뷰 제출에 실패했습니다",
+    invalidLink: "유효하지 않거나 만료된 리뷰 링크입니다.",
+    emailPlaceholder: "reviewer@example.com",
+    commentPlaceholder: "코멘트를 입력하세요...",
+    poweredBy: "프리랜서를 위한 투명한 시간 추적",
+    flagWeekend: "주말 작업",
+    flagLateNight: "심야 작업",
+    flagLongSession: "장시간 작업 (8시간+)",
+    flagBackdated: "소급 입력",
+    flagRoundNumber: "반올림 패턴",
+  },
+};
+
+const flagKeyMap: Record<string, string> = {
+  weekend_work: "flagWeekend",
+  late_night: "flagLateNight",
+  long_session: "flagLongSession",
+  backdated: "flagBackdated",
+  round_number: "flagRoundNumber",
 };
 
 export function TimesheetReviewClient({ token }: { token: string }) {
@@ -61,6 +112,9 @@ export function TimesheetReviewClient({ token }: { token: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [reviewed, setReviewed] = useState(false);
 
+  const locale = data?.locale ?? "en";
+  const t = (key: string) => i18n[locale]?.[key] ?? i18n.en[key] ?? key;
+
   useEffect(() => {
     fetch(`/api/timesheets/review/${token}`)
       .then((r) => {
@@ -68,7 +122,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
         return r.json();
       })
       .then(({ data }) => setData(data))
-      .catch(() => setError("This review link is invalid or expired."))
+      .catch(() => setError(i18n.en.invalidLink))
       .finally(() => setLoading(false));
   }, [token]);
 
@@ -82,9 +136,9 @@ export function TimesheetReviewClient({ token }: { token: string }) {
       });
       if (!res.ok) throw new Error("Failed");
       setReviewed(true);
-      toast.success(action === "approved" ? "Timesheet approved" : "Timesheet rejected");
+      toast.success(action === "approved" ? t("approved") : t("rejected"));
     } catch {
-      toast.error("Failed to submit review");
+      toast.error(t("reviewFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -144,7 +198,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
               <User className="size-6 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl">Timesheet Review</CardTitle>
+              <CardTitle className="text-xl">{t("title")}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 {data.freelancerName} &middot; {data.projectName}
               </p>
@@ -166,7 +220,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
       </Card>
 
       {/* Entries by date */}
-      <div className="space-y-4 mb-6">
+      <div className="mb-6 space-y-4">
         {sortedDates.map((date) => {
           const entries = byDate.get(date)!;
           const dayTotal = entries.reduce((s, e) => s + e.minutes, 0);
@@ -184,7 +238,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
                     key={e.id}
                     className="flex items-start gap-3 rounded-lg bg-muted/50 p-3"
                   >
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="text-xs">
                           {e.category}
@@ -209,7 +263,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
                                   : "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
                               }
                             >
-                              {flagLabels[f.flagType] ?? f.flagType}
+                              {t(flagKeyMap[f.flagType] ?? f.flagType)}
                             </Badge>
                           ))}
                         </div>
@@ -226,7 +280,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
       {/* Category breakdown */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-base">Category Breakdown</CardTitle>
+          <CardTitle className="text-base">{t("categoryBreakdown")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -254,8 +308,8 @@ export function TimesheetReviewClient({ token }: { token: string }) {
             <Check className="mx-auto mb-2 size-10 text-green-500" />
             <p className="text-lg font-medium">
               {data.status === "approved" || reviewed
-                ? "This timesheet has been reviewed"
-                : `Status: ${data.status}`}
+                ? t("reviewed")
+                : `${t("status")}: ${data.status}`}
             </p>
           </CardContent>
         </Card>
@@ -263,32 +317,32 @@ export function TimesheetReviewClient({ token }: { token: string }) {
         <Card>
           <CardContent className="space-y-4 pt-6">
             <div>
-              <label className="text-sm font-medium">Your Email (optional)</label>
+              <label className="text-sm font-medium">{t("yourEmail")}</label>
               <Input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="reviewer@example.com"
+                placeholder={t("emailPlaceholder")}
                 className="mt-1"
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Comment (optional)</label>
+              <label className="text-sm font-medium">{t("comment")}</label>
               <Textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Add a comment..."
+                placeholder={t("commentPlaceholder")}
                 className="mt-1"
                 rows={3}
               />
             </div>
             <div className="flex gap-3">
               <Button
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                className="flex-1 bg-green-600 text-white hover:bg-green-700"
                 onClick={() => handleReview("approved")}
                 disabled={submitting}
               >
                 <Check className="mr-2 size-4" />
-                Approve
+                {t("approve")}
               </Button>
               <Button
                 variant="destructive"
@@ -297,7 +351,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
                 disabled={submitting}
               >
                 <X className="mr-2 size-4" />
-                Reject
+                {t("reject")}
               </Button>
             </div>
           </CardContent>
@@ -306,7 +360,7 @@ export function TimesheetReviewClient({ token }: { token: string }) {
 
       {/* Branding footer */}
       <p className="mt-8 text-center text-xs text-muted-foreground">
-        Powered by <strong>RealHourly</strong> &middot; Transparent time tracking for freelancers
+        Powered by <strong>RealHourly</strong> &middot; {t("poweredBy")}
       </p>
     </div>
   );

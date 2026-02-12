@@ -282,7 +282,8 @@
     "switchToDone": "완료로 전환",
     "noEntries": "시간 기록이 없습니다",
     "parseSummary": "{count}개 항목으로 분해됨",
-    "parseFailed": "분석에 실패했습니다",
+    "parseFailed": "분석에 실패했습니다. 잠시 후 다시 시도하거나 수동 입력을 이용해주세요.",
+    "rateLimitExceeded": "요청이 너무 빈번합니다. 잠시 후 다시 시도해주세요.",
     "manualEntry": "수동 입력",
     "timerStopped": "타이머가 정지되었습니다. 결과를 확인하세요.",
     "exampleFill1": "예시 1 채우기",
@@ -975,7 +976,13 @@
     "chipProfitCompare": "수익성 비교",
     "chipScopeRisk": "스코프 위험",
     "chipNextAction": "다음 할 일",
-    "chipBillingMsg": "청구 메시지"
+    "chipBillingMsg": "청구 메시지",
+    "thinkingTitle": "AI가 분석 중...",
+    "thinkingContext": "데이터 컨텍스트 로딩 중...",
+    "thinkingAnalyzing": "AI가 분석하고 있어요...",
+    "thinkingFormatting": "응답을 준비하고 있어요...",
+    "thinkingDone": "완료!",
+    "clearChat": "대화 초기화"
   },
   "chatPage": {
     "title": "AI 컨설턴트",
@@ -995,6 +1002,21 @@
     "roleDesc_timeCoach": "생산성 향상, 작업 최적화, 번아웃 예방",
     "role_finConsultant": "재무 컨설팅",
     "roleDesc_finConsultant": "비용 최적화, 수익 극대화, 재무 계획"
+  },
+  "clients": {
+    "title": "클라이언트",
+    "subtitle": "프로젝트별 클라이언트를 관리하세요",
+    "addClient": "클라이언트 추가",
+    "noClients": "아직 등록된 클라이언트가 없습니다",
+    "noClientsDesc": "프로젝트 생성 시 클라이언트가 자동으로 추가됩니다",
+    "name": "이름",
+    "projectCount": "프로젝트 {count}개",
+    "editClient": "클라이언트 수정",
+    "deleteConfirm": "이 클라이언트를 삭제하시겠습니까?",
+    "deleted": "클라이언트가 삭제되었습니다",
+    "updated": "클라이언트가 수정되었습니다",
+    "created": "클라이언트가 추가되었습니다",
+    "namePlaceholder": "예: ABC Corp"
   },
   "timesheet": {
     "title": "타임시트",

@@ -1,19 +1,10 @@
-import OpenAI from "openai";
+import { callChatLLM } from "./openai-client";
 import {
   buildChatContext,
   chatContextToPromptString,
   type ChatContext,
 } from "./chat-context";
 import { buildChatSystemPrompt } from "./chat-prompt";
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-  }
-  return _openai;
-}
 
 export async function generateChatResponse(
   userId: string,
@@ -32,23 +23,20 @@ export async function generateChatResponse(
   // Keep last 5 conversation pairs (10 messages) to save token budget
   const recentHistory = conversationHistory.slice(-10);
 
-  const primaryModel = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
-  const fallbackModel = "gpt-4o-mini";
+  const primaryModel = process.env.LLM_MODEL_GENERATE || "gpt-5-mini";
+  const fallbackModel = "gpt-5-mini";
 
-  const messages: OpenAI.ChatCompletionMessageParam[] = [
+  const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
     { role: "system", content: systemPrompt },
-    ...recentHistory.map(
-      (m) =>
-        ({
-          role: m.role,
-          content: m.content,
-        }) as OpenAI.ChatCompletionMessageParam,
-    ),
+    ...recentHistory.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    })),
     { role: "user", content: userMessage },
   ];
 
   // Attempt 1: primary model with full context
-  const result = await callLLM(primaryModel, messages);
+  const result = await callChatLLM(primaryModel, messages, 2000);
   if (result) return result;
 
   // Attempt 2: fallback model with reduced context + no history
@@ -57,60 +45,17 @@ export async function generateChatResponse(
     ...context,
     recentActivity: context.recentActivity.slice(0, 5),
   });
-  const fallbackMessages: OpenAI.ChatCompletionMessageParam[] = [
+  const fallbackMessages: { role: "system" | "user" | "assistant"; content: string }[] = [
     { role: "system", content: buildChatSystemPrompt(reducedContext) },
     { role: "user", content: userMessage },
   ];
 
-  const fallbackResult = await callLLM(fallbackModel, fallbackMessages, true);
+  const fallbackResult = await callChatLLM(fallbackModel, fallbackMessages, 2000);
   if (fallbackResult) return fallbackResult;
 
   // Attempt 3: data-driven response (no LLM)
   console.warn("[AI Chat] All LLM attempts failed, using data-driven fallback");
   return buildDataDrivenResponse(context, userMessage);
-}
-
-async function callLLM(
-  model: string,
-  messages: OpenAI.ChatCompletionMessageParam[],
-  useLegacyParam = false,
-): Promise<string | null> {
-  try {
-    const params: OpenAI.ChatCompletionCreateParamsNonStreaming = {
-      model,
-      messages,
-    };
-
-    // gpt-4o family uses max_tokens, gpt-5 family uses max_completion_tokens
-    if (useLegacyParam || model.startsWith("gpt-4")) {
-      params.max_tokens = 2000;
-    } else {
-      params.max_completion_tokens = 2000;
-    }
-
-    const completion = await getOpenAI().chat.completions.create(params);
-
-    const choice = completion.choices[0];
-    const content = choice?.message?.content;
-
-    if (choice?.finish_reason && choice.finish_reason !== "stop") {
-      console.warn(
-        `[AI Chat] finish_reason=${choice.finish_reason}, model=${model}, usage=${JSON.stringify(completion.usage)}`,
-      );
-    }
-
-    if (!content || content.trim() === "") {
-      console.error(
-        `[AI Chat] Empty content. finish_reason=${choice?.finish_reason}, model=${model}, usage=${JSON.stringify(completion.usage)}`,
-      );
-      return null;
-    }
-
-    return content.trim();
-  } catch (error) {
-    console.error(`[AI Chat] ${model} call failed:`, error);
-    return null;
-  }
 }
 
 function buildDataDrivenResponse(ctx: ChatContext, query: string): string {

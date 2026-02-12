@@ -70,9 +70,9 @@ export function TimesheetSubmitDialog({ open, onClose, timesheetId, onSubmitted 
 
         {reviewToken ? (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
-              <code className="flex-1 truncate text-xs">{reviewUrl}</code>
-              <Button size="icon" variant="ghost" onClick={handleCopy}>
+            <div className="flex items-center gap-2 rounded-lg bg-muted p-3 overflow-hidden">
+              <code className="min-w-0 flex-1 break-all text-xs">{reviewUrl}</code>
+              <Button size="icon" variant="ghost" className="shrink-0" onClick={handleCopy}>
                 {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
               </Button>
             </div>

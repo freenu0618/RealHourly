@@ -90,7 +90,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         }),
       });
 
-      if (!res.ok) throw new Error("Parse failed");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
+        const code = errBody?.error?.code;
+        if (res.status === 429) throw new Error("RATE_LIMIT");
+        if (code === "VALIDATION_ERROR") throw new Error("VALIDATION");
+        throw new Error("PARSE_FAILED");
+      }
       const { data } = await res.json();
       const parsedEntries = data.entries as ParsedEntry[];
 
@@ -145,8 +151,13 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         setSuggestedProgress(data.progressHint.suggestedProgress ?? 50);
         setShowProgressHint(true);
       }
-    } catch {
-      toast.error(t("parseFailed"));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "RATE_LIMIT") {
+        toast.error(t("rateLimitExceeded"));
+      } else {
+        toast.error(t("parseFailed"));
+      }
       setError(t("parseFailed"));
       thinking.reset();
       setShowThinking(false);

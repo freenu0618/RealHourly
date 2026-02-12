@@ -23,6 +23,14 @@ export function handleApiError(error: unknown): NextResponse {
     );
   }
 
+  // OpenAI API errors (timeout, connection)
+  if (error instanceof Error && (error.message?.includes("timeout") || error.message?.includes("ETIMEDOUT"))) {
+    return NextResponse.json(
+      { error: { code: "LLM_TIMEOUT", message: "AI service timed out. Please try again." } },
+      { status: 504 },
+    );
+  }
+
   console.error("Unhandled API error:", error);
   return NextResponse.json(
     { error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred" } },

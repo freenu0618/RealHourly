@@ -1,13 +1,4 @@
-import OpenAI from "openai";
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-  }
-  return _openai;
-}
+import { callJsonObjectLLM } from "./openai-client";
 
 interface CategorySummary {
   category: string;
@@ -41,19 +32,8 @@ export async function generateInvoiceItemDescriptions(
   const userPrompt = `Project: ${projectName}\n\nCategories:\n${categoryLines}\n\nRespond with a JSON object where keys are category names and values are professional descriptions. Example: {"design": "UX/UI Design & Prototyping"}`;
 
   try {
-    const completion = await getOpenAI().chat.completions.create({
-      model,
-      max_completion_tokens: 300,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      response_format: { type: "json_object" },
-    });
-
-    const content = completion.choices[0]?.message?.content;
-    if (!content) return {};
-    return JSON.parse(content) as Record<string, string>;
+    const result = await callJsonObjectLLM<Record<string, string>>(model, systemPrompt, userPrompt, 300);
+    return result ?? {};
   } catch {
     return {};
   }

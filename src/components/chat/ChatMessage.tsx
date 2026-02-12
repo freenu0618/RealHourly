@@ -1,14 +1,47 @@
 "use client";
 
+import { memo } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
-import { Bot } from "lucide-react";
+import { Bot, Copy, Check } from "lucide-react";
+import { useState, useCallback } from "react";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
 }
 
-export function ChatMessage({ role, content }: ChatMessageProps) {
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Ignore
+    }
+  }, [text]);
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="absolute right-2 top-2 rounded-md bg-muted-foreground/10 p-1 opacity-0 transition-opacity hover:bg-muted-foreground/20 group-hover/code:opacity-100"
+      aria-label="Copy code"
+    >
+      {copied ? (
+        <Check className="size-3.5 text-emerald-500" />
+      ) : (
+        <Copy className="size-3.5 text-muted-foreground" />
+      )}
+    </button>
+  );
+}
+
+export const ChatMessage = memo(function ChatMessage({ role, content }: ChatMessageProps) {
   const isUser = role === "user";
 
   return (
@@ -31,13 +64,45 @@ export function ChatMessage({ role, content }: ChatMessageProps) {
             : "bg-muted text-foreground",
         )}
       >
-        {content.split("\n").map((line, i) => (
-          <span key={i}>
-            {line}
-            {i < content.split("\n").length - 1 && <br />}
-          </span>
-        ))}
+        {isUser ? (
+          // User messages: plain text
+          content.split("\n").map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < content.split("\n").length - 1 && <br />}
+            </span>
+          ))
+        ) : (
+          // Assistant messages: full markdown rendering
+          <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:mb-2 prose-headings:mt-3 prose-headings:text-base prose-headings:font-bold prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-pre:my-2 prose-pre:rounded-lg prose-pre:bg-foreground/5 prose-code:rounded prose-code:bg-foreground/10 prose-code:px-1 prose-code:py-0.5 prose-code:text-[13px] prose-code:before:content-none prose-code:after:content-none prose-strong:font-semibold prose-table:text-xs">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                pre({ children, ...props }) {
+                  // Extract text from <code> child for copy button
+                  let codeText = "";
+                  if (
+                    children &&
+                    typeof children === "object" &&
+                    "props" in (children as { props?: { children?: unknown } })
+                  ) {
+                    const el = children as { props?: { children?: unknown } };
+                    codeText = String(el.props?.children ?? "");
+                  }
+                  return (
+                    <div className="group/code relative">
+                      <CopyButton text={codeText} />
+                      <pre {...props}>{children}</pre>
+                    </div>
+                  );
+                },
+              }}
+            >
+              {content}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+});

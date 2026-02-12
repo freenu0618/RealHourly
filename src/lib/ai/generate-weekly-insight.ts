@@ -1,14 +1,5 @@
-import OpenAI from "openai";
+import { callStructuredLLM } from "./openai-client";
 import type { WeeklyReportData } from "@/lib/reports/collect-weekly-data";
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-  }
-  return _openai;
-}
 
 /** Structured AI insight returned from LLM */
 export interface WeeklyInsight {
@@ -33,9 +24,9 @@ const SYSTEM_PROMPT = `당신은 프리랜서의 주간 업무 코치입니다.
 - revision이 많아도 "소통이 활발했다"로 표현 후 개선 제안
 - 절대 부정적이거나 압박하는 표현 금지`;
 
-const RESPONSE_SCHEMA: OpenAI.ResponseFormatJSONSchema["json_schema"] = {
+const RESPONSE_SCHEMA = {
   name: "weekly_insight",
-  strict: true,
+  strict: true as const,
   schema: {
     type: "object",
     properties: {
@@ -87,7 +78,7 @@ export async function generateWeeklyInsight(
   data: WeeklyReportData,
 ): Promise<string> {
   try {
-    const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
+    const model = process.env.LLM_MODEL_GENERATE || "gpt-5-mini";
     const totalHours = Math.round((data.totalMinutes / 60) * 10) / 10;
     const prevHours = Math.round((data.prevWeekMinutes / 60) * 10) / 10;
 
@@ -115,32 +106,14 @@ export async function generateWeeklyInsight(
       2,
     );
 
-    const completion = await getOpenAI().chat.completions.create({
-      model,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `다음 주간 데이터를 분석해서 인사이트를 JSON으로 작성해주세요:\n\n${context}`,
-        },
-      ],
-      response_format: {
-        type: "json_schema",
-        json_schema: RESPONSE_SCHEMA,
-      },
-      max_completion_tokens: 800,
-    });
+    const userPrompt = `다음 주간 데이터를 분석해서 인사이트를 JSON으로 작성해주세요:\n\n${context}`;
 
-    const content = completion.choices[0]?.message?.content;
-    if (!content) throw new Error("LLM returned empty response");
-
-    // Validate JSON parse
-    const parsed = JSON.parse(content) as WeeklyInsight;
+    const parsed = await callStructuredLLM<WeeklyInsight>(model, SYSTEM_PROMPT, userPrompt, RESPONSE_SCHEMA, 800);
     if (!parsed.summary || !Array.isArray(parsed.actions)) {
       throw new Error("Invalid structured response");
     }
 
-    return content;
+    return JSON.stringify(parsed);
   } catch (error) {
     console.error("Weekly insight generation failed, using fallback:", error);
     return JSON.stringify(getFallbackInsight(data));

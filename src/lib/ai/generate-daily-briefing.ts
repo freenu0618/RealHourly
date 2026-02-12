@@ -1,14 +1,5 @@
-import OpenAI from "openai";
+import { callTextLLM } from "./openai-client";
 import { getDashboardData } from "@/db/queries/dashboard";
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-  }
-  return _openai;
-}
 
 const SYSTEM_PROMPT = `당신은 프리랜서의 비즈니스 매니저입니다.
 아래 JSON 데이터를 바탕으로 오늘의 업무 브리핑을 작성하세요.
@@ -121,26 +112,15 @@ export async function generateDailyBriefing(
   const context = buildContext(data);
 
   try {
-    const model = process.env.LLM_MODEL_GENERATE || "gpt-4o-mini";
+    const model = process.env.LLM_MODEL_GENERATE || "gpt-5-mini";
+    const userPrompt = `다음 데이터를 바탕으로 오늘의 모닝 브리핑을 작성해주세요:\n\n${JSON.stringify(context, null, 2)}`;
 
-    const completion = await getOpenAI().chat.completions.create({
-      model,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `다음 데이터를 바탕으로 오늘의 모닝 브리핑을 작성해주세요:\n\n${JSON.stringify(context, null, 2)}`,
-        },
-      ],
-      max_completion_tokens: 800,
-    });
-
-    const content = completion.choices[0]?.message?.content;
+    const content = await callTextLLM(model, SYSTEM_PROMPT, userPrompt, 800);
     if (!content) throw new Error("LLM returned empty response");
 
     return {
       title: "오늘의 브리핑",
-      message: content.trim(),
+      message: content,
     };
   } catch (error) {
     console.error("Daily briefing generation failed, using fallback:", error);

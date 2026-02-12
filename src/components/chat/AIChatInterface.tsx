@@ -14,6 +14,8 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { useThinkingLog } from "@/lib/hooks/use-thinking-log";
+import { ThinkingLog } from "@/components/ui/ThinkingLog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -98,6 +100,7 @@ export function AIChatInterface() {
   const [messages, setMessages] = useState<Message[]>(loadMessagesFromStorage);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const thinking = useThinkingLog();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -171,11 +174,15 @@ export function AIChatInterface() {
       setMessages(newMessages);
       setInput("");
       setIsLoading(true);
+      thinking.reset();
 
       try {
         const history = newMessages
           .slice(-20)
           .map((m) => ({ role: m.role, content: m.content }));
+
+        // Step 1: Preparing context
+        const s1 = thinking.addStep("\uD83D\uDCCB", tChat("thinkingContext") || "Loading your data context...");
 
         const res = await fetch("/api/ai/chat", {
           method: "POST",
@@ -186,13 +193,24 @@ export function AIChatInterface() {
           }),
         });
 
+        thinking.completeStep(s1);
+
         if (res.status === 429) {
+          thinking.complete(tChat("rateLimited") || "Rate limited");
           toast.error(tChat("rateLimited"));
           return;
         }
         if (!res.ok) throw new Error("API error");
 
+        // Step 2: Analyzing
+        const s2 = thinking.addStep("\uD83E\uDDE0", tChat("thinkingAnalyzing") || "AI is analyzing...");
+
         const json = await res.json();
+        thinking.completeStep(s2);
+
+        // Step 3: Formatting response
+        const s3 = thinking.addStep("\u2728", tChat("thinkingFormatting") || "Preparing response...");
+
         const assistantMsg: Message = {
           id: nextMsgId(),
           role: "assistant",
@@ -201,7 +219,11 @@ export function AIChatInterface() {
         const updated = [...newMessages, assistantMsg];
         setMessages(updated);
         syncMessages(convId, updated);
+
+        thinking.completeStep(s3);
+        thinking.complete(tChat("thinkingDone") || "Done!");
       } catch {
+        thinking.complete(tChat("errorMessage") || "Error");
         toast.error(tChat("errorMessage"));
       } finally {
         setIsLoading(false);
@@ -380,8 +402,18 @@ export function AIChatInterface() {
                 <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
               ))}
 
-              {/* Typing indicator */}
-              {isLoading && (
+              {/* AI Thinking indicator */}
+              {isLoading && thinking.steps.length > 0 && (
+                <div className="max-w-md">
+                  <ThinkingLog
+                    title={tChat("thinkingTitle") || "AI is thinking..."}
+                    steps={thinking.steps}
+                    isComplete={thinking.isComplete}
+                    completionText={thinking.completionText}
+                  />
+                </div>
+              )}
+              {isLoading && thinking.steps.length === 0 && (
                 <div className="flex items-center gap-2.5">
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-orange/10">
                     <Sparkles className="size-4 text-brand-orange" />

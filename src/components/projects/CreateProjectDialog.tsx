@@ -45,6 +45,7 @@ const PRESET_LABELS: Record<string, string> = {
   upwork: "Upwork (10%)",
   fiverr: "Fiverr (20%)",
   kmong: "\uD06C\uBABD (20%)",
+  soomgo: "\uC228\uACE0 (20%)",
   custom: "Custom",
 };
 
@@ -107,6 +108,7 @@ export function CreateProjectDialog() {
     upwork: 0.1,
     fiverr: 0.2,
     kmong: 0.2,
+    soomgo: 0.2,
     custom: watchedCustomRate || 0,
   };
   const effectivePlatformFeeRate = PRESET_RATES[preset] ?? 0;
@@ -313,7 +315,8 @@ export function CreateProjectDialog() {
             <Input
               type="number"
               step="0.01"
-              {...register("fixedCostAmount", { valueAsNumber: true })}
+              min={0}
+              {...register("fixedCostAmount", { valueAsNumber: true, min: 0 })}
               className="rounded-xl"
             />
           </div>

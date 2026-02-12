@@ -249,6 +249,7 @@ export async function getTimesheetByReviewToken(token: string) {
       projectName: projects.name,
       projectCurrency: projects.currency,
       userName: profiles.displayName,
+      userLocale: profiles.locale,
     })
     .from(timesheets)
     .innerJoin(projects, eq(timesheets.projectId, projects.id))
@@ -279,6 +280,7 @@ export async function getTimesheetByReviewToken(token: string) {
     projectName: row.projectName,
     projectCurrency: row.projectCurrency,
     freelancerName: row.userName,
+    locale: row.userLocale ?? "en",
     approvalId: approval.id,
     approvalAction: approval.action,
     entries: entries.map((e) => ({
