@@ -25,16 +25,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
+  console.log(`[Polar Webhook] type=${event.type}`);
+
   try {
     switch (event.type) {
       case "subscription.active": {
         const sub = event.data;
-        const customerId = sub.customerId;
+        const userId = sub.customer?.externalId;
         const customerEmail = sub.customer?.email;
 
-        if (customerEmail) {
-          // Find user by email via Supabase auth, update profile
-          await activateSubscription(customerEmail, customerId, sub.id);
+        console.log(`[Polar] subscription.active — userId=${userId}, email=${customerEmail}, customerId=${sub.customerId}, subId=${sub.id}`);
+
+        if (userId) {
+          await activateSubscription(userId, sub.customerId, sub.id);
+        } else if (customerEmail) {
+          // Fallback: look up by email in profiles via DB
+          await activateSubscriptionByEmail(customerEmail, sub.customerId, sub.id);
+        } else {
+          console.error("[Polar] No userId or email in subscription.active event");
         }
         break;
       }
@@ -42,75 +50,80 @@ export async function POST(req: NextRequest) {
       case "subscription.canceled":
       case "subscription.revoked": {
         const sub = event.data;
+        const userId = sub.customer?.externalId;
         const customerEmail = sub.customer?.email;
 
-        if (customerEmail) {
-          await deactivateSubscription(customerEmail);
+        console.log(`[Polar] ${event.type} — userId=${userId}, email=${customerEmail}`);
+
+        if (userId) {
+          await deactivateSubscription(userId);
+        } else if (customerEmail) {
+          await deactivateSubscriptionByEmail(customerEmail);
         }
         break;
       }
 
       case "order.paid": {
-        // Handled by subscription events for recurring
-        console.log(`Order paid: ${event.data.id}`);
+        console.log(`[Polar] order.paid: ${event.data.id}`);
         break;
       }
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook handler error:", error);
+    console.error("[Polar] Webhook handler error:", error);
     return NextResponse.json({ error: "Handler error" }, { status: 500 });
   }
 }
 
-/** Activate pro plan for user by email */
+/** Activate pro plan by user ID (primary — from externalCustomerId set at checkout) */
 async function activateSubscription(
-  email: string,
+  userId: string,
   polarCustomerId: string,
   polarSubscriptionId: string,
 ) {
-  // Look up Supabase user by email using service role
-  const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
-
-  const { data } = await supabase.auth.admin.listUsers();
-  const user = data?.users?.find((u) => u.email === email);
-  if (!user) {
-    console.warn(`No Supabase user found for email: ${email}`);
-    return;
-  }
-
-  await db
+  const result = await db
     .update(profiles)
     .set({
       planType: "pro",
       polarCustomerId,
       polarSubscriptionId,
-      planExpiresAt: null, // Active subscription = no expiry
+      planExpiresAt: null,
       updatedAt: sql`now()`,
     })
-    .where(eq(profiles.id, user.id));
+    .where(eq(profiles.id, userId));
 
-  console.log(`Activated Pro plan for user ${user.id} (${email})`);
+  console.log(`[Polar] Activated Pro for userId=${userId}`, result);
 }
 
-/** Deactivate pro plan — set expiry to current period end */
-async function deactivateSubscription(email: string) {
+/** Fallback: activate by email lookup in auth (for subscriptions created outside checkout) */
+async function activateSubscriptionByEmail(
+  email: string,
+  polarCustomerId: string,
+  polarSubscriptionId: string,
+) {
   const { createClient } = await import("@supabase/supabase-js");
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
 
-  const { data } = await supabase.auth.admin.listUsers();
+  const { data, error } = await supabase.auth.admin.listUsers();
+  if (error) {
+    console.error("[Polar] Supabase admin.listUsers failed:", error.message);
+    return;
+  }
   const user = data?.users?.find((u) => u.email === email);
-  if (!user) return;
+  if (!user) {
+    console.warn(`[Polar] No Supabase user for email: ${email}`);
+    return;
+  }
 
-  // Set plan to free
+  await activateSubscription(user.id, polarCustomerId, polarSubscriptionId);
+}
+
+/** Deactivate pro plan by user ID */
+async function deactivateSubscription(userId: string) {
   await db
     .update(profiles)
     .set({
@@ -119,7 +132,26 @@ async function deactivateSubscription(email: string) {
       planExpiresAt: null,
       updatedAt: sql`now()`,
     })
-    .where(eq(profiles.id, user.id));
+    .where(eq(profiles.id, userId));
 
-  console.log(`Deactivated Pro plan for user ${user.id} (${email})`);
+  console.log(`[Polar] Deactivated Pro for userId=${userId}`);
+}
+
+/** Fallback: deactivate by email */
+async function deactivateSubscriptionByEmail(email: string) {
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+
+  const { data, error } = await supabase.auth.admin.listUsers();
+  if (error) {
+    console.error("[Polar] Supabase admin.listUsers failed:", error.message);
+    return;
+  }
+  const user = data?.users?.find((u) => u.email === email);
+  if (!user) return;
+
+  await deactivateSubscription(user.id);
 }
