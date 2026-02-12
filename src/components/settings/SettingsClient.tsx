@@ -7,6 +7,7 @@ import { ProfileSection } from "./ProfileSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { AccountSection } from "./AccountSection";
 import { DataSection } from "./DataSection";
+import { SubscriptionSection } from "./SubscriptionSection";
 
 /**
  * SettingsClient
@@ -124,6 +125,9 @@ export function SettingsClient({ locale }: SettingsClientProps) {
               setPreferencesData({ ...preferencesData, ...updates });
             }}
           />
+
+          {/* Subscription Section */}
+          <SubscriptionSection />
 
           {/* Account Section */}
           <AccountSection provider={profileData.provider} />

@@ -1058,5 +1058,30 @@
     "invalidLink": "Invalid review link",
     "alreadyReviewed": "This timesheet has already been reviewed",
     "entryLocked": "This entry is approved and cannot be edited"
+  },
+  "subscription": {
+    "title": "Subscription Plan",
+    "loading": "Loading plan info...",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "month": "mo",
+    "save22": "Save 22%",
+    "billedYearly": "$84/year billed annually",
+    "upgradePro": "Upgrade to Pro",
+    "manageSubscription": "Manage Subscription",
+    "proIncludes": "Included in Pro",
+    "yourFeatures": "Your current features",
+    "checkoutError": "Failed to create checkout",
+    "portalError": "Could not open subscription portal",
+    "unlimitedProjects": "Unlimited projects",
+    "unlimitedNlp": "Unlimited NLP time logging",
+    "unlimitedAiChat": "Unlimited AI consultant",
+    "pdfInvoice": "PDF invoice/estimate",
+    "timesheetApproval": "Timesheet approval workflow",
+    "shareLinks": "Client share links",
+    "weeklyInsight": "Weekly report AI insights",
+    "dailyBriefing": "Daily AI briefing",
+    "csvExport": "CSV/JSON data export",
+    "voiceInput": "Voice input"
   }
 }

@@ -1058,5 +1058,30 @@
     "invalidLink": "유효하지 않은 리뷰 링크입니다",
     "alreadyReviewed": "이미 처리된 타임시트입니다",
     "entryLocked": "이 항목은 승인되어 수정할 수 없습니다"
+  },
+  "subscription": {
+    "title": "구독 플랜",
+    "loading": "플랜 정보 로딩 중...",
+    "monthly": "월간 결제",
+    "yearly": "연간 결제",
+    "month": "월",
+    "save22": "22% 할인",
+    "billedYearly": "$84/년 일괄 결제",
+    "upgradePro": "Pro로 업그레이드",
+    "manageSubscription": "구독 관리",
+    "proIncludes": "Pro 플랜에 포함된 기능",
+    "yourFeatures": "현재 사용 중인 기능",
+    "checkoutError": "결제 페이지 생성에 실패했어요",
+    "portalError": "구독 관리 페이지를 열 수 없어요",
+    "unlimitedProjects": "무제한 프로젝트",
+    "unlimitedNlp": "무제한 NLP 시간 기록",
+    "unlimitedAiChat": "무제한 AI 컨설턴트",
+    "pdfInvoice": "PDF 인보이스/견적서",
+    "timesheetApproval": "타임시트 승인 워크플로우",
+    "shareLinks": "클라이언트 공유 링크",
+    "weeklyInsight": "주간 리포트 AI 인사이트",
+    "dailyBriefing": "일일 AI 브리핑",
+    "csvExport": "CSV/JSON 데이터 내보내기",
+    "voiceInput": "음성 입력"
   }
 }
