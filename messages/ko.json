@@ -13,7 +13,10 @@
     "search": "검색",
     "noResults": "결과가 없습니다",
     "error": "오류가 발생했습니다",
-    "retry": "재시도"
+    "retry": "재시도",
+    "errorTitle": "문제가 발생했어요",
+    "errorMessage": "예기치 않은 오류가 발생했습니다",
+    "tryAgain": "다시 시도"
   },
   "auth": {
     "login": "로그인",
@@ -737,6 +740,10 @@
     "footerPricing": "요금제",
     "footerSupport": "지원",
     "footerFaq": "FAQ",
+    "footerContact": "문의하기",
+    "footerLegal": "법적 고지",
+    "footerTerms": "이용약관",
+    "footerPrivacy": "개인정보처리방침",
     "footerCopyright": "© 2026 RealHourly. All rights reserved.",
     "nominalRate": "명목 시급",
     "actualRate": "실제 시급",
@@ -1172,5 +1179,66 @@
     "dailyBriefing": "일일 AI 브리핑",
     "csvExport": "CSV/JSON 데이터 내보내기",
     "voiceInput": "음성 입력"
+  },
+  "cookie": {
+    "message": "저희는 서비스 개선을 위해 쿠키를 사용합니다. 필수 쿠키는 로그인 유지에 사용되며, 분석 쿠키는 서비스 개선에 도움을 줍니다.",
+    "privacyLink": "개인정보처리방침",
+    "acceptAll": "모두 동의",
+    "necessaryOnly": "필수만 동의"
+  },
+  "contact": {
+    "title": "문의하기",
+    "description": "궁금한 점이 있으시면 언제든지 연락주세요. 빠른 시일 내에 답변드리겠습니다.",
+    "directContactTitle": "이메일 문의",
+    "responseTime": "응답 시간: 평균 24시간 이내",
+    "nameLabel": "이름",
+    "namePlaceholder": "이름을 입력하세요",
+    "emailLabel": "이메일",
+    "emailPlaceholder": "your@email.com",
+    "subjectLabel": "문의 유형",
+    "subjectPlaceholder": "유형을 선택하세요",
+    "subjectGeneral": "일반 문의",
+    "subjectBug": "버그 신고",
+    "subjectFeature": "기능 요청",
+    "subjectBilling": "결제 관련",
+    "messageLabel": "메시지",
+    "messagePlaceholder": "문의 내용을 입력하세요...",
+    "submitButton": "메시지 보내기",
+    "emailSubjectPrefix": "문의 접수",
+    "emailBodyName": "이름",
+    "emailBodyEmail": "이메일",
+    "emailBodyMessage": "내용"
+  },
+  "onboarding": {
+    "title": "RealHourly에 오신 걸 환영합니다",
+    "skip": "건너뛰기",
+    "back": "이전",
+    "next": "다음",
+    "getStarted": "시작하기",
+    "goToStep": "단계로 이동",
+    "welcome": {
+      "title": "RealHourly에 오신 걸 환영합니다!",
+      "description": "AI 기반 프리랜서 수익성 대시보드"
+    },
+    "quickStart": {
+      "title": "빠른 시작",
+      "description": "세 가지 간단한 단계로 시작하세요",
+      "step1": {
+        "title": "첫 프로젝트 만들기",
+        "description": "클라이언트와 예상 수수료로 프로젝트를 설정하세요"
+      },
+      "step2": {
+        "title": "AI로 시간 기록하기",
+        "description": "자연어로 작업 시간을 간편하게 기록하세요"
+      },
+      "step3": {
+        "title": "진짜 시급 확인하기",
+        "description": "모든 비용을 제한 실제 수익성을 확인하세요"
+      }
+    },
+    "ready": {
+      "title": "준비 완료!",
+      "description": "시간을 기록하고 진짜 시급을 발견해보세요"
+    }
   }
 }

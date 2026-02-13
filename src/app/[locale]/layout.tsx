@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { routing } from "@/i18n/routing";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/cookie/CookieConsent";
 
 type Props = {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <NextIntlClientProvider messages={messages}>
         {children}
         <Toaster />
+        <CookieConsent />
       </NextIntlClientProvider>
     </ThemeProvider>
   );

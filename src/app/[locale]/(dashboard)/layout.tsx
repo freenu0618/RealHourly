@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { NotificationBell } from "@/components/ai-actions/NotificationBell";
 import { AIChatWrapper } from "@/components/chat/AIChatWrapper";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
 
 export default function DashboardLayout({
   children,
@@ -27,6 +28,7 @@ export default function DashboardLayout({
         </main>
       </SidebarInset>
       <AIChatWrapper />
+      <OnboardingModal />
     </SidebarProvider>
   );
 }

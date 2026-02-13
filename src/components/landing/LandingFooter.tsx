@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export function LandingFooter() {
   const t = useTranslations("landing");
+  const locale = useLocale();
 
   return (
     <footer className="border-t px-6 py-12">
@@ -49,6 +51,27 @@ export function LandingFooter() {
             >
               {t("footerFaq")}
             </a>
+            <Link
+              href="/contact"
+              className="block text-muted-foreground hover:text-foreground"
+            >
+              {t("footerContact")}
+            </Link>
+          </div>
+          <div>
+            <h4 className="mb-2 font-medium">{t("footerLegal")}</h4>
+            <Link
+              href="/terms"
+              className="block text-muted-foreground hover:text-foreground"
+            >
+              {t("footerTerms")}
+            </Link>
+            <Link
+              href="/privacy"
+              className="block text-muted-foreground hover:text-foreground"
+            >
+              {t("footerPrivacy")}
+            </Link>
           </div>
         </div>
       </div>

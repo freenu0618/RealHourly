@@ -16,6 +16,9 @@ const staticPages = [
   "/clients",
   "/settings",
   "/login",
+  "/terms",
+  "/privacy",
+  "/contact",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

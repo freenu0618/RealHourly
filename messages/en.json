@@ -13,7 +13,10 @@
     "search": "Search",
     "noResults": "No results found",
     "error": "An error occurred",
-    "retry": "Retry"
+    "retry": "Retry",
+    "errorTitle": "Something went wrong",
+    "errorMessage": "An unexpected error occurred",
+    "tryAgain": "Try Again"
   },
   "auth": {
     "login": "Log in",
@@ -737,6 +740,10 @@
     "footerPricing": "Pricing",
     "footerSupport": "Support",
     "footerFaq": "FAQ",
+    "footerContact": "Contact",
+    "footerLegal": "Legal",
+    "footerTerms": "Terms of Service",
+    "footerPrivacy": "Privacy Policy",
     "footerCopyright": "© 2026 RealHourly. All rights reserved.",
     "nominalRate": "Nominal Rate",
     "actualRate": "Actual Rate",
@@ -1172,5 +1179,66 @@
     "dailyBriefing": "Daily AI briefing",
     "csvExport": "CSV/JSON data export",
     "voiceInput": "Voice input"
+  },
+  "cookie": {
+    "message": "We use cookies to improve your experience. Essential cookies keep you logged in, while analytics cookies help us improve the service.",
+    "privacyLink": "Privacy Policy",
+    "acceptAll": "Accept All",
+    "necessaryOnly": "Necessary Only"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Have a question? We'd love to hear from you. We'll get back to you as soon as possible.",
+    "directContactTitle": "Email Us",
+    "responseTime": "Response time: ~24 hours",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "your@email.com",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Select a topic",
+    "subjectGeneral": "General Inquiry",
+    "subjectBug": "Bug Report",
+    "subjectFeature": "Feature Request",
+    "subjectBilling": "Billing Question",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Your message...",
+    "submitButton": "Send Message",
+    "emailSubjectPrefix": "Contact Form",
+    "emailBodyName": "Name",
+    "emailBodyEmail": "Email",
+    "emailBodyMessage": "Message"
+  },
+  "onboarding": {
+    "title": "Welcome to RealHourly",
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next",
+    "getStarted": "Get Started",
+    "goToStep": "Go to step",
+    "welcome": {
+      "title": "Welcome to RealHourly!",
+      "description": "Your AI-powered freelancer profitability dashboard"
+    },
+    "quickStart": {
+      "title": "Quick Start",
+      "description": "Get started with these three simple steps",
+      "step1": {
+        "title": "Create your first project",
+        "description": "Set up a project with your client and expected fees"
+      },
+      "step2": {
+        "title": "Log time with AI",
+        "description": "Use natural language to track your work hours"
+      },
+      "step3": {
+        "title": "Check your real hourly rate",
+        "description": "See your true profitability after all costs"
+      }
+    },
+    "ready": {
+      "title": "You're all set!",
+      "description": "Start tracking your time and discover your real hourly rate"
+    }
   }
 }
