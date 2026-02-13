@@ -485,7 +485,11 @@
     "saveFailed": "Failed to save settings",
     "passwordOnlyEmail": "Password change is only available for email login users",
     "noGoal": "Not set",
-    "hours": "hours"
+    "hours": "hours",
+    "searchTimezone": "Search timezone...",
+    "noTimezoneFound": "No timezone found",
+    "unsavedChanges": "You have unsaved changes",
+    "discard": "Discard"
   },
   "ai": {
     "parseStep1": "Reading your input...",
@@ -601,7 +605,13 @@
     "projectBreakdown": "By Project",
     "aiInsights": "Insights",
     "recommendedActions": "Recommended Actions",
-    "actionDone": "Done"
+    "actionDone": "Done",
+    "dataOnlyFilter": "Data weeks only",
+    "batchGenerate": "Generate All ({count})",
+    "batchProgress": "Generating {current} / {total}",
+    "batchComplete": "Generated {count} reports",
+    "totalReports": "Reports",
+    "totalHoursAll": "Total Hours"
   },
   "landing": {
     "nav": {
@@ -808,14 +818,12 @@
     "uc8Desc": "After consulting, free revision requests kept coming...",
     "uc8Nominal": "\u0000",
     "uc8Actual": "8",
-
     "heroAnchorRate": "75",
     "heroAnchorRealRate": "23",
     "heroAnchorCurrency": "$",
     "heroAnchorUnit": "/hr",
     "heroAnchorLabel": "Contract rate",
     "heroAnchorRealLabel": "Real rate",
-
     "calcTitle": "Calculate your real hourly rate now",
     "calcSubtitle": "How much is actually left after hidden costs?",
     "calcInputAmount": "Project amount",
@@ -833,19 +841,15 @@
     "calcTaxAmount": "Tax",
     "calcToolAmount": "Tool costs",
     "calcCta": "Get more precise analysis for free →",
-
     "socialTitle": "Auto-calculates fees for major freelance platforms",
     "socialSubtitle": "Built for freelancers",
-
     "comp5Label": "Weekly reports",
     "comp5Old": "Manual summaries, or none at all",
     "comp5New": "AI-generated insights",
     "comp6Label": "AI consulting",
     "comp6Old": "Figure it out alone",
     "comp6New": "AI consultant with 5 roles",
-
     "_pricingLegacyRemoved": true,
-
     "demoTitle": "See it in action",
     "demoSubtitle": "Check project profitability at a glance on your RealHourly dashboard",
     "demoCta": "Try it yourself →"
@@ -967,7 +971,16 @@
     "planned": "Planned",
     "tabOverview": "Overview",
     "tabTimeCosts": "Time & Costs",
-    "tabShares": "Shares"
+    "tabTime": "Time",
+    "tabCosts": "Costs",
+    "tabShares": "Shares",
+    "tabSettings": "Settings",
+    "quickRealRate": "Real Rate",
+    "quickProgress": "Progress",
+    "quickLogged": "Logged",
+    "quickBudgetLeft": "Budget Left",
+    "generateInvoice": "Generate Invoice",
+    "reviewAlert": "Review Alert"
   },
   "progress": {
     "promptToast": "Update progress for {projects}?",

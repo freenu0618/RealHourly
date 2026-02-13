@@ -4,11 +4,14 @@ import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import dynamic from "next/dynamic";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, BarChart3, Clock, DollarSign, Share2, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { NumberTicker } from "@/components/ui/number-ticker";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { PulsatingButton } from "@/components/ui/pulsating-button";
 import { ScopeAlertModal } from "@/components/alerts/ScopeAlertModal";
 
 const HourlyRateBar = dynamic(
@@ -175,11 +178,36 @@ export function ProjectDetailClient({
 
       <ProjectProgressSection projectId={projectId} initialProgress={metrics.progressPercent} isEditable={isEditable} onProgressUpdated={() => fetchMetrics()} />
 
+      <QuickStatsBar
+        realHourly={metrics.realHourly}
+        progressPercent={metrics.progressPercent}
+        totalHours={metrics.totalHours}
+        budgetLeft={project.expectedFee ? project.expectedFee - (metrics.gross - metrics.net) : null}
+        currency={currency}
+      />
+
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">{tDetail("tabOverview")}</TabsTrigger>
-          <TabsTrigger value="timeCosts">{tDetail("tabTimeCosts")}</TabsTrigger>
-          <TabsTrigger value="shares">{tDetail("tabShares")}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <BarChart3 className="size-4" />
+            <span className="hidden sm:inline">{tDetail("tabOverview")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="time" className="flex items-center gap-2">
+            <Clock className="size-4" />
+            <span className="hidden sm:inline">{tDetail("tabTime")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="costs" className="flex items-center gap-2">
+            <DollarSign className="size-4" />
+            <span className="hidden sm:inline">{tDetail("tabCosts")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="shares" className="flex items-center gap-2">
+            <Share2 className="size-4" />
+            <span className="hidden sm:inline">{tDetail("tabShares")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Settings className="size-4" />
+            <span className="hidden sm:inline">{tDetail("tabSettings")}</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -213,15 +241,63 @@ export function ProjectDetailClient({
           {project.clientId && (
             <ClientAnalysisCard clientId={project.clientId} />
           )}
+
+          {metrics.progressPercent >= 80 && (
+            <div className="flex justify-center">
+              <ShimmerButton
+                onClick={() => { setInvoiceType("invoice"); setShowInvoice(true); }}
+              >
+                {tDetail("generateInvoice")}
+              </ShimmerButton>
+            </div>
+          )}
+
+          {pendingAlert && (
+            <div className="flex justify-center">
+              <PulsatingButton onClick={() => setShowAlertModal(true)}>
+                {tDetail("reviewAlert")}
+              </PulsatingButton>
+            </div>
+          )}
         </TabsContent>
 
-        <TabsContent value="timeCosts" className="space-y-6">
+        <TabsContent value="time" className="space-y-6">
           <TimeEntriesSection projectId={projectId} />
+        </TabsContent>
+
+        <TabsContent value="costs" className="space-y-6">
           <CostEntriesSection projectId={projectId} currency={currency} isEditable={isEditable} />
         </TabsContent>
 
         <TabsContent value="shares" className="space-y-6">
           <ShareManagementSection projectId={projectId} />
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{tDetail("tabSettings")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-3">
+                <Button variant="outline" onClick={() => setShowEdit(true)} disabled={!isEditable}>
+                  {tDetail.raw("edit") || "Edit Project"}
+                </Button>
+                <Button variant="outline" onClick={() => setShowComplete(true)} disabled={project.status !== "active"}>
+                  Complete
+                </Button>
+                <Button variant="outline" onClick={() => { setInvoiceType("estimate"); setShowInvoice(true); }}>
+                  Generate Estimate
+                </Button>
+                <Button variant="outline" onClick={() => { setInvoiceType("invoice"); setShowInvoice(true); }}>
+                  Generate Invoice
+                </Button>
+                <Button variant="destructive" onClick={() => setShowDelete(true)}>
+                  Delete Project
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
@@ -239,5 +315,59 @@ function KPICard({ title, value, highlight }: { title: string; value: string; hi
       <p className="text-xs text-muted-foreground">{title}</p>
       <p className={`text-xl font-bold ${highlight ? "text-destructive" : ""}`}>{value}</p>
     </CardContent></Card>
+  );
+}
+
+function QuickStatsBar({
+  realHourly,
+  progressPercent,
+  totalHours,
+  budgetLeft,
+  currency,
+}: {
+  realHourly: number | null;
+  progressPercent: number;
+  totalHours: number;
+  budgetLeft: number | null;
+  currency: string;
+}) {
+  const tDetail = useTranslations("projectDetail");
+
+  return (
+    <div className="sticky top-0 z-10 -mx-4 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:-mx-6 sm:px-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">{tDetail("quickRealRate")}</span>
+          <span className="text-lg font-bold">
+            {realHourly !== null ? (
+              <>
+                {currency === "KRW" ? "₩" : "$"}
+                <NumberTicker value={Math.round(realHourly)} />
+              </>
+            ) : (
+              "—"
+            )}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">{tDetail("quickProgress")}</span>
+          <span className="text-lg font-bold">
+            <NumberTicker value={progressPercent} />%
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">{tDetail("quickLogged")}</span>
+          <span className="text-lg font-bold">
+            <NumberTicker value={totalHours} />h
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">{tDetail("quickBudgetLeft")}</span>
+          <span className="text-lg font-bold">
+            {budgetLeft !== null ? formatCurrency(budgetLeft, currency) : "—"}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }

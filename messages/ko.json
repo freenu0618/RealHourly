@@ -485,7 +485,11 @@
     "saveFailed": "저장에 실패했어요",
     "passwordOnlyEmail": "비밀번호 변경은 이메일 로그인 사용자만 가능해요",
     "noGoal": "설정 안 함",
-    "hours": "시간"
+    "hours": "시간",
+    "searchTimezone": "타임존 검색...",
+    "noTimezoneFound": "타임존을 찾을 수 없습니다",
+    "unsavedChanges": "저장하지 않은 변경사항이 있습니다",
+    "discard": "취소"
   },
   "ai": {
     "parseStep1": "입력한 내용을 읽고 있어요...",
@@ -601,7 +605,13 @@
     "projectBreakdown": "프로젝트별",
     "aiInsights": "인사이트",
     "recommendedActions": "추천 액션",
-    "actionDone": "완료"
+    "actionDone": "완료",
+    "dataOnlyFilter": "데이터 있는 주만",
+    "batchGenerate": "일괄 생성 ({count})",
+    "batchProgress": "{current} / {total} 생성 중",
+    "batchComplete": "{count}개 리포트 생성 완료",
+    "totalReports": "리포트",
+    "totalHoursAll": "총 시간"
   },
   "landing": {
     "nav": {
@@ -808,14 +818,12 @@
     "uc8Desc": "컨설팅 후 무료 수정 요청이 끝없이 이어져...",
     "uc8Nominal": "₩70,000",
     "uc8Actual": "₩28,000",
-
     "heroAnchorRate": "75",
     "heroAnchorRealRate": "23",
     "heroAnchorCurrency": "$",
     "heroAnchorUnit": "/hr",
     "heroAnchorLabel": "계약 시급",
     "heroAnchorRealLabel": "실제 시급",
-
     "calcTitle": "내 실제 시급, 지금 바로 계산해보세요",
     "calcSubtitle": "숨겨진 비용을 빼면 실제로 얼마나 남을까요?",
     "calcInputAmount": "프로젝트 금액",
@@ -833,19 +841,15 @@
     "calcTaxAmount": "세금",
     "calcToolAmount": "도구 비용",
     "calcCta": "더 정밀한 분석은 무료 가입 후 →",
-
     "socialTitle": "주요 프리랜서 플랫폼 수수료 자동 계산 지원",
     "socialSubtitle": "프리랜서를 위해 설계되었습니다",
-
     "comp5Label": "주간 리포트",
     "comp5Old": "직접 정리, 또는 아예 안 함",
     "comp5New": "AI 인사이트 자동 생성",
     "comp6Label": "AI 상담",
     "comp6Old": "혼자 고민",
     "comp6New": "AI 컨설턴트 5가지 역할",
-
     "_pricingLegacyRemoved": true,
-
     "demoTitle": "실제로 이렇게 보여요",
     "demoSubtitle": "RealHourly 대시보드에서 프로젝트 수익성을 한눈에 확인하세요",
     "demoCta": "직접 사용해보기 →"
@@ -967,7 +971,16 @@
     "planned": "예정",
     "tabOverview": "개요",
     "tabTimeCosts": "시간 & 비용",
-    "tabShares": "공유"
+    "tabTime": "시간",
+    "tabCosts": "비용",
+    "tabShares": "공유",
+    "tabSettings": "설정",
+    "quickRealRate": "실시급",
+    "quickProgress": "진행률",
+    "quickLogged": "기록",
+    "quickBudgetLeft": "예산 잔여",
+    "generateInvoice": "인보이스 생성",
+    "reviewAlert": "알림 확인"
   },
   "progress": {
     "promptToast": "{projects} 진행률을 업데이트할까요?",

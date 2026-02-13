@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { Link } from "@/i18n/navigation";
 import { startOfWeek, subWeeks, addDays } from "date-fns";
 import { formatDate } from "@/lib/date";
@@ -25,6 +27,8 @@ export function ReportsListClient() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [dataOnlyFilter, setDataOnlyFilter] = useState(false);
+  const [batchProgress, setBatchProgress] = useState<{ current: number; total: number } | null>(null);
 
   useEffect(() => {
     fetchReports();
@@ -60,6 +64,38 @@ export function ReportsListClient() {
     }
   }
 
+  async function handleBatchGenerate() {
+    const reportMap = new Map(reports.map((r) => [r.weekStart, r]));
+    const weeksToGenerate = weeks.filter((week) => {
+      const report = reportMap.get(week.weekStart);
+      const hasData = report && (report.data?.entryCount ?? 0) > 0;
+      return hasData && !reportMap.has(week.weekStart);
+    });
+
+    if (weeksToGenerate.length === 0) return;
+
+    setBatchProgress({ current: 0, total: weeksToGenerate.length });
+
+    for (let i = 0; i < weeksToGenerate.length; i++) {
+      try {
+        const res = await fetch("/api/reports/weekly/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ weekStart: weeksToGenerate[i].weekStart }),
+        });
+        if (!res.ok) throw new Error();
+        setBatchProgress({ current: i + 1, total: weeksToGenerate.length });
+      } catch {
+        toast.error(t("generateError"));
+        break;
+      }
+    }
+
+    await fetchReports();
+    setBatchProgress(null);
+    toast.success(t("batchComplete", { count: String(weeksToGenerate.length) }));
+  }
+
   const weeks = Array.from({ length: MAX_WEEKS }, (_, i) => {
     const monday = startOfWeek(subWeeks(new Date(), i + 1), {
       weekStartsOn: 1,
@@ -74,7 +110,26 @@ export function ReportsListClient() {
   });
 
   const reportMap = new Map(reports.map((r) => [r.weekStart, r]));
-  const visibleWeeks = showAll ? weeks : weeks.slice(0, INITIAL_WEEKS);
+
+  const filteredWeeks = dataOnlyFilter
+    ? weeks.filter((week) => {
+        const report = reportMap.get(week.weekStart);
+        return report && (report.data?.entryCount ?? 0) > 0;
+      })
+    : weeks;
+
+  const visibleWeeks = showAll ? filteredWeeks : filteredWeeks.slice(0, INITIAL_WEEKS);
+
+  const weeksNeedingGeneration = weeks.filter((week) => {
+    const report = reportMap.get(week.weekStart);
+    const hasData = report && (report.data?.entryCount ?? 0) > 0;
+    return hasData && !report.id;
+  }).length;
+
+  const totalReportsGenerated = reports.filter((r) => r.id).length;
+  const totalHoursAll = Math.round(
+    reports.reduce((sum, r) => sum + (r.data?.totalMinutes ?? 0), 0) / 60 * 10
+  ) / 10;
 
   if (loading) {
     return (
@@ -93,6 +148,61 @@ export function ReportsListClient() {
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
+
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-2xl border bg-card p-4">
+          <p className="text-xs text-muted-foreground">{t("totalReports")}</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums">
+            <NumberTicker value={totalReportsGenerated} />
+          </p>
+        </div>
+        <div className="rounded-2xl border bg-card p-4">
+          <p className="text-xs text-muted-foreground">{t("totalHoursAll")}</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums">
+            <NumberTicker value={totalHoursAll} />
+            <span className="ml-1 text-sm font-normal text-muted-foreground">{t("hours")}</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Filter and Batch Actions */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant={dataOnlyFilter ? "default" : "outline"}
+          size="sm"
+          onClick={() => setDataOnlyFilter(!dataOnlyFilter)}
+          className="rounded-xl text-xs"
+        >
+          {t("dataOnlyFilter")}
+        </Button>
+        {weeksNeedingGeneration > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleBatchGenerate}
+            disabled={batchProgress !== null}
+            className="rounded-xl text-xs"
+          >
+            {t("batchGenerate", { count: String(weeksNeedingGeneration) })}
+          </Button>
+        )}
+      </div>
+
+      {/* Batch Progress Bar */}
+      {batchProgress && (
+        <div className="space-y-2 rounded-2xl border bg-muted/30 p-4">
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>
+              {t("batchProgress", {
+                current: String(batchProgress.current),
+                total: String(batchProgress.total),
+              })}
+            </span>
+          </div>
+          <Progress value={(batchProgress.current / batchProgress.total) * 100} />
+        </div>
+      )}
 
       <div className="space-y-3">
         {visibleWeeks.map((week) => {
@@ -157,7 +267,7 @@ export function ReportsListClient() {
         })}
       </div>
 
-      {!showAll && weeks.length > INITIAL_WEEKS && (
+      {!showAll && filteredWeeks.length > INITIAL_WEEKS && (
         <div className="flex justify-center">
           <Button
             variant="ghost"
