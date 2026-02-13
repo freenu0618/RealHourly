@@ -5,7 +5,7 @@
 
 ## Project Overview
 
-**Product**: RealHourly (realhourly.ai)
+**Product**: RealHourly (real-hourly.com)
 **Problem**: Freelancers don't know their real hourly rate after hidden costs (platform fees, taxes, tool subscriptions, unbilled time like meetings/emails/revisions).
 **Solution**: NLP time logging → hidden cost analysis → real hourly rate calculation → scope creep detection → auto-generated billing messages.
 **Target**: Global freelancers (Upwork, Fiverr, 크몽, 숨고 + independent)
@@ -350,7 +350,7 @@ nominal_hourly = expected_hours > 0 ? gross / expected_hours : null
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-NEXT_PUBLIC_SITE_URL=          # metadataBase (default: https://realhourly.ai)
+NEXT_PUBLIC_SITE_URL=          # metadataBase (default: https://real-hourly.com)
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 OPENAI_API_KEY=

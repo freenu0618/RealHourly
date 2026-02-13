@@ -27,7 +27,7 @@ export function ProductDemoSection() {
         <FadeIn delay={0.2} className="mb-12">
           <div className="relative mx-auto max-w-5xl">
             <Safari
-              url="realhourly.ai/dashboard"
+              url="real-hourly.com/dashboard"
               imageSrc={imageSrc}
               className="w-full shadow-2xl"
             />
