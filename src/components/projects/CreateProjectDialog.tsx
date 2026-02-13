@@ -209,7 +209,9 @@ export function CreateProjectDialog() {
               <Input
                 type="number"
                 step="0.01"
-                {...register("expectedFee", { valueAsNumber: true })}
+                min={0}
+                onWheel={(e) => e.currentTarget.blur()}
+                {...register("expectedFee", { valueAsNumber: true, min: 0 })}
                 className="rounded-xl"
               />
             </div>
@@ -217,7 +219,9 @@ export function CreateProjectDialog() {
               <Label>{t("expectedHours")}</Label>
               <Input
                 type="number"
-                {...register("expectedHours", { valueAsNumber: true })}
+                min={0}
+                onWheel={(e) => e.currentTarget.blur()}
+                {...register("expectedHours", { valueAsNumber: true, min: 0 })}
                 className="rounded-xl"
               />
             </div>
@@ -262,6 +266,7 @@ export function CreateProjectDialog() {
                 min={0}
                 max={1}
                 placeholder="0.15 = 15%"
+                onWheel={(e) => e.currentTarget.blur()}
                 {...register("platformFeeRate", { valueAsNumber: true })}
                 className="mt-1 rounded-xl"
               />
@@ -284,6 +289,7 @@ export function CreateProjectDialog() {
                   step="0.1"
                   min={0}
                   max={100}
+                  onWheel={(e) => e.currentTarget.blur()}
                   {...register("taxRate", { valueAsNumber: true })}
                   className="w-20 rounded-xl"
                 />
@@ -300,6 +306,7 @@ export function CreateProjectDialog() {
               min={0}
               max={50}
               step={1}
+              onWheel={(e) => e.currentTarget.blur()}
               {...register("agreedRevisionCount")}
               className="rounded-xl"
               placeholder={t("agreedRevisionCountPlaceholder")}
@@ -316,6 +323,7 @@ export function CreateProjectDialog() {
               type="number"
               step="0.01"
               min={0}
+              onWheel={(e) => e.currentTarget.blur()}
               {...register("fixedCostAmount", { valueAsNumber: true, min: 0 })}
               className="rounded-xl"
             />
