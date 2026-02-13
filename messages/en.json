@@ -980,6 +980,10 @@
     "quickLogged": "Logged",
     "quickBudgetLeft": "Budget Left",
     "generateInvoice": "Generate Invoice",
+    "generateEstimate": "Generate Estimate",
+    "editProject": "Edit Project",
+    "completeProject": "Complete",
+    "deleteProject": "Delete Project",
     "reviewAlert": "Review Alert"
   },
   "progress": {

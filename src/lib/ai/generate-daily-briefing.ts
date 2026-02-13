@@ -1,7 +1,8 @@
 import { callTextLLM } from "./openai-client";
 import { getDashboardData } from "@/db/queries/dashboard";
+import { getProfile } from "@/db/queries/profiles";
 
-const SYSTEM_PROMPT = `당신은 프리랜서의 비즈니스 매니저입니다.
+const SYSTEM_PROMPT_KO = `당신은 프리랜서의 비즈니스 매니저입니다.
 아래 JSON 데이터를 바탕으로 오늘의 업무 브리핑을 작성하세요.
 
 필수 규칙:
@@ -16,6 +17,22 @@ const SYSTEM_PROMPT = `당신은 프리랜서의 비즈니스 매니저입니다
 절대 하지 말 것:
 - "3개의 프로젝트가 진행 중입니다" 같은 일반적 표현 금지
 - 프로젝트 이름 없이 숫자만 나열 금지`;
+
+const SYSTEM_PROMPT_EN = `You are a freelancer's business manager.
+Write today's work briefing based on the JSON data below.
+
+Required rules:
+1. Always mention each project by its exact name (e.g., "Alpha App Design")
+2. Include specific numbers for each project (real hourly rate, revision ratio, progress)
+3. Mark risky projects with 🚨, on-track projects with ✅
+4. Keep it within 3-5 sentences
+5. The last line must follow this format:
+   👉 [specific action]
+   Example: "👉 Send an additional billing message for the Gamma Rebranding project"
+
+Never do this:
+- No generic statements like "You have 3 projects in progress"
+- No listing numbers without project names`;
 
 interface BriefingContext {
   projects: {
@@ -100,71 +117,100 @@ function buildContext(data: Awaited<ReturnType<typeof getDashboardData>>): Brief
 export async function generateDailyBriefing(
   userId: string,
 ): Promise<{ title: string; message: string }> {
-  const data = await getDashboardData(userId);
+  const [data, profile] = await Promise.all([
+    getDashboardData(userId),
+    getProfile(userId),
+  ]);
+
+  const locale = profile?.locale === "ko" ? "ko" : "en";
 
   if (data.projects.length === 0) {
     return {
-      title: "오늘의 브리핑",
-      message: "아직 진행 중인 프로젝트가 없습니다. 새 프로젝트를 만들어보세요!",
+      title: locale === "ko" ? "오늘의 브리핑" : "Today's Briefing",
+      message: locale === "ko"
+        ? "아직 진행 중인 프로젝트가 없습니다. 새 프로젝트를 만들어보세요!"
+        : "You don't have any active projects yet. Create a new project to get started!",
     };
   }
 
   const context = buildContext(data);
+  const systemPrompt = locale === "ko" ? SYSTEM_PROMPT_KO : SYSTEM_PROMPT_EN;
+  const title = locale === "ko" ? "오늘의 브리핑" : "Today's Briefing";
 
   try {
     const model = process.env.LLM_MODEL_GENERATE || "gpt-5-mini";
-    const userPrompt = `다음 데이터를 바탕으로 오늘의 모닝 브리핑을 작성해주세요:\n\n${JSON.stringify(context, null, 2)}`;
+    const userPrompt = locale === "ko"
+      ? `다음 데이터를 바탕으로 오늘의 모닝 브리핑을 작성해주세요:\n\n${JSON.stringify(context, null, 2)}`
+      : `Write today's morning briefing based on the following data:\n\n${JSON.stringify(context, null, 2)}`;
 
-    const content = await callTextLLM(model, SYSTEM_PROMPT, userPrompt, 800);
+    const content = await callTextLLM(model, systemPrompt, userPrompt, 800);
     if (!content) throw new Error("LLM returned empty response");
 
-    return {
-      title: "오늘의 브리핑",
-      message: content,
-    };
+    return { title, message: content };
   } catch (error) {
     console.error("Daily briefing generation failed, using fallback:", error);
-    return {
-      title: "오늘의 브리핑",
-      message: getFallbackBriefing(context),
-    };
+    return { title, message: getFallbackBriefing(context, locale) };
   }
 }
 
-function getFallbackBriefing(ctx: BriefingContext): string {
+function getFallbackBriefing(ctx: BriefingContext, locale: string): string {
   const lines: string[] = [];
 
-  lines.push(`📊 현재 ${ctx.totalActiveProjects}개 프로젝트가 진행 중이에요.`);
+  if (locale === "ko") {
+    lines.push(`📊 현재 ${ctx.totalActiveProjects}개 프로젝트가 진행 중이에요.`);
 
-  if (ctx.yesterdayTotalMinutes > 0) {
-    const hrs = Math.round((ctx.yesterdayTotalMinutes / 60) * 10) / 10;
-    lines.push(`✅ 어제 총 ${hrs}시간 작업했어요.`);
+    if (ctx.yesterdayTotalMinutes > 0) {
+      const hrs = Math.round((ctx.yesterdayTotalMinutes / 60) * 10) / 10;
+      lines.push(`✅ 어제 총 ${hrs}시간 작업했어요.`);
+    } else {
+      lines.push(`어제는 기록된 작업이 없어요.`);
+    }
+
+    const risky = ctx.projects.filter((p) => p.timeUsageRate >= 80 && p.progressPercent < 50);
+    if (risky.length > 0) {
+      lines.push(`🚨 ${risky.map((p) => p.name).join(", ")} — 시간 사용률이 높은데 진행률이 낮아요.`);
+    }
+
+    if (ctx.activeAlertCount > 0) {
+      lines.push(`🚨 ${ctx.activeAlertCount}개의 활성 경고가 있어요.`);
+    }
+
+    const lowProfit = ctx.projects.filter(
+      (p) => p.nominalHourly && p.realHourly && p.realHourly < p.nominalHourly * 0.5,
+    );
+    if (lowProfit.length > 0) {
+      lines.push(`🚨 ${lowProfit.map((p) => p.name).join(", ")} — 실제 시급이 명목 시급의 50% 미만이에요.`);
+    }
+
+    lines.push(`👉 시간 기록을 꼼꼼히 입력하고, 경고가 있다면 확인해보세요.`);
   } else {
-    lines.push(`어제는 기록된 작업이 없어요.`);
-  }
+    lines.push(`📊 You have ${ctx.totalActiveProjects} active project${ctx.totalActiveProjects === 1 ? "" : "s"}.`);
 
-  // Find risky projects
-  const risky = ctx.projects.filter((p) => p.timeUsageRate >= 80 && p.progressPercent < 50);
-  if (risky.length > 0) {
-    lines.push(
-      `🚨 ${risky.map((p) => p.name).join(", ")} — 시간 사용률이 높은데 진행률이 낮아요.`,
+    if (ctx.yesterdayTotalMinutes > 0) {
+      const hrs = Math.round((ctx.yesterdayTotalMinutes / 60) * 10) / 10;
+      lines.push(`✅ You logged ${hrs} hours yesterday.`);
+    } else {
+      lines.push(`No time entries were logged yesterday.`);
+    }
+
+    const risky = ctx.projects.filter((p) => p.timeUsageRate >= 80 && p.progressPercent < 50);
+    if (risky.length > 0) {
+      lines.push(`🚨 ${risky.map((p) => p.name).join(", ")} — high time usage but low progress.`);
+    }
+
+    if (ctx.activeAlertCount > 0) {
+      lines.push(`🚨 ${ctx.activeAlertCount} active alert${ctx.activeAlertCount === 1 ? "" : "s"} need your attention.`);
+    }
+
+    const lowProfit = ctx.projects.filter(
+      (p) => p.nominalHourly && p.realHourly && p.realHourly < p.nominalHourly * 0.5,
     );
-  }
+    if (lowProfit.length > 0) {
+      lines.push(`🚨 ${lowProfit.map((p) => p.name).join(", ")} — real hourly rate is below 50% of nominal.`);
+    }
 
-  if (ctx.activeAlertCount > 0) {
-    lines.push(`🚨 ${ctx.activeAlertCount}개의 활성 경고가 있어요.`);
+    lines.push(`👉 Log your time entries carefully and review any active alerts.`);
   }
-
-  const lowProfit = ctx.projects.filter(
-    (p) => p.nominalHourly && p.realHourly && p.realHourly < p.nominalHourly * 0.5,
-  );
-  if (lowProfit.length > 0) {
-    lines.push(
-      `🚨 ${lowProfit.map((p) => p.name).join(", ")} — 실제 시급이 명목 시급의 50% 미만이에요.`,
-    );
-  }
-
-  lines.push(`👉 시간 기록을 꼼꼼히 입력하고, 경고가 있다면 확인해보세요.`);
 
   return lines.join("\n");
 }

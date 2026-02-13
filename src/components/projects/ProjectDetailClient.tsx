@@ -281,19 +281,19 @@ export function ProjectDetailClient({
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-3">
                 <Button variant="outline" onClick={() => setShowEdit(true)} disabled={!isEditable}>
-                  {tDetail.raw("edit") || "Edit Project"}
+                  {tDetail("editProject")}
                 </Button>
                 <Button variant="outline" onClick={() => setShowComplete(true)} disabled={project.status !== "active"}>
-                  Complete
+                  {tDetail("completeProject")}
                 </Button>
                 <Button variant="outline" onClick={() => { setInvoiceType("estimate"); setShowInvoice(true); }}>
-                  Generate Estimate
+                  {tDetail("generateEstimate")}
                 </Button>
                 <Button variant="outline" onClick={() => { setInvoiceType("invoice"); setShowInvoice(true); }}>
-                  Generate Invoice
+                  {tDetail("generateInvoice")}
                 </Button>
                 <Button variant="destructive" onClick={() => setShowDelete(true)}>
-                  Delete Project
+                  {tDetail("deleteProject")}
                 </Button>
               </div>
             </CardContent>

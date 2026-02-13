@@ -980,6 +980,10 @@
     "quickLogged": "기록",
     "quickBudgetLeft": "예산 잔여",
     "generateInvoice": "인보이스 생성",
+    "generateEstimate": "견적서 생성",
+    "editProject": "프로젝트 수정",
+    "completeProject": "완료 처리",
+    "deleteProject": "프로젝트 삭제",
     "reviewAlert": "알림 확인"
   },
   "progress": {
