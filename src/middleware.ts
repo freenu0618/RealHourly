@@ -5,7 +5,15 @@ import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const PUBLIC_PATHS = ["/login", "/auth/callback"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/auth/callback",
+  "/terms",
+  "/privacy",
+  "/contact",
+  "/reset-password",
+  "/verify",
+];
 
 function isPublicPath(pathname: string): boolean {
   const pathWithoutLocale = pathname.replace(/^\/(en|ko)/, "") || "/";
