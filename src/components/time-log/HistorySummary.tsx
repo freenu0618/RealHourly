@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 interface Summary {
   totalMinutes: number;
@@ -71,14 +72,16 @@ export default function HistorySummary({ summary, locale, loading }: HistorySumm
       {/* Total Time */}
       <div className="rounded-2xl border bg-card p-4 shadow-sm">
         <p className="text-xs font-medium text-muted-foreground">{t("totalTime")}</p>
-        <p className="mt-1 text-2xl font-bold tracking-tight">{totalDisplay}</p>
+        <p className="mt-1 text-2xl font-bold tracking-tight">
+          <NumberTicker value={hours} />{hShort} <NumberTicker value={mins} />{mShort}
+        </p>
       </div>
 
       {/* Total Entries */}
       <div className="rounded-2xl border bg-card p-4 shadow-sm">
         <p className="text-xs font-medium text-muted-foreground">{t("totalEntries")}</p>
         <p className="mt-1 text-2xl font-bold tracking-tight">
-          {summary.totalEntries}{t("entriesSuffix")}
+          <NumberTicker value={summary.totalEntries} />{t("entriesSuffix")}
         </p>
       </div>
 

@@ -174,6 +174,34 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
     }
   };
 
+  const handleDuplicate = async (entry: HistoryEntry) => {
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const res = await fetch("/api/time/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entries: [
+            {
+              projectId: entry.projectId,
+              date: today,
+              minutes: entry.minutes,
+              category: entry.category,
+              intent: entry.intent,
+              taskDescription: entry.taskDescription,
+            },
+          ],
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to duplicate");
+      toast.success(t("duplicateSuccess"));
+      const { from, to } = getMonthRange(currentMonth);
+      await fetchHistory(from, to);
+    } catch {
+      toast.error(t("duplicateError"));
+    }
+  };
+
   const handleExportCSV = () => {
     exportToCSV(entries, currentMonth);
     toast.success(t("exportSuccess"));
@@ -289,6 +317,7 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
                 entries={filteredByDate}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onDuplicate={handleDuplicate}
                 locale={locale}
               />
             </div>
@@ -299,6 +328,7 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
           entries={entries}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
           locale={locale}
           selectable={selectMode}
           selectedIds={selectedIds}

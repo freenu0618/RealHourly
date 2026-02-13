@@ -393,7 +393,10 @@
     "exportCSV": "CSV 내보내기",
     "exportJSON": "JSON 내보내기",
     "exportSuccess": "내보내기 완료",
-    "entriesSuffix": "건"
+    "entriesSuffix": "건",
+    "duplicateToday": "오늘로 복제",
+    "duplicateSuccess": "오늘 날짜로 복제되었어요",
+    "duplicateError": "복제에 실패했어요"
   },
   "alerts": {
     "title": "알림",

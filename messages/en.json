@@ -393,7 +393,10 @@
     "exportCSV": "Export CSV",
     "exportJSON": "Export JSON",
     "exportSuccess": "Export completed",
-    "entriesSuffix": ""
+    "entriesSuffix": "",
+    "duplicateToday": "Duplicate to today",
+    "duplicateSuccess": "Duplicated to today",
+    "duplicateError": "Failed to duplicate"
   },
   "alerts": {
     "title": "Alerts",

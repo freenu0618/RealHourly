@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/date";
-import { Pencil, Trash2, Check, X, CheckSquare, Square } from "lucide-react";
+import { Pencil, Trash2, Check, X, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,6 +35,7 @@ interface HistoryListProps {
     }
   ) => Promise<void>;
   onDelete: (entryId: string) => Promise<void>;
+  onDuplicate?: (entry: HistoryEntry) => Promise<void>;
   locale: string;
   selectable?: boolean;
   selectedIds?: Set<string>;
@@ -60,6 +61,7 @@ export default function HistoryList({
   entries,
   onEdit,
   onDelete,
+  onDuplicate,
   locale,
   selectable = false,
   selectedIds = new Set(),
@@ -125,6 +127,7 @@ export default function HistoryList({
                 entry={entry}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onDuplicate={onDuplicate}
                 formatDuration={formatDuration}
                 categoryLabel={tCategory(`category${entry.category.charAt(0).toUpperCase() + entry.category.slice(1)}`) || entry.category}
                 selectable={selectable}
@@ -143,6 +146,7 @@ interface HistoryEntryCardProps {
   entry: HistoryEntry;
   onEdit: HistoryListProps["onEdit"];
   onDelete: HistoryListProps["onDelete"];
+  onDuplicate?: HistoryListProps["onDuplicate"];
   formatDuration: (minutes: number) => string;
   categoryLabel: string;
   selectable: boolean;
@@ -154,6 +158,7 @@ function HistoryEntryCard({
   entry,
   onEdit,
   onDelete,
+  onDuplicate,
   formatDuration,
   categoryLabel,
   selectable,
@@ -308,6 +313,17 @@ function HistoryEntryCard({
               >
                 <Pencil className="h-4 w-4" />
               </Button>
+              {onDuplicate && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  onClick={() => onDuplicate(entry)}
+                  aria-label={t("duplicateToday")}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              )}
               <Button
                 size="icon"
                 variant="ghost"
