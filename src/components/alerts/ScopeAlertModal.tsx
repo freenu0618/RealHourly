@@ -82,7 +82,10 @@ export function ScopeAlertModal({
       .then((res) => (res.ok ? res.json() : null))
       .then((json) => {
         if (json?.data) {
-          setRelatedEntries((json.data as RelatedEntry[]).slice(0, 5));
+          const list = Array.isArray(json.data) ? json.data : json.data.entries;
+          if (Array.isArray(list)) {
+            setRelatedEntries((list as RelatedEntry[]).slice(0, 5));
+          }
         }
       })
       .catch(() => {});

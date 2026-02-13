@@ -36,7 +36,10 @@ export function TimeEntriesSection({ projectId }: TimeEntriesSectionProps) {
       .then((res) => (res.ok ? res.json() : null))
       .then((json) => {
         if (json?.data) {
-          setEntries((json.data as TimeEntry[]).slice(0, 10));
+          const list = Array.isArray(json.data) ? json.data : json.data.entries;
+          if (Array.isArray(list)) {
+            setEntries((list as TimeEntry[]).slice(0, 10));
+          }
         }
       })
       .catch(() => {})
