@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { cn } from "@/lib/utils";
 import {
   signInWithGoogle,
   signInWithEmail,
@@ -249,6 +250,26 @@ function LoginView({
 
 /* ── Sign Up View ── */
 
+function getPasswordStrength(pw: string): { level: number; label: string; color: string } {
+  if (pw.length === 0) return { level: 0, label: "", color: "" };
+  if (pw.length < 6) return { level: 1, label: "strengthWeak", color: "bg-red-500" };
+
+  const hasLetters = /[a-zA-Z]/.test(pw);
+  const hasNumbers = /[0-9]/.test(pw);
+  const hasSpecial = /[^a-zA-Z0-9]/.test(pw);
+
+  if (pw.length >= 8 && hasLetters && hasNumbers && hasSpecial) {
+    return { level: 4, label: "strengthStrong", color: "bg-green-500" };
+  }
+  if (pw.length >= 8 && hasLetters && hasNumbers) {
+    return { level: 3, label: "strengthGood", color: "bg-yellow-500" };
+  }
+  if (pw.length >= 6 && (hasLetters || hasNumbers)) {
+    return { level: 2, label: "strengthFair", color: "bg-orange-500" };
+  }
+  return { level: 1, label: "strengthWeak", color: "bg-red-500" };
+}
+
 function SignUpView({
   t,
   router,
@@ -263,6 +284,8 @@ function SignUpView({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+
+  const strength = getPasswordStrength(password);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -347,7 +370,24 @@ function SignUpView({
             autoComplete="new-password"
             className={inputClass}
           />
-          <p className="pl-1 text-xs text-muted-foreground">{t("passwordMinLength")}</p>
+          {password.length > 0 ? (
+            <div className="space-y-1.5 pl-1">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "h-1.5 flex-1 rounded-full transition-colors",
+                      i <= strength.level ? strength.color : "bg-muted"
+                    )}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">{t(strength.label)}</p>
+            </div>
+          ) : (
+            <p className="pl-1 text-xs text-muted-foreground">{t("passwordMinLength")}</p>
+          )}
         </div>
         <Input
           type="password"

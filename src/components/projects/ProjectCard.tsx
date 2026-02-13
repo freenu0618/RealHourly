@@ -1,7 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
+import { Clock, BarChart3, FileText } from "lucide-react";
 import { MagicCard } from "@/components/ui/magic-card";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/money/currency";
@@ -57,6 +59,7 @@ function getRateHealth(realHourly: number | null, currency: string) {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("projects");
+  const router = useRouter();
   const status = getStatusBadge(project.status ?? "active", project.progressPercent, t);
   const health = getRateHealth(project.realHourly, project.currency);
 
@@ -169,6 +172,33 @@ export function ProjectCard({ project }: ProjectCardProps) {
               <span className="text-xs text-muted-foreground">
                 {Math.round((project.totalMinutes / 60) * 10) / 10}h
               </span>
+            )}
+          </div>
+          {/* Quick action buttons on hover */}
+          <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <button
+              onClick={(e) => { e.preventDefault(); router.push(`/time-log?projectId=${project.id}`); }}
+              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+              title={t("quickLogTime")}
+            >
+              <Clock className="size-3.5" />
+              {t("quickLogTime")}
+            </button>
+            <button
+              onClick={(e) => { e.preventDefault(); router.push("/analytics"); }}
+              className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+              title={t("quickAnalytics")}
+            >
+              <BarChart3 className="size-3.5" />
+            </button>
+            {project.progressPercent >= 80 && (
+              <button
+                onClick={(e) => { e.preventDefault(); router.push(`/projects/${project.id}`); }}
+                className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                title={t("quickInvoice")}
+              >
+                <FileText className="size-3.5" />
+              </button>
             )}
           </div>
         </CardContent>

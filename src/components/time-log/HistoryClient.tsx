@@ -3,9 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Calendar, List } from "lucide-react";
+import { Calendar, List, Download, CheckSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { exportToCSV, exportToJSON } from "@/lib/utils/export-entries";
 import CalendarView from "./CalendarView";
 import HistoryList from "./HistoryList";
 import HistoryFilters from "./HistoryFilters";
@@ -61,6 +68,8 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filterProject, setFilterProject] = useState<string>("");
   const [filterCategory, setFilterCategory] = useState<string>("");
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const fetchHistory = useCallback(
     async (from: string, to: string) => {
@@ -88,6 +97,12 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
     const { from, to } = getMonthRange(currentMonth);
     fetchHistory(from, to);
   }, [currentMonth, fetchHistory]);
+
+  useEffect(() => {
+    if (!selectMode || tab === "calendar") {
+      setSelectedIds(new Set());
+    }
+  }, [selectMode, tab]);
 
   const handleEdit = async (
     entryId: string,
@@ -118,37 +133,123 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
     await fetchHistory(from, to);
   };
 
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+
+    const confirmed = window.confirm(
+      t("bulkDeleteConfirm", { count: selectedIds.size })
+    );
+    if (!confirmed) return;
+
+    const deletePromises = Array.from(selectedIds).map((id) =>
+      fetch(`/api/time/${id}`, { method: "DELETE" })
+        .then((res) => ({ id, success: res.ok }))
+        .catch(() => ({ id, success: false }))
+    );
+
+    const results = await Promise.allSettled(deletePromises);
+    const successCount = results.filter(
+      (r) => r.status === "fulfilled" && r.value.success
+    ).length;
+
+    if (successCount > 0) {
+      toast.success(t("bulkDeleteSuccess", { count: successCount }));
+      setSelectedIds(new Set());
+      const { from, to } = getMonthRange(currentMonth);
+      await fetchHistory(from, to);
+    } else {
+      toast.error(t("deleteError"));
+    }
+  };
+
+  const handleExportCSV = () => {
+    exportToCSV(entries, currentMonth);
+    toast.success(t("exportSuccess"));
+  };
+
+  const handleExportJSON = () => {
+    exportToJSON(entries, currentMonth);
+    toast.success(t("exportSuccess"));
+  };
+
   const filteredByDate = selectedDate
     ? entries.filter((e) => e.date === selectedDate)
     : entries;
+
+  const showBulkToolbar = selectMode && selectedIds.size > 0;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-        <div className="flex rounded-full bg-muted p-1">
-          <button
-            type="button"
-            onClick={() => setTab("calendar")}
-            className={cn(
-              "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all",
-              tab === "calendar" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <Calendar className="size-4" />
-            {t("calendarTab")}
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("list")}
-            className={cn(
-              "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all",
-              tab === "list" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <List className="size-4" />
-            {t("listTab")}
-          </button>
+        <div className="flex items-center gap-3">
+          {tab === "list" && (
+            <Button
+              variant={selectMode ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                setSelectMode(!selectMode);
+                if (selectMode) setSelectedIds(new Set());
+              }}
+            >
+              <CheckSquare className="size-4 mr-1.5" />
+              {t("selectMode")}
+            </Button>
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Download className="size-4 mr-1.5" />
+                {t("export")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleExportCSV}>
+                {t("exportCSV")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportJSON}>
+                {t("exportJSON")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="flex rounded-full bg-muted p-1">
+            <button
+              type="button"
+              onClick={() => setTab("calendar")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all",
+                tab === "calendar" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Calendar className="size-4" />
+              {t("calendarTab")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("list")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all",
+                tab === "list" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <List className="size-4" />
+              {t("listTab")}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -199,7 +300,36 @@ export default function HistoryClient({ projects, locale }: HistoryClientProps) 
           onEdit={handleEdit}
           onDelete={handleDelete}
           locale={locale}
+          selectable={selectMode}
+          selectedIds={selectedIds}
+          onToggleSelect={handleToggleSelect}
         />
+      )}
+
+      {showBulkToolbar && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+          <div className="bg-card border shadow-lg rounded-full px-6 py-3 flex items-center gap-4">
+            <span className="text-sm font-medium">
+              {t("selectedCount", { count: selectedIds.size })}
+            </span>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedIds(new Set())}
+              >
+                {t("deselectAll")}
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleBulkDelete}
+              >
+                {t("bulkDelete")}
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

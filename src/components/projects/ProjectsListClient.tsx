@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { FolderKanban, RefreshCw, Search } from "lucide-react";
+import { FolderKanban, RefreshCw, Search, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FadeIn } from "@/components/ui/fade-in";
 import { CreateProjectDialog } from "./CreateProjectDialog";
 import { ProjectCard } from "./ProjectCard";
@@ -30,6 +31,8 @@ interface Project {
 const FILTER_TABS = ["active", "completed", "paused", "all"] as const;
 type FilterTab = (typeof FILTER_TABS)[number];
 
+type SortKey = "name" | "progress" | "rate" | "date";
+
 export function ProjectsListClient() {
   const t = useTranslations("projects");
   const tCommon = useTranslations("common");
@@ -38,6 +41,8 @@ export function ProjectsListClient() {
   const [error, setError] = useState(false);
   const [filter, setFilter] = useState<FilterTab>("active");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("date");
+  const [clientFilter, setClientFilter] = useState<string>("all");
 
   const fetchProjects = useCallback(async (status: FilterTab) => {
     setLoading(true);
@@ -75,15 +80,46 @@ export function ProjectsListClient() {
     }
   };
 
-  // Filter projects by search query (debounced by input value change)
+  const clientNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const p of projects) {
+      if (p.clientName) names.add(p.clientName);
+    }
+    return Array.from(names).sort();
+  }, [projects]);
+
   const filteredProjects = useMemo(() => {
-    if (!searchQuery.trim()) return projects;
-    const query = searchQuery.toLowerCase();
-    return projects.filter((p) =>
-      p.name.toLowerCase().includes(query) ||
-      (p.clientName && p.clientName.toLowerCase().includes(query))
-    );
-  }, [projects, searchQuery]);
+    let list = projects;
+
+    if (clientFilter !== "all") {
+      list = list.filter((p) => p.clientName === clientFilter);
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      list = list.filter((p) =>
+        p.name.toLowerCase().includes(query) ||
+        (p.clientName && p.clientName.toLowerCase().includes(query))
+      );
+    }
+
+    const sorted = [...list];
+    switch (sortKey) {
+      case "name":
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "progress":
+        sorted.sort((a, b) => b.progressPercent - a.progressPercent);
+        break;
+      case "rate":
+        sorted.sort((a, b) => (b.realHourly ?? -Infinity) - (a.realHourly ?? -Infinity));
+        break;
+      case "date":
+        break;
+    }
+
+    return sorted;
+  }, [projects, searchQuery, sortKey, clientFilter]);
 
   return (
     <div className="space-y-6">
@@ -103,15 +139,44 @@ export function ProjectsListClient() {
           </TabsList>
         </Tabs>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder={tCommon("search")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
+        <div className="flex items-center gap-2">
+          {clientNames.length > 0 && (
+            <Select value={clientFilter} onValueChange={setClientFilter}>
+              <SelectTrigger className="w-36 text-xs">
+                <SelectValue placeholder={t("allClients")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("allClients")}</SelectItem>
+                {clientNames.map((name) => (
+                  <SelectItem key={name} value={name}>{name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          <Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
+            <SelectTrigger className="w-28 text-xs">
+              <ArrowUpDown className="mr-1 size-3" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">{t("sortDate")}</SelectItem>
+              <SelectItem value="name">{t("sortName")}</SelectItem>
+              <SelectItem value="progress">{t("sortProgress")}</SelectItem>
+              <SelectItem value="rate">{t("sortRate")}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="relative w-full sm:w-52">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder={tCommon("search")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
         </div>
       </div>
 

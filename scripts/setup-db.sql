@@ -188,7 +188,133 @@ CREATE POLICY "project_shares_delete" ON project_shares
     EXISTS (SELECT 1 FROM projects WHERE projects.id = project_shares.project_id AND projects.user_id = auth.uid())
   );
 
--- 12. Auto-create profile on user signup (trigger)
+-- 12. timesheets: user_id = auth.uid()
+ALTER TABLE timesheets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "timesheets_select" ON timesheets
+  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "timesheets_insert" ON timesheets
+  FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "timesheets_update" ON timesheets
+  FOR UPDATE USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "timesheets_delete" ON timesheets
+  FOR DELETE USING (user_id = auth.uid());
+
+-- 13. timesheet_approvals: via timesheet.user_id = auth.uid()
+--     Note: public review access via reviewer_token is handled by the API route (service role, no auth required)
+ALTER TABLE timesheet_approvals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "timesheet_approvals_select" ON timesheet_approvals
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM timesheets WHERE timesheets.id = timesheet_approvals.timesheet_id AND timesheets.user_id = auth.uid())
+  );
+CREATE POLICY "timesheet_approvals_insert" ON timesheet_approvals
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM timesheets WHERE timesheets.id = timesheet_approvals.timesheet_id AND timesheets.user_id = auth.uid())
+  );
+CREATE POLICY "timesheet_approvals_update" ON timesheet_approvals
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM timesheets WHERE timesheets.id = timesheet_approvals.timesheet_id AND timesheets.user_id = auth.uid())
+  ) WITH CHECK (
+    EXISTS (SELECT 1 FROM timesheets WHERE timesheets.id = timesheet_approvals.timesheet_id AND timesheets.user_id = auth.uid())
+  );
+CREATE POLICY "timesheet_approvals_delete" ON timesheet_approvals
+  FOR DELETE USING (
+    EXISTS (SELECT 1 FROM timesheets WHERE timesheets.id = timesheet_approvals.timesheet_id AND timesheets.user_id = auth.uid())
+  );
+
+-- 14. time_entry_versions: via time_entry → project.user_id = auth.uid()
+ALTER TABLE time_entry_versions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "time_entry_versions_select" ON time_entry_versions
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = time_entry_versions.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "time_entry_versions_insert" ON time_entry_versions
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = time_entry_versions.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "time_entry_versions_update" ON time_entry_versions
+  FOR UPDATE USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = time_entry_versions.time_entry_id AND projects.user_id = auth.uid()
+    )
+  ) WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = time_entry_versions.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "time_entry_versions_delete" ON time_entry_versions
+  FOR DELETE USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = time_entry_versions.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+
+-- 15. entry_flags: via time_entry → project.user_id = auth.uid()
+ALTER TABLE entry_flags ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "entry_flags_select" ON entry_flags
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = entry_flags.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "entry_flags_insert" ON entry_flags
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = entry_flags.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "entry_flags_update" ON entry_flags
+  FOR UPDATE USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = entry_flags.time_entry_id AND projects.user_id = auth.uid()
+    )
+  ) WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = entry_flags.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+CREATE POLICY "entry_flags_delete" ON entry_flags
+  FOR DELETE USING (
+    EXISTS (
+      SELECT 1 FROM time_entries
+      JOIN projects ON projects.id = time_entries.project_id
+      WHERE time_entries.id = entry_flags.time_entry_id AND projects.user_id = auth.uid()
+    )
+  );
+
+-- 16. usage_counts: user_id = auth.uid()
+ALTER TABLE usage_counts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "usage_counts_select" ON usage_counts
+  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "usage_counts_insert" ON usage_counts
+  FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "usage_counts_update" ON usage_counts
+  FOR UPDATE USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "usage_counts_delete" ON usage_counts
+  FOR DELETE USING (user_id = auth.uid());
+
+-- 17. Auto-create profile on user signup (trigger)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql

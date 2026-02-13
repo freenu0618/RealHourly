@@ -29,6 +29,8 @@ import { PostLogSuggestions, type PostLogSuggestion } from "./PostLogSuggestions
 import type { TimerResult } from "@/store/use-timer-store";
 import { generateId } from "@/lib/utils/nanoid";
 import type { Category } from "@/types/time-log";
+import { cn } from "@/lib/utils";
+import { Clock, Repeat } from "lucide-react";
 
 interface TimeLogInterfaceProps {
   projects: { id: string; name: string }[];
@@ -55,11 +57,45 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   const [progressProjects, setProgressProjects] = useState<
     { projectId: string; projectName: string; currentProgress: number }[]
   >([]);
+  const [recentProjects, setRecentProjects] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [lastEntry, setLastEntry] = useState<{
+    projectId: string;
+    projectName: string;
+    taskDescription: string;
+    minutes: number;
+    category: Category;
+  } | null>(null);
 
   const { entries, isLoading, setEntries, setLoading, setError } =
     useDraftStore();
 
   const thinking = useThinkingLog();
+
+  // Load recent projects and last entry from localStorage
+  useEffect(() => {
+    try {
+      const storedRecent = localStorage.getItem("realhourly:recent-projects");
+      if (storedRecent) {
+        const parsed = JSON.parse(storedRecent) as { id: string; name: string }[];
+        // Filter against current projects (only show projects that still exist)
+        const validRecent = parsed.filter((r) => projects.some((p) => p.id === r.id));
+        setRecentProjects(validRecent.slice(0, 3));
+      }
+
+      const storedLast = localStorage.getItem("realhourly:last-entry");
+      if (storedLast) {
+        const parsed = JSON.parse(storedLast);
+        // Validate that the project still exists
+        if (projects.some((p) => p.id === parsed.projectId)) {
+          setLastEntry(parsed);
+        }
+      }
+    } catch (err) {
+      // Ignore localStorage errors
+    }
+  }, [projects]);
 
   const handleParse = useCallback(async () => {
     if (!input.trim()) return;
@@ -197,6 +233,52 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   }
 
   function handleSaved() {
+    // Persist recent projects and last entry to localStorage
+    try {
+      // Get unique projects from saved entries
+      const savedProjects = entries
+        .filter((e) => e.matchedProjectId)
+        .map((e) => ({
+          id: e.matchedProjectId!,
+          name: projects.find((p) => p.id === e.matchedProjectId)?.name || e.projectNameRaw,
+        }));
+
+      // Update recent projects (deduplicate, push to front, cap at 5)
+      const storedRecent = localStorage.getItem("realhourly:recent-projects");
+      let recentList: { id: string; name: string }[] = storedRecent
+        ? JSON.parse(storedRecent)
+        : [];
+
+      // Add saved projects to the front (newest first)
+      savedProjects.forEach((sp) => {
+        // Remove if already exists
+        recentList = recentList.filter((r) => r.id !== sp.id);
+        // Add to front
+        recentList.unshift(sp);
+      });
+
+      // Cap at 5
+      recentList = recentList.slice(0, 5);
+      localStorage.setItem("realhourly:recent-projects", JSON.stringify(recentList));
+      setRecentProjects(recentList.slice(0, 3));
+
+      // Store last entry (first entry's data)
+      if (entries.length > 0 && entries[0].matchedProjectId && entries[0].durationMinutes) {
+        const firstEntry = entries[0];
+        const lastEntryData = {
+          projectId: firstEntry.matchedProjectId!,
+          projectName: projects.find((p) => p.id === firstEntry.matchedProjectId)?.name || firstEntry.projectNameRaw,
+          taskDescription: firstEntry.taskDescription,
+          minutes: firstEntry.durationMinutes!,
+          category: firstEntry.category,
+        };
+        localStorage.setItem("realhourly:last-entry", JSON.stringify(lastEntryData));
+        setLastEntry(lastEntryData);
+      }
+    } catch (err) {
+      // Ignore localStorage errors
+    }
+
     setInput("");
     setPreferredProjectId("");
     setShowProgressHint(false);
@@ -221,6 +303,26 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
   ) {
     setProgressProjects(projects);
     setProgressDialogOpen(true);
+  }
+
+  function handleRepeatLast() {
+    if (!lastEntry) return;
+    const entry: ParsedEntry = {
+      id: generateId(),
+      projectNameRaw: lastEntry.projectName,
+      matchedProjectId: lastEntry.projectId,
+      matchSource: "name",
+      taskDescription: lastEntry.taskDescription,
+      date: new Date().toISOString(),
+      durationMinutes: lastEntry.minutes,
+      category: lastEntry.category,
+      intent: "done",
+      issues: [],
+      needsUserAction: false,
+      clarificationQuestion: null,
+    };
+    setEntries([...entries, entry]);
+    toast.success(t("repeatLastSuccess"));
   }
 
   function handleTimerStopped(result: TimerResult) {
@@ -272,6 +374,33 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      {/* Recent projects quick chips */}
+      {recentProjects.length > 0 && (
+        <div className="space-y-2">
+          <Label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="h-3 w-3" />
+            {t("recentProjects")}
+          </Label>
+          <div className="flex flex-wrap gap-2">
+            {recentProjects.map((project) => (
+              <button
+                key={project.id}
+                type="button"
+                onClick={() => setPreferredProjectId(project.id)}
+                disabled={isLoading}
+                className={cn(
+                  "rounded-full bg-muted/50 px-3 py-1.5 text-xs transition-colors hover:bg-primary/10 disabled:opacity-50 disabled:cursor-not-allowed",
+                  preferredProjectId === project.id &&
+                    "bg-primary/10 text-primary ring-1 ring-primary/30"
+                )}
+              >
+                {project.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Preferred project (optional) */}
       <div className="space-y-1.5">
         <Label className="text-xs text-muted-foreground">
@@ -329,7 +458,7 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         disabled={isLoading}
       />
 
-      {/* Action row: Magic Parse + Example Fill */}
+      {/* Action row: Magic Parse + Example Fill + Repeat Last */}
       <div className="flex flex-wrap items-center gap-2">
         <MagicParseButton
           onClick={handleParse}
@@ -354,6 +483,18 @@ export function TimeLogInterface({ projects }: TimeLogInterfaceProps) {
         >
           {t("exampleFill2")}
         </Button>
+        {lastEntry && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="rounded-xl text-xs text-primary/80 hover:text-primary hover:bg-primary/10"
+            onClick={handleRepeatLast}
+            disabled={isLoading}
+          >
+            <Repeat className="mr-1.5 h-3.5 w-3.5" />
+            {t("repeatLast")}
+          </Button>
+        )}
       </div>
 
       {/* Thinking Log */}

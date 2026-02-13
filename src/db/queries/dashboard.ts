@@ -39,6 +39,8 @@ export interface DashboardData {
   recentEntries: RecentEntry[];
   activeAlerts: ActiveAlert[];
   weeklyMinutes: { date: string; minutes: number }[];
+  previousWeekMinutes: number;
+  previousWeekDaily: { date: string; minutes: number }[];
 }
 
 export async function getDashboardData(userId: string): Promise<DashboardData> {
@@ -62,11 +64,13 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       recentEntries: [],
       activeAlerts: [],
       weeklyMinutes: [],
+      previousWeekMinutes: 0,
+      previousWeekDaily: [],
     };
   }
 
   // 2. Get aggregated time & cost per project + recent entries + alerts + weekly summary
-  const [timeAgg, costAgg, recentRows, alertRows, weeklyRows] =
+  const [timeAgg, costAgg, recentRows, alertRows, weeklyRows, prevWeekRows] =
     await Promise.all([
       // Time aggregation per project
       db
@@ -171,6 +175,30 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
         )
         .groupBy(timeEntries.date)
         .orderBy(timeEntries.date),
+
+      // Previous week daily breakdown (days -13 to -7) for chart overlay + trend
+      db
+        .select({
+          date: timeEntries.date,
+          minutes:
+            sql<number>`COALESCE(SUM(${timeEntries.minutes}), 0)`.as(
+              "minutes",
+            ),
+        })
+        .from(timeEntries)
+        .innerJoin(projects, eq(timeEntries.projectId, projects.id))
+        .where(
+          and(
+            eq(projects.userId, userId),
+            eq(timeEntries.intent, "done"),
+            isNull(timeEntries.deletedAt),
+            isNull(projects.deletedAt),
+            sql`${timeEntries.date} >= CURRENT_DATE - INTERVAL '13 days'`,
+            sql`${timeEntries.date} < CURRENT_DATE - INTERVAL '6 days'`,
+          ),
+        )
+        .groupBy(timeEntries.date)
+        .orderBy(timeEntries.date),
     ]);
 
   // Build lookup maps
@@ -214,6 +242,11 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       metadata: r.metadata as Record<string, unknown>,
     })),
     weeklyMinutes: weeklyRows.map((r) => ({
+      date: r.date,
+      minutes: Number(r.minutes),
+    })),
+    previousWeekMinutes: prevWeekRows.reduce((s, r) => s + Number(r.minutes), 0),
+    previousWeekDaily: prevWeekRows.map((r) => ({
       date: r.date,
       minutes: Number(r.minutes),
     })),

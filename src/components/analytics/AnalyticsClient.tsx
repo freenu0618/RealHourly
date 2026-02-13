@@ -7,11 +7,18 @@ import dynamic from "next/dynamic";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { ComparisonData } from "@/db/queries/analytics";
 import { getDominantCurrency } from "@/lib/money/currency";
 import { ClientSummaryCards } from "./ClientSummaryCards";
 import { InsightCards } from "./InsightCards";
-import { subDays, formatISO } from "date-fns";
+import { subDays, formatISO, format } from "date-fns";
+import { CalendarIcon, Download } from "lucide-react";
 
 const ChartSkeleton = () => <Skeleton className="h-[260px] w-full rounded-xl" />;
 const HourlyRankingChart = dynamic(
@@ -27,13 +34,16 @@ const CategoryStackedBar = dynamic(
   { ssr: false, loading: ChartSkeleton },
 );
 
-type DateRangePreset = "7D" | "30D" | "3M" | "6M" | "All";
+type DateRangePreset = "7D" | "30D" | "3M" | "6M" | "All" | "Custom";
 
 export function AnalyticsClient() {
   const t = useTranslations("analytics");
   const [data, setData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPreset, setSelectedPreset] = useState<DateRangePreset>("All");
+  const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>();
+  const [customDateTo, setCustomDateTo] = useState<Date | undefined>();
+  const [isCustomPopoverOpen, setIsCustomPopoverOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -41,9 +51,14 @@ export function AnalyticsClient() {
         const params = new URLSearchParams();
 
         // Calculate date range based on preset
-        if (selectedPreset !== "All") {
+        if (selectedPreset === "Custom") {
+          if (customDateFrom && customDateTo) {
+            params.set("from", formatISO(customDateFrom, { representation: "date" }));
+            params.set("to", formatISO(customDateTo, { representation: "date" }));
+          }
+        } else if (selectedPreset !== "All") {
           const today = new Date();
-          const daysMap: Record<Exclude<DateRangePreset, "All">, number> = {
+          const daysMap: Record<Exclude<DateRangePreset, "All" | "Custom">, number> = {
             "7D": 7,
             "30D": 30,
             "3M": 90,
@@ -66,7 +81,45 @@ export function AnalyticsClient() {
       }
     }
     fetchData();
-  }, [t, selectedPreset]);
+  }, [t, selectedPreset, customDateFrom, customDateTo]);
+
+  const handleExportCSV = () => {
+    if (!data) return;
+
+    const headers = ["Project", "Client", "Hours", "Revenue", "Net", "RealRate", "NominalRate"];
+    const rows = data.projects.map((p) => [
+      p.name,
+      p.clientName || "-",
+      p.totalHours.toFixed(2),
+      p.gross.toFixed(2),
+      p.net.toFixed(2),
+      p.realHourly?.toFixed(2) || "-",
+      p.nominalHourly?.toFixed(2) || "-",
+    ]);
+
+    const csv = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `analytics-export-${format(new Date(), "yyyy-MM-dd")}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleApplyCustomDates = () => {
+    if (customDateFrom && customDateTo) {
+      setSelectedPreset("Custom");
+      setIsCustomPopoverOpen(false);
+      setLoading(true);
+    } else {
+      toast.error(t("selectBothDates") || "Please select both from and to dates");
+    }
+  };
 
   if (loading) {
     return (
@@ -103,9 +156,21 @@ export function AnalyticsClient() {
   return (
     <div className="mx-auto max-w-4xl space-y-5 p-4 md:p-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleExportCSV}
+          disabled={!data || data.projects.length === 0}
+          className="rounded-xl"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          {t("exportCSV")}
+        </Button>
       </div>
 
       {/* Date Range Selector */}
@@ -124,6 +189,48 @@ export function AnalyticsClient() {
             {preset}
           </Button>
         ))}
+        <Popover open={isCustomPopoverOpen} onOpenChange={setIsCustomPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              size="sm"
+              variant={selectedPreset === "Custom" ? "default" : "outline"}
+              className="rounded-xl"
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {t("custom")}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-4" align="start">
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">{t("from")}</label>
+                  <Calendar
+                    mode="single"
+                    selected={customDateFrom}
+                    onSelect={setCustomDateFrom}
+                    initialFocus
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">{t("to")}</label>
+                  <Calendar
+                    mode="single"
+                    selected={customDateTo}
+                    onSelect={setCustomDateTo}
+                  />
+                </div>
+              </div>
+              <Button
+                onClick={handleApplyCustomDates}
+                className="w-full rounded-xl"
+                disabled={!customDateFrom || !customDateTo}
+              >
+                {t("apply")}
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Insight Cards */}

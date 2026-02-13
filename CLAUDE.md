@@ -10,7 +10,7 @@
 **Solution**: NLP time logging → hidden cost analysis → real hourly rate calculation → scope creep detection → auto-generated billing messages.
 **Target**: Global freelancers (Upwork, Fiverr, 크몽, 숨고 + independent)
 
-**Phase**: P1 — MVP Complete, Production-Ready
+**Phase**: P1 — MVP Complete, Production-Ready + Monetization Active
 
 ### Core Features (5)
 1. **NLP Time Log** — Natural language + voice input → AI parsing → HITL confirmation → save
@@ -20,16 +20,18 @@
 5. **Client Work Report** — Shareable public work report via token-based links (no auth required)
 
 ### Extended Features
-6. **Dashboard** — KPI cards, weekly hours chart, recent entries, active alerts
-7. **Analytics** — Multi-project comparison, category breakdown, hourly ranking, scatter plot
+6. **Dashboard** — KPI cards (NumberTicker, MagicCard, drill-down), weekly chart, briefing card (BorderBeam), recent entries
+7. **Analytics** — Multi-project comparison, category breakdown, hourly ranking, scatter plot, date presets
 8. **Weekly Reports** — Auto-generated weekly summaries with AI insights
 9. **Voice Input** — Audio recording → Whisper transcription → NLP parsing
 10. **PDF Invoice/Estimate** — AI-generated line items, professional PDF output
 11. **Project Lifecycle** — Status management (active/completed/paused/cancelled), progress tracking
 12. **Settings** — Profile, preferences (currency/timezone/locale), data export
-13. **Marketing Landing** — Full landing page with hero carousel, features, pricing, FAQ
-14. **AI Chat Assistant** — Floating chat panel with full user context, conversational Q&A about projects/profitability/time
+13. **Marketing Landing** — MagicUI redesign (NumberTicker, ShimmerButton, PulsatingButton, BorderBeam, MagicCard, BentoGrid, Marquee, Safari mockup)
+14. **AI Chat Assistant** — Floating chat panel with full user context, conversational Q&A, localStorage persistence, markdown rendering
 15. **AI Consultant Page** — Dedicated full-page chat with 5 specialist roles (data analyst, business advisor, career guide, time coach, financial consultant)
+16. **Payment & Subscription** — Polar integration, Free/Pro plans ($9/mo, $7/mo yearly), feature gates, monthly usage tracking
+17. **Timesheet Approval Workflow** — Weekly timesheet (draft→submitted→approved/rejected), magic link client review, entry locking, audit trail, anomaly flags
 
 ## Tech Stack
 
@@ -53,6 +55,8 @@
 | Deploy | Vercel | |
 | Package | pnpm | |
 | Animation | framer-motion | 12.x |
+| MagicUI | number-ticker, border-beam, shimmer-button, pulsating-button, marquee, dot-pattern, safari, magic-card, bento-grid, animated-shiny-text | |
+| Payment | @polar-sh/nextjs (Polar checkout + webhooks) | |
 
 ### LLM Strategy (OpenAI, Tiered)
 
@@ -108,6 +112,7 @@ src/
 │  │  │  ├─ settings/page.tsx                # Profile + preferences
 │  │  │  ├─ clients/page.tsx                 # Client management
 │  │  │  ├─ chat/page.tsx                  # AI Consultant (5 roles)
+│  │  │  ├─ timesheets/page.tsx            # Timesheet management
 │  │  │  └─ layout.tsx
 │  │  ├─ (marketing)/
 │  │  │  ├─ page.tsx                         # Landing page
@@ -141,12 +146,23 @@ src/
 │  │  ├─ reports/weekly/generate/route.ts
 │  │  ├─ ai/chat/route.ts
 │  │  ├─ ai/daily-briefing/route.ts
+│  │  ├─ timesheets/route.ts             # Timesheet CRUD (POST create, GET list)
+│  │  ├─ timesheets/[id]/route.ts        # Timesheet detail (GET)
+│  │  ├─ timesheets/[id]/submit/route.ts # Submit timesheet (POST)
+│  │  ├─ timesheets/review/[token]/route.ts # PUBLIC client review (GET/POST)
+│  │  ├─ time/[entryId]/history/route.ts # Audit trail (GET)
+│  │  ├─ time/flags/route.ts            # Entry flags (GET)
+│  │  ├─ time/flags/[flagId]/dismiss/route.ts # Dismiss flag (POST)
+│  │  ├─ polar/checkout/route.ts         # Polar checkout session
+│  │  ├─ polar/webhooks/route.ts         # Polar webhook handler
+│  │  ├─ subscription/route.ts           # Subscription status
 │  │  ├─ settings/profile/route.ts
 │  │  ├─ settings/preferences/route.ts
 │  │  ├─ settings/export/route.ts
 │  │  └─ og/route.tsx
 │  ├─ globals.css
 │  ├─ report/[shareToken]/page.tsx            # Public report page (no locale)
+│  ├─ timesheet-review/[token]/page.tsx       # PUBLIC timesheet review (no locale)
 │  └─ middleware.ts                          # next-intl + Supabase auth
 ├─ components/
 │  ├─ ui/                    # shadcn/ui + fade-in animation (27 components)
@@ -156,6 +172,7 @@ src/
 │  ├─ reports/               # Weekly report components + PublicReportClient (6)
 │  ├─ charts/                # HourlyRateBar, CostBreakdownPie (2)
 │  ├─ alerts/                # ScopeAlertModal (1)
+│  ├─ timesheets/            # Timesheet list, detail, submit, review, status badge (5)
 │  ├─ dashboard/             # DashboardClient (1)
 │  ├─ settings/              # Profile, preferences, account, data (5)
 │  ├─ chat/                  # AI chat + consultant page (5)
@@ -164,20 +181,21 @@ src/
 │  └─ app-sidebar.tsx        # Navigation sidebar
 ├─ lib/
 │  ├─ ai/                    # LLM integrations (14 files)
-│  ├─ metrics/               # Real hourly calc + scope rules (2)
+│  ├─ metrics/               # Real hourly calc + scope rules + entry flags (3)
 │  ├─ money/                 # Currency formatting (2)
 │  ├─ pdf/                   # Invoice/estimate PDF (2)
 │  ├─ reports/               # Weekly data collection (1)
+│  ├─ polar/                 # Polar payment + feature-gate.ts (Free/Pro enforcement)
 │  ├─ date/index.ts          # date-fns wrapper (SINGLE ENTRY)
 │  ├─ auth/                  # getUser(), requireUser(), auth-actions (2)
 │  ├─ supabase/              # Server, client, middleware (3)
 │  ├─ api/                   # Error handling, response wrapper, rate-limit (3)
-│  ├─ validators/            # Zod schemas (10 files)
+│  ├─ validators/            # Zod schemas (11 files, incl. timesheet-schema.ts)
 │  ├─ hooks/                 # useCountUp, useStepLoader, useThinkingLog, useAudioRecorder (4)
 │  └─ utils/                 # cn, nanoid, clipboard, category-emoji (5)
 ├─ db/
-│  ├─ schema/                # Drizzle table/enum definitions (10 files)
-│  ├─ queries/               # DB access functions (11 files)
+│  ├─ schema/                # Drizzle table/enum definitions (16 files)
+│  ├─ queries/               # DB access functions (14 files, incl. timesheets, versions, flags)
 │  └─ index.ts               # Drizzle client init
 ├─ store/
 │  └─ use-draft-store.ts     # zustand (HITL draft ONLY)
@@ -237,9 +255,11 @@ export async function POST(req: Request) {
 8. **Input sanitization** — LLM inputs sanitized via `lib/ai/sanitize-input.ts`.
 9. **Error Boundary** — Dashboard pages wrapped in `<ErrorBoundary>` (`components/error-boundary.tsx`).
 10. **Public data policy** — real_hourly, nominal_hourly, cost_entries, scope alerts, AI insights are NEVER exposed in public report API (`/api/report/[shareToken]`).
-11. **Public endpoint** — `/api/report/:shareToken` is the only unauthenticated endpoint. Uses IP-based rate limiting (60 req/min).
+11. **Public endpoint** — `/api/report/:shareToken`, `/api/polar/webhooks`, and `/api/timesheets/review/:token` are unauthenticated. Report uses IP-based rate limiting (60 req/min).
+13. **Entry locking** — Approved timesheet entries have `lockedAt` set. Locked entries return 403 on PATCH/DELETE.
+12. **Feature gates** — Pro-only features enforced server-side. Free users get 403 `PLAN_LIMIT` or `QUOTA_EXCEEDED`.
 
-## DB Schema (9 Tables)
+## DB Schema (14 Tables)
 
 All tables: UUID PK, `created_at`, `updated_at`, `deleted_at` (soft delete).
 RLS: All tables scoped to `auth.uid()`.
@@ -250,19 +270,31 @@ RLS: All tables scoped to `auth.uid()`.
 - `time_category`: planning, design, development, meeting, revision, admin, email, research, other
 - `time_intent`: done, planned
 - `cost_type`: platform_fee, tax, tool, contractor, misc
-- `alert_type`: scope_rule1, scope_rule2, scope_rule3
+- `alert_type`: scope_rule1, scope_rule2, scope_rule3, scope_rule4
 - `message_tone`: polite, neutral, firm
+- `timesheet_status`: draft, submitted, approved, rejected
 
 ### Tables
-1. **profiles** — `id` (= auth.users.id), `display_name`, `default_currency`, `hourly_goal`, `timezone` (default 'Asia/Seoul'), `locale`
+1. **profiles** — `id` (= auth.users.id), `display_name`, `default_currency`, `hourly_goal`, `timezone` (default 'Asia/Seoul'), `locale`, `plan_type` (free/pro), `plan_expires_at?`
 2. **clients** — `user_id`, `name`. Unique: `(user_id, name)`
 3. **projects** — `user_id`, `client_id?`, `name`, `aliases[]`, `start_date?`, `expected_hours`, `expected_fee`, `currency`, `platform_fee_rate` (0~1), `tax_rate` (0~1), `progress_percent` (0~100), `is_active` (deprecated), `status` (enum, source of truth), `completed_at?`
-4. **time_entries** — `project_id`, `date` (DATE), `minutes` (1~1440), `category`, `intent` (default done), `task_description`, `source_text?`, `issues[]`
+4. **time_entries** — `project_id`, `date` (DATE), `minutes` (1~1440), `category`, `intent` (default done), `task_description`, `source_text?`, `issues[]`, `timesheet_id?`, `locked_at?`
 5. **cost_entries** — `project_id`, `date?`, `amount` (>=0), `cost_type`, `notes?`
 6. **alerts** — `project_id`, `alert_type`, `triggered_at`, `dismissed_at?`, `metadata` (jsonb). Partial unique: `(project_id, alert_type)` WHERE `dismissed_at IS NULL AND deleted_at IS NULL`
 7. **generated_messages** — `alert_id`, `tone`, `subject`, `body`, `copied_at?`
 8. **weekly_reports** — `user_id`, `week_start`, `week_end`, `data` (jsonb), `ai_insight`
 9. **project_shares** — `project_id`, `share_token` (UUID), `label?`, `expires_at?`, `show_time_details`, `show_category_breakdown`, `show_progress`, `show_invoice_download`, `is_revoked`, `access_count`, `last_accessed_at`. Unique index on `share_token` WHERE not deleted/revoked.
+10. **usage_counts** — `user_id`, `feature` (nlp_parse/ai_chat), `period` (YYYY-MM), `count`. Monthly quota tracking with UPSERT.
+11. **timesheets** — `project_id`, `user_id`, `week_start`, `week_end`, `status` (draft/submitted/approved/rejected), `submitted_at?`, `approved_at?`, `rejected_at?`, `reviewer_note?`, `total_minutes`. Unique: `(project_id, week_start)` WHERE not deleted.
+12. **timesheet_approvals** — `timesheet_id`, `action` (submitted/approved/rejected), `reviewer_email?`, `reviewer_token` (UUID, auto-generated), `note?`, `acted_at?`
+13. **time_entry_versions** — `time_entry_id`, `changed_by`, `changed_at`, `change_type` (create/update/delete), `old_values` (jsonb), `new_values` (jsonb)
+14. **entry_flags** — `time_entry_id`, `flag_type` (weekend_work/long_session/backdated/round_number), `severity` (info/warning), `metadata` (jsonb), `dismissed_at?`
+
+### Feature Gate System (`lib/polar/feature-gate.ts`)
+- **Free**: 2 projects, 20 NLP parse/mo, 10 AI chat/mo, 1 scope alert project, no PDF/shares/weekly/briefing/CSV/voice
+- **Pro** ($9/mo, $7/mo yearly): All unlimited
+- Enforcement: `requireFeature()` for boolean limits, `checkQuota()` + `trackUsage()` for monthly quotas, `checkProjectLimit()` for project count
+- Payment: Polar checkout → webhook → `profiles.plan_type` update
 
 ## Core Logic Reference
 
@@ -336,7 +368,7 @@ LLM_MODEL_GENERATE_PREMIUM=gpt-5.2
 ## Build & Deploy
 ```bash
 pnpm install
-pnpm build          # Next.js production build (50 pages)
+pnpm build          # Next.js production build (58 pages)
 pnpm test:run       # Vitest unit tests (88 tests)
 pnpm drizzle-kit push   # Push schema changes to DB
 pnpm seed           # Seed demo data (optional)

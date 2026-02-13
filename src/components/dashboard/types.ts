@@ -35,6 +35,8 @@ export interface DashboardData {
   recentEntries: RecentEntry[];
   activeAlerts: ActiveAlert[];
   weeklyMinutes: { date: string; minutes: number }[];
+  previousWeekMinutes: number;
+  previousWeekDaily: { date: string; minutes: number }[];
 }
 
 export interface DashboardMetrics {

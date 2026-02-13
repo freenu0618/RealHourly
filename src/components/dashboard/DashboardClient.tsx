@@ -69,10 +69,17 @@ export function DashboardClient() {
       </div>
 
       <BriefingCard />
-      <DashboardKPICards metrics={metrics} t={t} />
+      <DashboardKPICards
+        metrics={metrics}
+        weeklyTrend={{
+          currentMinutes: data.weeklyMinutes.reduce((s, d) => s + d.minutes, 0),
+          previousMinutes: data.previousWeekMinutes,
+        }}
+        t={t}
+      />
       <DashboardBudgetWarning projects={data.projects} />
       <DashboardProfitabilityCard projects={data.projects} weeklyMinutes={data.weeklyMinutes} />
-      <DashboardWeeklyChart weeklyMinutes={data.weeklyMinutes} t={t} />
+      <DashboardWeeklyChart weeklyMinutes={data.weeklyMinutes} previousWeekDaily={data.previousWeekDaily} t={t} />
       <DashboardRecentEntries entries={data.recentEntries} t={t} tTimeLog={tTimeLog} />
 
       {data.activeAlerts.length > 0 && (

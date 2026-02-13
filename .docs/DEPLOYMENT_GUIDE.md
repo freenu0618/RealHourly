@@ -23,7 +23,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| 제품명 | RealHourly (realhourly.ai) |
+| 제품명 | RealHourly (real-hourly.com) |
 | 핵심 가치 | "계약서엔 시급 7.5만원, 통장엔 2.3만원 — 당신의 진짜 시급을 찾아보세요" |
 | 대상 사용자 | 글로벌 프리랜서 (Upwork, Fiverr, 크몽, 숨고 + 독립 프리랜서) |
 | 기술 스택 | Next.js 16 + TypeScript + Tailwind + shadcn/ui + Supabase + OpenAI |

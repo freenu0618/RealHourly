@@ -3,9 +3,10 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/date";
-import { Pencil, Trash2, Check, X } from "lucide-react";
+import { Pencil, Trash2, Check, X, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { CATEGORY_EMOJI, getCategoryEmoji } from "@/lib/utils/category-emoji";
 
@@ -35,18 +36,24 @@ interface HistoryListProps {
   ) => Promise<void>;
   onDelete: (entryId: string) => Promise<void>;
   locale: string;
+  selectable?: boolean;
+  selectedIds?: Set<string>;
+  onToggleSelect?: (id: string) => void;
 }
 
 /**
  * HistoryList
  *
- * @description Displays time log entries grouped by date with inline editing
+ * @description Displays time log entries grouped by date with inline editing and optional bulk selection
  * @example
  * <HistoryList
  *   entries={entries}
  *   onEdit={handleEdit}
  *   onDelete={handleDelete}
  *   locale="ko"
+ *   selectable={true}
+ *   selectedIds={selectedIds}
+ *   onToggleSelect={toggleSelect}
  * />
  */
 export default function HistoryList({
@@ -54,6 +61,9 @@ export default function HistoryList({
   onEdit,
   onDelete,
   locale,
+  selectable = false,
+  selectedIds = new Set(),
+  onToggleSelect,
 }: HistoryListProps) {
   const t = useTranslations("history");
   const tCategory = useTranslations("timeLog");
@@ -80,9 +90,9 @@ export default function HistoryList({
   const formatDateHeader = (dateStr: string, totalMinutes: number) => {
     const date = new Date(dateStr + "T00:00:00");
     const hours = (totalMinutes / 60).toFixed(1);
-    const fmt = locale === "ko" ? "M\uC6D4 d\uC77C EEEE" : "EEE, MMM d";
+    const fmt = locale === "ko" ? "M월 d일 EEEE" : "EEE, MMM d";
     const formatted = formatDate(date, fmt, locale);
-    return `${formatted} \u2014 ${hours}${t("hoursShort")}`;
+    return `${formatted} — ${hours}${t("hoursShort")}`;
   };
 
   const formatDuration = (minutes: number) => {
@@ -117,6 +127,9 @@ export default function HistoryList({
                 onDelete={onDelete}
                 formatDuration={formatDuration}
                 categoryLabel={tCategory(`category${entry.category.charAt(0).toUpperCase() + entry.category.slice(1)}`) || entry.category}
+                selectable={selectable}
+                isSelected={selectedIds.has(entry.id)}
+                onToggleSelect={onToggleSelect}
               />
             ))}
           </div>
@@ -132,6 +145,9 @@ interface HistoryEntryCardProps {
   onDelete: HistoryListProps["onDelete"];
   formatDuration: (minutes: number) => string;
   categoryLabel: string;
+  selectable: boolean;
+  isSelected: boolean;
+  onToggleSelect?: (id: string) => void;
 }
 
 function HistoryEntryCard({
@@ -140,6 +156,9 @@ function HistoryEntryCard({
   onDelete,
   formatDuration,
   categoryLabel,
+  selectable,
+  isSelected,
+  onToggleSelect,
 }: HistoryEntryCardProps) {
   const t = useTranslations("history");
   const tCommon = useTranslations("common");
@@ -176,6 +195,12 @@ function HistoryEntryCard({
     const confirmed = window.confirm(t("deleteConfirm"));
     if (confirmed) {
       await onDelete(entry.id);
+    }
+  };
+
+  const handleCheckboxChange = () => {
+    if (onToggleSelect) {
+      onToggleSelect(entry.id);
     }
   };
 
@@ -235,8 +260,20 @@ function HistoryEntryCard({
   }
 
   return (
-    <div className="group bg-card border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative">
+    <div className={cn(
+      "group bg-card border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow relative",
+      selectable && isSelected && "ring-2 ring-primary"
+    )}>
       <div className="flex items-start justify-between gap-4">
+        {selectable && (
+          <div className="flex items-center pt-1">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={handleCheckboxChange}
+              aria-label={t("selectEntry")}
+            />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold text-foreground">
@@ -260,26 +297,28 @@ function HistoryEntryCard({
           <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
             {formatDuration(entry.minutes)}
           </span>
-          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8"
-              onClick={() => setIsEditing(true)}
-              aria-label={tCommon("edit")}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 text-destructive hover:text-destructive"
-              onClick={handleDelete}
-              aria-label={tCommon("delete")}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+          {!selectable && (
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => setIsEditing(true)}
+                aria-label={tCommon("edit")}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-destructive hover:text-destructive"
+                onClick={handleDelete}
+                aria-label={tCommon("delete")}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

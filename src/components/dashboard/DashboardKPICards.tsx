@@ -11,11 +11,22 @@ import type { DashboardMetrics } from "./types";
 
 interface DashboardKPICardsProps {
   metrics: DashboardMetrics;
+  weeklyTrend: { currentMinutes: number; previousMinutes: number } | null;
   t: (key: string, values?: Record<string, string>) => string;
 }
 
-export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
+function computeTrend(current: number, previous: number): { percent: number; direction: "up" | "down" | "flat" } {
+  if (previous === 0 && current === 0) return { percent: 0, direction: "flat" };
+  if (previous === 0) return { percent: 100, direction: "up" };
+  const change = ((current - previous) / previous) * 100;
+  if (Math.abs(change) < 1) return { percent: 0, direction: "flat" };
+  return { percent: Math.abs(Math.round(change)), direction: change > 0 ? "up" : "down" };
+}
+
+export function DashboardKPICards({ metrics, weeklyTrend, t }: DashboardKPICardsProps) {
   const router = useRouter();
+
+  const hoursTrend = weeklyTrend ? computeTrend(weeklyTrend.currentMinutes, weeklyTrend.previousMinutes) : null;
 
   const cards = [
     {
@@ -25,6 +36,7 @@ export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
       format: (v: number) => formatCurrency(v, metrics.currency),
       href: "/analytics" as const,
       highlight: false,
+      trend: null as { percent: number; direction: "up" | "down" | "flat" } | null,
     },
     {
       emoji: "\uD83D\uDCCA",
@@ -33,6 +45,7 @@ export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
       format: (v: number) => formatCurrency(v, metrics.currency),
       href: "/analytics" as const,
       highlight: metrics.totalNet < 0,
+      trend: null,
     },
     {
       emoji: "\u23F0",
@@ -41,6 +54,7 @@ export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
       format: (v: number) => `${v}h`,
       href: "/time-log/history" as const,
       highlight: false,
+      trend: hoursTrend,
     },
     {
       emoji: "\uD83D\uDCB8",
@@ -49,6 +63,7 @@ export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
       format: (v: number) => formatCurrency(v, metrics.currency),
       href: "/analytics" as const,
       highlight: false,
+      trend: null,
     },
   ];
 
@@ -86,6 +101,12 @@ export function DashboardKPICards({ metrics, t }: DashboardKPICardsProps) {
                     "\u2014"
                   )}
                 </p>
+                {card.trend && card.trend.direction !== "flat" && (
+                  <p className={`mt-0.5 flex items-center gap-0.5 text-xs font-medium ${card.trend.direction === "up" ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"}`}>
+                    {card.trend.direction === "up" ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
+                    {card.trend.percent}% {t("trendVsLastWeek")}
+                  </p>
+                )}
               </div>
             </CardContent>
           </MagicCard>
@@ -106,9 +127,7 @@ function KPIValue({
   currency: string;
   decimalPlaces: number;
 }) {
-  // For currency, show prefix then ticker
   const formatted = format(value);
-  // Extract currency symbol (first non-digit, non-comma, non-dot, non-minus, non-space chars)
   const symbolMatch = formatted.match(/^[^\d\-,.\s]+/);
   const symbol = symbolMatch ? symbolMatch[0] : "";
   const suffix = formatted.endsWith("h") ? "h" : "";

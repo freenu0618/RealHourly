@@ -1,7 +1,7 @@
 # RealHourly — Product Requirements Document (PRD)
 
-> Version: P1 MVP Complete
-> Last Updated: 2026-02-10
+> Version: P1 MVP Complete + Timesheet Workflow
+> Last Updated: 2026-02-12
 > Phase: P0 Hackathon MVP (Done) → P1 Production-Ready (Current)
 
 ---
@@ -131,7 +131,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 OPENAI_API_KEY=
-NEXT_PUBLIC_SITE_URL=https://realhourly.ai
+NEXT_PUBLIC_SITE_URL=https://real-hourly.com
 LLM_MODEL_PARSE=gpt-5-mini
 LLM_MODEL_PARSE_FALLBACK=gpt-5-mini
 LLM_MODEL_GENERATE=gpt-5-mini
@@ -502,20 +502,22 @@ getProjectMetrics 실행
 
 ## 6. Extended Features (F4~F13)
 
-### F4. Dashboard — Done
+### F4. Dashboard — Done (MagicUI Enhanced)
 
 Overview of all freelancer activity.
 
 | Sub-feature | Status | Notes |
 |-------------|--------|-------|
-| KPI cards (revenue, hours, rate, projects) | Done | Animated count-up |
+| KPI cards (revenue, hours, rate, projects) | Done | NumberTicker + MagicCard hover + click drill-down |
 | Weekly hours bar chart | Done | Today's bar highlighted |
-| Recent time entries | Done | Last 5 entries with details |
+| Recent time entries | Done | Last 5 entries with details + FadeIn |
 | Active alert banners | Done | Direct navigation to project |
 | Time-of-day greeting | Done | Morning/afternoon/evening/night |
 | Empty state | Done | Onboarding guidance |
+| Daily briefing card | Done | BorderBeam border + ShimmerButton CTA |
+| Profitability card | Done | Real vs nominal rate visualization |
 
-**Files**: `components/dashboard/DashboardClient.tsx`, `db/queries/dashboard.ts`
+**Files**: `components/dashboard/` (7 files), `db/queries/dashboard.ts`
 
 ### F5. Project Management — Done
 
@@ -618,25 +620,29 @@ User preferences and account management.
 
 **Files**: `components/settings/` (5 files), `api/settings/`
 
-### F11. Marketing Landing — Done
+### F11. Marketing Landing — Done (MagicUI Redesign)
 
-Public-facing landing page.
+Public-facing landing page redesigned with MagicUI components.
 
 | Sub-feature | Status | Notes |
 |-------------|--------|-------|
-| Hero carousel (rotating taglines) | Done | Auto-rotating |
-| Feature showcase | Done | 3 core features with mockups |
-| Interactive mock cards | Done | Live app previews |
-| Empathy/pain-point section | Done | Problem statement |
+| Hero section | Done | NumberTicker stats + ShimmerButton CTA |
+| Feature showcase | Done | BentoGrid + MagicCard hover spotlight |
+| Product demo | Done | Safari mockup, locale+theme-aware screenshots |
+| Social proof | Done | Marquee infinite scroll testimonials |
+| Empathy/pain-point section | Done | Loss framing with warning icons |
 | How-it-works steps | Done | 5-step visual guide |
-| Before/after comparison | Done | Rate comparison table |
+| Before/after comparison | Done | BorderBeam animated border |
 | Use case section | Done | Different freelancer types |
-| Stats counter (animated) | Done | Count-up numbers |
-| Pricing section | Done | Free/Pro tiers |
+| Stats counter (animated) | Done | NumberTicker count-up |
+| Interactive calculator | Done | Real-time hourly rate calculator |
+| Pricing section | Done | ShimmerButton + Polar checkout |
 | FAQ accordion | Done | Expandable questions |
-| CTA section | Done | Sign up call-to-action |
+| CTA section | Done | PulsatingButton call-to-action |
 | Navigation bar (lang toggle) | Done | With login button |
 | Footer | Done | Links + branding |
+
+**MagicUI Components Used**: NumberTicker, BorderBeam, ShimmerButton, PulsatingButton, Marquee, DotPattern, Safari, MagicCard, BentoGrid, AnimatedShinyText
 
 **Files**: `components/landing/` (15 files), `app/[locale]/(marketing)/`
 
@@ -687,8 +693,79 @@ Conversational AI assistant available across all dashboard pages.
 | Mobile responsive | Done | Full-width panel on mobile |
 
 **API**: `POST /api/ai/chat`
-**Components**: `src/components/chat/` (4 files: AIChatWrapper, AIChatPanel, ChatMessage, QuickActionChips)
+**Components**: `src/components/chat/` (5 files)
 **Backend**: `src/lib/ai/chat-context.ts`, `chat-prompt.ts`, `generate-chat-response.ts`
+
+### F15. AI Consultant Page — Done
+
+Dedicated full-page AI chat with 5 specialist roles.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Role selection (5 specialists) | Done | Data analyst, business advisor, career guide, time coach, financial consultant |
+| Full-page chat interface | Done | `/chat` route in dashboard |
+| localStorage conversation persistence | Done | Auto-save across sessions |
+| Conversation sidebar (recent 20) | Done | Switch between conversations |
+| Markdown rendering | Done | Formatted AI responses |
+| Code block copy button | Done | Clipboard integration |
+| Quick action presets | Done | Role-specific suggestions |
+
+**Files**: `src/components/chat/AIChatInterface.tsx`, `src/app/[locale]/(dashboard)/chat/page.tsx`
+
+### F16. Payment & Subscription — Done
+
+Polar-based payment integration with Free/Pro plans.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Polar checkout integration | Done | Redirect to Polar checkout |
+| Webhook handler (subscription lifecycle) | Done | Create/update/cancel events |
+| Free plan limits enforced | Done | All 10 API endpoints gated |
+| Pro plan ($9/mo, $7/mo yearly) | Done | Unlimited everything |
+| Monthly usage tracking | Done | usage_counts table with UPSERT |
+| Feature gate helpers | Done | requireFeature, checkQuota, trackUsage |
+| Subscription status page | Done | `/api/subscription` endpoint |
+| Pricing landing section | Done | ShimmerButton checkout CTA |
+
+**Feature Limits (Free)**:
+- 2 projects, 20 NLP parse/mo, 10 AI chat/mo, 1 scope alert project
+- No PDF invoice, share links, weekly insight, daily briefing, CSV export, voice input
+
+**Files**: `src/lib/polar/`, `src/app/api/polar/`, `src/app/api/subscription/`, `src/db/schema/usage-counts.ts`
+
+### F17. Timesheet Approval Workflow — Done
+
+업계 표준 타임시트 승인 워크플로우. 프리랜서가 주간 타임시트를 생성/제출하면, 클라이언트가 매직 링크로 리뷰하고 승인/거절.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Timesheet CRUD (create/list/detail) | Done | 주간 단위 (월~일), 프로젝트별 |
+| Draft → Submitted workflow | Done | 매직 링크 토큰 자동 생성 |
+| Client review page (PUBLIC) | Done | `/timesheet-review/[token]` 인증 불필요 |
+| Approve/Reject + note | Done | 토큰 기반, 상태 전이 + 코멘트 |
+| Entry locking on approval | Done | 승인 시 `locked_at` 설정, 편집/삭제 차단 (403) |
+| Audit trail (time_entry_versions) | Done | create/update/delete 자동 기록 |
+| Anomaly flags (entry_flags) | Done | weekend, long_session, backdated, round_number |
+| Flag display in review | Done | 클라이언트에게 플래그 표시 |
+| Flag dismiss | Done | 프리랜서가 해제 가능 |
+| Sidebar navigation | Done | ClipboardCheck 아이콘 |
+| i18n (ko/en) | Done | ~40 키 |
+
+**워크플로우**:
+```
+프리랜서: 시간 기록 → 주간 타임시트 생성 → 제출 (매직 링크 생성)
+클라이언트: 매직 링크 → 타임시트 리뷰 (플래그 표시) → 승인/거절 + 코멘트
+승인 시: entries locked_at 설정 → 편집/삭제 불가
+거절 시: 프리랜서 알림, entries 수정 가능 유지
+```
+
+**비정상 패턴 플래그 (차단 아님, 리뷰 시 표시)**:
+- `weekend_work` — 토/일 기록 (info)
+- `long_session` — 480분(8시간) 이상 단일 항목 (warning)
+- `backdated` — 7일 이상 과거 날짜 기록 (warning)
+- `round_number` — 연속 5개 이상 정확히 60분/120분 (info)
+
+**Files**: `src/components/timesheets/` (5 files), `src/db/queries/timesheets.ts`, `src/db/queries/time-entry-versions.ts`, `src/db/queries/entry-flags.ts`, `src/lib/metrics/entry-flags.ts`, `src/lib/validators/timesheet-schema.ts`, `src/app/api/timesheets/`, `src/app/timesheet-review/`
 
 ---
 
@@ -702,7 +779,7 @@ Conversational AI assistant available across all dashboard pages.
 - **RLS**: All tables scoped to `auth.uid()`
 - **Enum values**: lowercase (exception: currency = UPPERCASE ISO)
 
-### 7.2 Enums (7개)
+### 7.2 Enums (8개)
 
 ```sql
 CREATE TYPE project_currency AS ENUM ('USD', 'KRW', 'EUR', 'GBP', 'JPY');
@@ -710,11 +787,12 @@ CREATE TYPE project_status AS ENUM ('active', 'completed', 'paused', 'cancelled'
 CREATE TYPE time_category AS ENUM ('planning', 'design', 'development', 'meeting', 'revision', 'admin', 'email', 'research', 'other');
 CREATE TYPE time_intent AS ENUM ('done', 'planned');
 CREATE TYPE cost_type AS ENUM ('platform_fee', 'tax', 'tool', 'contractor', 'misc');
-CREATE TYPE alert_type AS ENUM ('scope_rule1', 'scope_rule2', 'scope_rule3');
+CREATE TYPE alert_type AS ENUM ('scope_rule1', 'scope_rule2', 'scope_rule3', 'scope_rule4');
 CREATE TYPE message_tone AS ENUM ('polite', 'neutral', 'firm');
+CREATE TYPE timesheet_status AS ENUM ('draft', 'submitted', 'approved', 'rejected');
 ```
 
-### 7.3 Tables (8개)
+### 7.3 Tables (14개)
 
 #### profiles
 ```sql
@@ -869,6 +947,101 @@ CREATE UNIQUE INDEX idx_weekly_reports_user_week ON weekly_reports(user_id, week
 -- RLS: user_id = auth.uid()
 ```
 
+#### project_shares
+```sql
+-- (기존 정의 유지)
+```
+
+#### usage_counts
+```sql
+CREATE TABLE usage_counts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  feature text NOT NULL,              -- 'nlp_parse' | 'ai_chat'
+  period text NOT NULL,               -- 'YYYY-MM'
+  count int NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE UNIQUE INDEX idx_usage_counts_unique ON usage_counts(user_id, feature, period) WHERE deleted_at IS NULL;
+-- RLS: user_id = auth.uid()
+```
+
+#### timesheets
+```sql
+CREATE TABLE timesheets (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id),
+  user_id uuid NOT NULL REFERENCES profiles(id),
+  week_start date NOT NULL,
+  week_end date NOT NULL,
+  status timesheet_status NOT NULL DEFAULT 'draft',
+  submitted_at timestamptz,
+  approved_at timestamptz,
+  rejected_at timestamptz,
+  reviewer_note text,
+  total_minutes int DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+CREATE UNIQUE INDEX idx_timesheets_project_week ON timesheets(project_id, week_start) WHERE deleted_at IS NULL;
+-- RLS: user_id = auth.uid()
+```
+
+#### timesheet_approvals
+```sql
+CREATE TABLE timesheet_approvals (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  timesheet_id uuid NOT NULL REFERENCES timesheets(id),
+  action text NOT NULL,               -- 'submitted' | 'approved' | 'rejected'
+  reviewer_email text,
+  reviewer_token uuid NOT NULL DEFAULT gen_random_uuid(),
+  note text,
+  acted_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: via timesheet.user_id = auth.uid() (or public via token)
+```
+
+#### time_entry_versions
+```sql
+CREATE TABLE time_entry_versions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  time_entry_id uuid NOT NULL REFERENCES time_entries(id),
+  changed_by uuid NOT NULL REFERENCES profiles(id),
+  changed_at timestamptz DEFAULT now(),
+  change_type text NOT NULL,          -- 'create' | 'update' | 'delete'
+  old_values jsonb,
+  new_values jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: changed_by = auth.uid()
+```
+
+#### entry_flags
+```sql
+CREATE TABLE entry_flags (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  time_entry_id uuid NOT NULL REFERENCES time_entries(id),
+  flag_type text NOT NULL,            -- 'weekend_work' | 'late_night' | 'long_session' | 'backdated' | 'round_number'
+  severity text NOT NULL DEFAULT 'info',
+  metadata jsonb,
+  dismissed_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+-- RLS: via time_entry → project.user_id = auth.uid()
+```
+
+#### time_entries 추가 컬럼
+```sql
+ALTER TABLE time_entries ADD COLUMN timesheet_id uuid REFERENCES timesheets(id);
+ALTER TABLE time_entries ADD COLUMN locked_at timestamptz;
+```
+
 ### 7.4 Migration Checklist
 
 1. `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
@@ -996,6 +1169,27 @@ export async function POST(req: Request) {
 |--------|------|------|----------|
 | POST | `/api/projects/:projectId/invoice/generate-items` | `{ type }` | `{ data: { lineItems } }` |
 
+#### Timesheets
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| POST | `/api/timesheets` | `{ projectId, weekStart }` | 201 `{ data: Timesheet }` |
+| GET | `/api/timesheets?projectId=&status=` | — | `{ data: Timesheet[] }` |
+| GET | `/api/timesheets/:id` | — | `{ data: Timesheet + entries }` |
+| POST | `/api/timesheets/:id/submit` | — | `{ data: { ...Timesheet, reviewToken } }` |
+| GET | `/api/timesheets/review/:token` | — | PUBLIC `{ data: TimesheetReview }` |
+| POST | `/api/timesheets/review/:token` | `{ action, note?, reviewerEmail? }` | PUBLIC `{ data: Timesheet }` |
+
+#### Entry Flags
+| Method | Path | Body | Response |
+|--------|------|------|----------|
+| GET | `/api/time/flags?projectId=` | — | `{ data: Flag[] }` |
+| POST | `/api/time/flags/:flagId/dismiss` | — | `{ data: { dismissedAt } }` |
+
+#### Audit Trail
+| Method | Path | Response |
+|--------|------|----------|
+| GET | `/api/time/:entryId/history` | `{ data: Version[] }` |
+
 ### 8.4 Validation Schema Location
 
 | Domain | File |
@@ -1008,6 +1202,7 @@ export async function POST(req: Request) {
 | LLM Parse | `lib/ai/time-log-schema.ts` |
 | LLM Message | `lib/ai/message-schema.ts` |
 | Chat | `lib/validators/chat.ts` — `ChatMessageSchema` |
+| Timesheets | `lib/validators/timesheet-schema.ts` — `CreateTimesheetSchema`, `SubmitTimesheetSchema`, `ReviewTimesheetSchema`, `TimesheetListQuerySchema` |
 
 ---
 
@@ -1071,12 +1266,13 @@ src/
 │  │  │  │  ├─ page.tsx                          # Weekly list
 │  │  │  │  └─ [reportId]/page.tsx               # Report detail
 │  │  │  ├─ clients/page.tsx                     # Client list
+│  │  │  ├─ timesheets/page.tsx                  # Timesheet management
 │  │  │  ├─ settings/page.tsx                    # User settings
 │  │  │  └─ layout.tsx                           # Sidebar layout
 │  │  └─ (marketing)/
 │  │     ├─ page.tsx                             # Landing page
 │  │     └─ layout.tsx
-│  ├─ api/                                       # 25 route handlers
+│  ├─ api/                                       # 35 route handlers
 │  │  ├─ auth/callback/route.ts
 │  │  ├─ auth/logout/route.ts
 │  │  ├─ health/route.ts
@@ -1103,11 +1299,19 @@ src/
 │  │  ├─ reports/weekly/[reportId]/route.ts
 │  │  ├─ settings/profile/route.ts
 │  │  ├─ settings/preferences/route.ts
+│  │  ├─ timesheets/route.ts                     # Timesheet CRUD
+│  │  ├─ timesheets/[id]/route.ts                # Timesheet detail
+│  │  ├─ timesheets/[id]/submit/route.ts         # Submit timesheet
+│  │  ├─ timesheets/review/[token]/route.ts      # PUBLIC client review
+│  │  ├─ time/[entryId]/history/route.ts         # Audit trail
+│  │  ├─ time/flags/route.ts                     # Entry flags
+│  │  ├─ time/flags/[flagId]/dismiss/route.ts    # Dismiss flag
 │  │  ├─ settings/export/route.ts
 │  │  └─ og/route.tsx
 │  ├─ globals.css
+│  ├─ timesheet-review/[token]/page.tsx          # PUBLIC review page (no locale)
 │  └─ middleware.ts                              # next-intl locale routing
-├─ components/                                   # 84 components
+├─ components/                                   # 90+ components
 │  ├─ ui/                                        # shadcn/ui (24 components)
 │  ├─ time-log/                                  # NLP input + HITL + history (15 files)
 │  ├─ projects/                                  # Project cards, forms, lifecycle (14 files)
@@ -1115,6 +1319,7 @@ src/
 │  ├─ analytics/                                 # Multi-project charts (6 files)
 │  ├─ reports/                                   # Weekly reports (5 files)
 │  ├─ settings/                                  # User settings (5 files)
+│  ├─ timesheets/                                # Timesheet list, detail, submit, review, badge (5 files)
 │  ├─ alerts/                                    # Scope alert modal (2 files)
 │  ├─ charts/                                    # Shared chart components (3 files)
 │  ├─ landing/                                   # Marketing page (15 files)
@@ -1129,11 +1334,11 @@ src/
 │  ├─ auth/server.ts                             # getUser(), requireUser()
 │  ├─ api/handler.ts                             # Error handler util
 │  ├─ supabase/                                  # Client + server helpers
-│  ├─ validators/                                # Zod schemas (5 files)
+│  ├─ validators/                                # Zod schemas (11 files)
 │  └─ utils/                                     # cn, nanoid, clipboard, category-emoji
 ├─ db/
-│  ├─ schema/                                    # Drizzle table/enum definitions (8 tables)
-│  ├─ queries/                                   # DB access functions (11 modules)
+│  ├─ schema/                                    # Drizzle table/enum definitions (16 files, 14 tables)
+│  ├─ queries/                                   # DB access functions (14 modules)
 │  └─ index.ts                                   # Drizzle client init
 ├─ store/
 │  └─ use-draft-store.ts                         # zustand (HITL draft ONLY)
@@ -1158,17 +1363,16 @@ scripts/
 
 | Metric | Count |
 |--------|-------|
-| Pages | 17 |
-| API Routes | 25 |
-| Components | 84 |
-| Lib Modules | 45 |
-| DB Tables | 8 |
-| DB Enums | 7 |
-| DB Queries | 11 modules |
-| i18n Keys | ~400+ per language |
-| Unit Tests | 68 cases |
-| Total Commits | 33 |
-| Build Output | 50 pages, 0 errors |
+| Pages | 19 |
+| API Routes | 35 |
+| Components | 90+ |
+| Lib Modules | 50+ |
+| DB Tables | 14 |
+| DB Enums | 8 |
+| DB Queries | 14 modules |
+| i18n Keys | ~450+ per language |
+| Unit Tests | 88 cases |
+| Build Output | 58 pages, 0 errors |
 
 ---
 

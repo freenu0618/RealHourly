@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { formatCurrency, getDominantCurrency } from "@/lib/money/currency";
 import type { ProjectSummary } from "./types";
 
@@ -52,8 +53,23 @@ export function DashboardProfitabilityCard({
           <p className="truncate text-xs font-medium text-muted-foreground">
             {t("weeklyRate")}
           </p>
-          <p className={`text-xl font-bold ${isPositive ? "" : "text-destructive"}`}>
-            {formatCurrency(avgRealRate, currency)}/h
+          <p className={`text-xl font-bold tabular-nums ${isPositive ? "" : "text-destructive"}`}>
+            {(() => {
+              const formatted = formatCurrency(avgRealRate, currency);
+              const symbolMatch = formatted.match(/^[^\d\-,.\s]+/);
+              const symbol = symbolMatch ? symbolMatch[0] : "";
+              return (
+                <span>
+                  {symbol}
+                  <NumberTicker
+                    value={Math.abs(avgRealRate)}
+                    decimalPlaces={avgRealRate % 1 !== 0 ? 1 : 0}
+                    className="text-xl font-bold"
+                  />
+                  /h
+                </span>
+              );
+            })()}
           </p>
           <p className="text-xs text-muted-foreground">
             {t("weeklyHours", { hours: String(weeklyHours) })}
