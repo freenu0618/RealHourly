@@ -14,6 +14,7 @@ import { DashboardAlertBanner } from "./DashboardAlertBanner";
 import { DashboardBudgetWarning } from "./DashboardBudgetWarning";
 import { DashboardProfitabilityCard } from "./DashboardProfitabilityCard";
 import { BriefingCard } from "./BriefingCard";
+import { OnboardingChecklist } from "./OnboardingChecklist";
 
 const DashboardWeeklyChart = dynamic(
   () => import("./DashboardWeeklyChart").then((m) => ({ default: m.DashboardWeeklyChart })),
@@ -68,6 +69,7 @@ export function DashboardClient() {
         </p>
       </div>
 
+      <OnboardingChecklist />
       <BriefingCard />
       <DashboardKPICards
         metrics={metrics}

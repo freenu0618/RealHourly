@@ -73,7 +73,8 @@
     "clients": "Clients",
     "menu": "Menu",
     "timesheets": "Timesheets",
-    "aiConsultant": "AI Consultant"
+    "aiConsultant": "AI Consultant",
+    "guide": "Feature Guide"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -1239,6 +1240,132 @@
     "ready": {
       "title": "You're all set!",
       "description": "Start tracking your time and discover your real hourly rate"
+    }
+  },
+  "onboardingChecklist": {
+    "title": "Getting Started",
+    "progress": "{completed}/{total} completed",
+    "steps": {
+      "0": {
+        "title": "Create your first project",
+        "description": "Enter project name, expected revenue, and estimated hours"
+      },
+      "1": {
+        "title": "Log time with AI",
+        "description": "Type 'yesterday design 3h' and AI organizes it for you"
+      },
+      "2": {
+        "title": "Add cost entries",
+        "description": "Register platform fees, taxes, and tool subscriptions"
+      },
+      "3": {
+        "title": "See your real hourly rate",
+        "description": "Log 3+ time entries and your real rate will be calculated"
+      },
+      "4": {
+        "title": "Generate a weekly report",
+        "description": "AI analyzes your weekly work breakdown"
+      },
+      "5": {
+        "title": "Ask the AI consultant",
+        "description": "Ask about profitability, time management, and more"
+      }
+    },
+    "complete": {
+      "title": "All steps completed!",
+      "description": "You're now ready to use all of RealHourly's features",
+      "cta": "View Feature Guide"
+    }
+  },
+  "guide": {
+    "title": "Feature Guide",
+    "subtitle": "Explore all of RealHourly's features and learn how to maximize your freelancing profitability.",
+    "proBadge": "Pro",
+    "sections": {
+      "nlp-time-log": {
+        "title": "AI Time Logging",
+        "description": "Log your work in natural language and AI automatically categorizes the project, category, and duration. Supports both Korean and English.",
+        "value": "Save 5 minutes daily — log your entire day in 30 seconds",
+        "steps": [
+          "Go to the Time Log page and describe your work freely",
+          "Click 'Magic Parse' and AI will analyze your input",
+          "Review the results, make adjustments if needed, then save",
+          "Voice input is also supported (Pro)"
+        ],
+        "cta": "Start Logging"
+      },
+      "real-rate": {
+        "title": "Real Hourly Rate",
+        "description": "Calculate your true hourly rate after accounting for platform fees, taxes, tool subscriptions, and all hidden costs.",
+        "value": "You thought you earned $75/hr, but it's actually $23? Find the truth",
+        "steps": [
+          "Set expected revenue and work hours for your project",
+          "Enter platform fees and tax rates (presets available)",
+          "Your real rate becomes more accurate as you log more time",
+          "Check the nominal vs real rate comparison on the project detail page"
+        ],
+        "cta": "View Projects"
+      },
+      "scope-creep": {
+        "title": "Scope Creep Alerts",
+        "description": "Automatically detect scope creep from time overruns and excessive revisions, and AI generates billing messages to send to your client.",
+        "value": "Earn $500 more with additional billing",
+        "steps": [
+          "Scope creep rules are checked automatically as you log time",
+          "When triggered, an alert modal appears on the project detail page",
+          "Click 'Generate Billing Message' to create messages in 3 tones",
+          "Choose your preferred tone and copy to clipboard"
+        ],
+        "cta": "Check Projects"
+      },
+      "dashboard": {
+        "title": "Dashboard & KPIs",
+        "description": "See total revenue, work hours, average rate, and active projects at a glance. Get AI daily briefings with personalized insights.",
+        "value": "30 seconds to understand your revenue situation every day",
+        "steps": [
+          "Dashboard appears automatically when you log in",
+          "Click KPI cards for detailed analysis",
+          "Check this week's work patterns in the weekly chart",
+          "Get personalized insights from the AI daily briefing"
+        ],
+        "cta": "Go to Dashboard"
+      },
+      "analytics": {
+        "title": "Comparative Analytics",
+        "description": "Compare hourly rates across projects, analyze time distribution by category, and identify which clients are most profitable.",
+        "value": "See which clients are really worth your time at a glance",
+        "steps": [
+          "Check project-by-project rate rankings on the Analytics page",
+          "Identify your most time-consuming tasks in the category chart",
+          "Find efficient projects in the revenue vs time scatter plot",
+          "Adjust date ranges for period-specific analysis"
+        ],
+        "cta": "View Analytics"
+      },
+      "timesheets": {
+        "title": "Timesheet Approval",
+        "description": "Create weekly timesheets and share them with clients via magic links. When approved, the time entries are automatically locked.",
+        "value": "Professional time reporting builds client trust",
+        "steps": [
+          "Select a project and week on the Timesheets page",
+          "Click 'Submit' to generate a review link",
+          "Share the link with your client (no login required)",
+          "When approved, the entries are automatically locked"
+        ],
+        "cta": "Create Timesheet"
+      },
+      "invoice-report": {
+        "title": "Invoices & Reports",
+        "description": "AI automatically generates invoice line items from your work logs, and creates shareable client reports.",
+        "value": "Professional invoices for faster payments",
+        "steps": [
+          "Click 'Generate Invoice' on the project detail page",
+          "AI creates line items based on your time entries",
+          "Download as PDF or generate a shareable link",
+          "Weekly reports also include AI-powered insights"
+        ],
+        "cta": "Start from Projects"
+      }
     }
   }
 }

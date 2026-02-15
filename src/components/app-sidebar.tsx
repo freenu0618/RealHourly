@@ -15,6 +15,7 @@ import {
   FileText,
   Sparkles,
   Users,
+  BookOpen,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -142,10 +143,30 @@ export function AppSidebar() {
 
         <SidebarSeparator />
 
-        {/* Settings */}
+        {/* Guide & Settings */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive("/guide")}
+                  className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
+                >
+                  <Link href="/guide">
+                    <div
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                        isActive("/guide")
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      <BookOpen className="size-4" />
+                    </div>
+                    <span>{t("guide") ?? "Guide"}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
