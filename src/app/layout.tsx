@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { getBaseUrl } from "@/lib/utils/get-base-url";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import "./globals.css";
@@ -76,6 +77,7 @@ export default function RootLayout({
       >
         {children}
         <ServiceWorkerRegister />
+        <Analytics />
       </body>
     </html>
   );
