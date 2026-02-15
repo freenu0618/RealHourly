@@ -3,18 +3,9 @@ import { getBaseUrl } from "@/lib/utils/get-base-url";
 
 const baseUrl = getBaseUrl();
 
+// Only public pages — authenticated pages must NOT be in sitemap
 const staticPages = [
   "",           // landing
-  "/dashboard",
-  "/projects",
-  "/time-log",
-  "/time-log/history",
-  "/analytics",
-  "/reports",
-  "/timesheets",
-  "/chat",
-  "/clients",
-  "/settings",
   "/login",
   "/terms",
   "/privacy",
@@ -29,8 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entries.push({
         url: `${baseUrl}/${locale}${page}`,
         lastModified: new Date(),
-        changeFrequency: page === "" ? "weekly" : "daily",
-        priority: page === "" ? 1.0 : page === "/dashboard" ? 0.9 : 0.7,
+        changeFrequency: page === "" ? "weekly" : "monthly",
+        priority: page === "" ? 1.0 : page === "/login" ? 0.8 : 0.5,
       });
     }
   }
