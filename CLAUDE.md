@@ -32,6 +32,7 @@
 15. **AI Consultant Page** — Dedicated full-page chat with 5 specialist roles (data analyst, business advisor, career guide, time coach, financial consultant)
 16. **Payment & Subscription** — Polar integration, Free/Pro plans ($9/mo, $7/mo yearly), feature gates, monthly usage tracking
 17. **Timesheet Approval Workflow** — Weekly timesheet (draft→submitted→approved/rejected), magic link client review, entry locking, audit trail, anomaly flags
+18. **Pre-signup Guide & Calculator** — Public `/features` page (7 feature deep-dives reusing GuideSection) + public `/calculator` page (unbilled time-aware rate calculator with cost breakdown). No auth required. PLG conversion strategy.
 
 ## Tech Stack
 
@@ -116,6 +117,8 @@ src/
 │  │  │  └─ layout.tsx
 │  │  ├─ (marketing)/
 │  │  │  ├─ page.tsx                         # Landing page
+│  │  │  ├─ features/page.tsx                # Public feature guide (no auth)
+│  │  │  ├─ calculator/page.tsx              # Public rate calculator (no auth)
 │  │  │  └─ layout.tsx
 │  │  └─ layout.tsx
 │  ├─ api/
@@ -176,7 +179,7 @@ src/
 │  ├─ dashboard/             # DashboardClient (1)
 │  ├─ settings/              # Profile, preferences, account, data (5)
 │  ├─ chat/                  # AI chat + consultant page (5)
-│  ├─ landing/               # Marketing landing page sections (15)
+│  ├─ landing/               # Marketing landing page sections (17, incl. PublicGuideContent, FullCalculator)
 │  ├─ layout/                # PageHeader (1)
 │  └─ app-sidebar.tsx        # Navigation sidebar
 ├─ lib/

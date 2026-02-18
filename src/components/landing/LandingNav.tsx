@@ -58,6 +58,12 @@ export function LandingNav() {
               {link.label}
             </a>
           ))}
+          <Link href="/features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            {t("nav.guide")}
+          </Link>
+          <Link href="/calculator" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            {t("nav.calculator")}
+          </Link>
         </div>
 
         {/* Desktop right */}
@@ -104,6 +110,12 @@ export function LandingNav() {
                 {link.label}
               </a>
             ))}
+            <Link href="/features" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              {t("nav.guide")}
+            </Link>
+            <Link href="/calculator" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              {t("nav.calculator")}
+            </Link>
             <button type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground">
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
               {theme === "dark" ? "Light Mode" : "Dark Mode"}

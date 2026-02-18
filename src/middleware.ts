@@ -13,6 +13,8 @@ const PUBLIC_PATHS = [
   "/contact",
   "/reset-password",
   "/verify",
+  "/features",
+  "/calculator",
 ];
 
 function isPublicPath(pathname: string): boolean {

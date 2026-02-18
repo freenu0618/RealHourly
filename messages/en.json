@@ -628,7 +628,9 @@
       "login": "Login",
       "cta": "Get Started Free",
       "close": "Close",
-      "howItWorks": "How it works"
+      "howItWorks": "How it works",
+      "guide": "Guide",
+      "calculator": "Rate Calculator"
     },
     "heroTag": "Revenue analytics for freelancers",
     "heroTitle1": "The rate you charge,",
@@ -746,6 +748,8 @@
     "footerTerms": "Terms of Service",
     "footerPrivacy": "Privacy Policy",
     "footerCopyright": "© 2026 RealHourly. All rights reserved.",
+    "footerGuide": "Feature Guide",
+    "footerCalculator": "Rate Calculator",
     "nominalRate": "Nominal Rate",
     "actualRate": "Actual Rate",
     "mockPlatformFee": "Platform Fee",
@@ -1276,6 +1280,35 @@
       "description": "You're now ready to use all of RealHourly's features",
       "cta": "View Feature Guide"
     }
+  },
+  "featuresPage": {
+    "title": "RealHourly Complete Feature Guide",
+    "subtitle": "Explore every feature before signing up. Everything you need for freelance revenue management is right here.",
+    "ctaLabel": "Get Started Free",
+    "ctaSub": "Takes just 2 minutes · No credit card needed",
+    "learnMore": "Learn more",
+    "bottomTitle": "Ready to get started?",
+    "bottomDesc": "Start for free and discover your real hourly rate today.",
+    "tryCalculator": "Calculate my rate first →"
+  },
+  "calculatorPage": {
+    "title": "Freelancer Real Hourly Rate Calculator",
+    "subtitle": "Calculate your true rate after platform fees, taxes, tool costs, and unbilled time.",
+    "unbilledTitle": "Unbilled Time",
+    "meetingHours": "Weekly meetings (hr)",
+    "emailHours": "Emails & communication (hr)",
+    "revisionPercent": "Revision work ratio (%)",
+    "totalUnbilled": "Total unbilled hours",
+    "adjustedHours": "Actual billable hours",
+    "withUnbilled": "With unbilled time",
+    "withoutUnbilled": "Without unbilled time",
+    "comparison": "If there was no unbilled time",
+    "saveResult": "Save this result and track weekly",
+    "saveResultDesc": "Sign up free to track projects in real-time",
+    "shareTitle": "Share results",
+    "shareCopied": "Link copied",
+    "ctaLabel": "Get Started Free",
+    "backToLanding": "← Back to main"
   },
   "guide": {
     "title": "Feature Guide",

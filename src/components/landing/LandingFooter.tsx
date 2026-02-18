@@ -42,6 +42,18 @@ export function LandingFooter() {
             >
               {t("footerPricing")}
             </a>
+            <Link
+              href="/features"
+              className="block text-muted-foreground hover:text-foreground"
+            >
+              {t("footerGuide")}
+            </Link>
+            <Link
+              href="/calculator"
+              className="block text-muted-foreground hover:text-foreground"
+            >
+              {t("footerCalculator")}
+            </Link>
           </div>
           <div>
             <h4 className="mb-2 font-medium">{t("footerSupport")}</h4>

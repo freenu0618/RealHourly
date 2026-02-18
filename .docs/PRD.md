@@ -1,7 +1,7 @@
 # RealHourly — Product Requirements Document (PRD)
 
-> Version: P1 MVP Complete + Timesheet Workflow
-> Last Updated: 2026-02-12
+> Version: P1 MVP Complete + Timesheet Workflow + Pre-signup Guide
+> Last Updated: 2026-02-18
 > Phase: P0 Hackathon MVP (Done) → P1 Production-Ready (Current)
 
 ---
@@ -13,7 +13,7 @@
 3. [Feature 1: NLP Time Log](#3-feature-1-nlp-time-log)
 4. [Feature 2: Real Hourly Rate Calculator](#4-feature-2-real-hourly-rate-calculator)
 5. [Feature 3: Scope Creep Detection + Billing Messages](#5-feature-3-scope-creep-detection--billing-messages)
-6. [Extended Features (F4~F13)](#6-extended-features-f4f13)
+6. [Extended Features (F4~F18)](#6-extended-features-f4f18)
 7. [Database Schema](#7-database-schema)
 8. [API Endpoints](#8-api-endpoints)
 9. [Coding Conventions](#9-coding-conventions)
@@ -500,7 +500,7 @@ getProjectMetrics 실행
 
 ---
 
-## 6. Extended Features (F4~F13)
+## 6. Extended Features (F4~F18)
 
 ### F4. Dashboard — Done (MagicUI Enhanced)
 
@@ -766,6 +766,28 @@ Polar-based payment integration with Free/Pro plans.
 - `round_number` — 연속 5개 이상 정확히 60분/120분 (info)
 
 **Files**: `src/components/timesheets/` (5 files), `src/db/queries/timesheets.ts`, `src/db/queries/time-entry-versions.ts`, `src/db/queries/entry-flags.ts`, `src/lib/metrics/entry-flags.ts`, `src/lib/validators/timesheet-schema.ts`, `src/app/api/timesheets/`, `src/app/timesheet-review/`
+
+### F18. Pre-signup Guide & Calculator — Done
+
+회원가입 전 방문자에게 서비스 가치를 체험시키는 PLG(Product-Led Growth) 전략 페이지. 인증 없이 접근 가능.
+
+| Sub-feature | Status | Notes |
+|-------------|--------|-------|
+| Public feature guide page (`/features`) | Done | 7개 기능 딥다이브, GuideSection/GuideNav 재사용 |
+| Public rate calculator (`/calculator`) | Done | 비청구 시간 포함 확장 계산기, 비용 분석 시각화 |
+| Middleware PUBLIC_PATHS 추가 | Done | `/features`, `/calculator` 인증 우회 |
+| LandingNav 가이드/계산기 링크 | Done | 데스크톱 + 모바일 메뉴 |
+| LandingFooter 가이드/계산기 링크 | Done | "제품" 섹션에 추가 |
+| FeatureSection 카드 클릭 링크 | Done | 각 카드 → `/features#section-id` |
+| i18n (ko/en) | Done | `featuresPage.*`, `calculatorPage.*`, nav/footer 키 |
+
+**구현 의도**:
+- 기존 `/guide` 페이지는 인증 필요 (대시보드 내). 잠재 고객은 기능을 미리 볼 수 없었음.
+- `/features` 페이지: 기존 GuideSection/GuideNav 컴포넌트 재사용, CTA만 `/login`으로 변경
+- `/calculator` 페이지: 랜딩 InteractiveCalcSection 확장. 비청구 시간(미팅, 이메일, 수정 작업) 입력 추가로 "숨은 비용" 임팩트 강조
+- FeatureSection 카드 → `/features#section-id` 딥링크로 전환 퍼널 강화
+
+**Files**: `src/app/[locale]/(marketing)/features/page.tsx`, `src/app/[locale]/(marketing)/calculator/page.tsx`, `src/components/landing/PublicGuideContent.tsx`, `src/components/landing/FullCalculator.tsx`, `src/components/landing/LandingNav.tsx`, `src/components/landing/LandingFooter.tsx`, `src/components/landing/FeatureSection.tsx`
 
 ---
 
