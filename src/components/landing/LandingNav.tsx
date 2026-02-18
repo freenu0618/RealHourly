@@ -23,11 +23,12 @@ export function LandingNav() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  const isHome = pathname === "/";
   const links = [
-    { href: "#features", label: t("nav.features") },
-    { href: "#how-it-works", label: t("nav.howItWorks") },
-    { href: "#pricing", label: t("nav.pricing") },
-    { href: "#faq", label: t("nav.faq") },
+    { href: isHome ? "#features" : "/#features", label: t("nav.features") },
+    { href: isHome ? "#how-it-works" : "/#how-it-works", label: t("nav.howItWorks") },
+    { href: isHome ? "#pricing" : "/#pricing", label: t("nav.pricing") },
+    { href: isHome ? "#faq" : "/#faq", label: t("nav.faq") },
   ];
 
   function toggleLocale() {
@@ -53,11 +54,17 @@ export function LandingNav() {
 
         {/* Desktop center menu */}
         <div className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
-            <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              {link.label}
-            </a>
-          ))}
+          {links.map((link) =>
+            isHome ? (
+              <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                {link.label}
+              </a>
+            ) : (
+              <Link key={link.href} href={link.href as "/"} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                {link.label}
+              </Link>
+            ),
+          )}
           <Link href="/features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             {t("nav.guide")}
           </Link>
@@ -105,11 +112,17 @@ export function LandingNav() {
       {mobileOpen && (
         <div className="border-t bg-background px-6 pb-6 pt-4 md:hidden">
           <div className="flex flex-col gap-4">
-            {links.map((link) => (
-              <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                {link.label}
-              </a>
-            ))}
+            {links.map((link) =>
+              isHome ? (
+                <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href as "/"} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  {link.label}
+                </Link>
+              ),
+            )}
             <Link href="/features" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.guide")}
             </Link>

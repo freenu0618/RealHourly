@@ -52,7 +52,7 @@ export function FullCalculator() {
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent]);
 
   const ni = "w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary";
-  const ri = "w-full accent-primary h-2 rounded-lg appearance-none cursor-pointer";
+  const ri = "w-full accent-primary h-2 rounded-lg cursor-pointer bg-muted [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-lg [&::-webkit-slider-runnable-track]:bg-muted [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-lg [&::-moz-range-track]:bg-muted [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer";
 
   const breakdowns = [
     { label: t("calcNetIncome"), val: r.net, pct: r.netPct, c: "bg-green-600 dark:bg-green-400", tc: "text-green-600 dark:text-green-400" },
@@ -81,8 +81,11 @@ export function FullCalculator() {
         {/* Left: Input form */}
         <FadeIn delay={0.1} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcInputAmount")} <span className="text-muted-foreground">({amount})</span></label>
-            <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={0} step={100} className={ni} aria-label={t("calcInputAmount")} />
+            <label className="block text-sm font-medium mb-2">{t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span></label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
+              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={t("calcInputAmount")} />
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcInputHours")} <span className="text-muted-foreground">({hours}h)</span></label>
@@ -97,8 +100,11 @@ export function FullCalculator() {
             <input type="range" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} min={0} max={50} step={1} className={ri} aria-label={t("calcTaxLabel")} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">({toolCost})</span></label>
-            <input type="number" value={toolCost} onChange={(e) => setToolCost(Number(e.target.value))} min={0} step={10} className={ni} aria-label={t("calcToolLabel")} />
+            <label className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span></label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
+              <input type="number" value={toolCost} onChange={(e) => setToolCost(Number(e.target.value))} min={0} step={10} className={`${ni} pl-9`} aria-label={t("calcToolLabel")} />
+            </div>
           </div>
 
           {/* Unbilled time section */}
@@ -125,14 +131,14 @@ export function FullCalculator() {
           <div className="space-y-6">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>{t("calcNominalLabel")}</span>
-              <span className="font-mono">{r.nominal.toFixed(2)}</span>
+              <span className="font-mono">${r.nominal.toFixed(2)}</span>
             </div>
 
             {/* Real rate hero */}
             <div className="text-center py-5 border-y">
               <p className="text-sm text-muted-foreground mb-2">{t("calcResultLabel")}</p>
               <div className="text-5xl font-bold text-primary">
-                <NumberTicker value={r.realWith} decimalPlaces={2} />
+                $<NumberTicker value={r.realWith} decimalPlaces={2} />
               </div>
             </div>
 
@@ -146,7 +152,7 @@ export function FullCalculator() {
                 <div key={label} className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span>{label}</span>
-                    <span className="font-mono font-semibold">{val.toFixed(2)}</span>
+                    <span className="font-mono font-semibold">${val.toFixed(2)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div className={`h-full ${cls}`} style={{ width: `${bar}%` }} />
@@ -161,7 +167,7 @@ export function FullCalculator() {
                 <div key={label} className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className={tc}>{label}</span>
-                    <span className="font-mono">{val.toFixed(0)}</span>
+                    <span className="font-mono">${val.toFixed(0)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div className={`h-full ${cls}`} style={{ width: `${Math.max(0, pct)}%` }} />
