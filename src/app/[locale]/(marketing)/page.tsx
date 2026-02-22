@@ -211,6 +211,20 @@ function buildJsonLd(locale: string) {
         ? "프리랜서를 위한 AI 수익 분석 도구"
         : "AI revenue analytics tool for freelancers",
     },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "RealHourly",
+      url: siteUrl,
+      inLanguage: [isKo ? "ko-KR" : "en-US"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${siteUrl}/${locale}/features`,
+        },
+      },
+    },
   ];
 }
 

@@ -15,3 +15,42 @@ export function getAlternates(locale: string, path: string = "") {
     },
   };
 }
+
+/**
+ * Generate OpenGraph metadata for a page.
+ */
+export function getOpenGraph(
+  locale: string,
+  path: string,
+  title: string,
+  description: string,
+) {
+  return {
+    title,
+    description,
+    type: "website" as const,
+    url: `${SITE_URL}/${locale}${path}`,
+    siteName: "RealHourly",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "RealHourly - AI Freelancer Revenue Analytics",
+      },
+    ],
+    locale: locale === "ko" ? "ko_KR" : "en_US",
+  };
+}
+
+/**
+ * Generate Twitter card metadata for a page.
+ */
+export function getTwitter(title: string, description: string) {
+  return {
+    card: "summary_large_image" as const,
+    title,
+    description,
+    images: ["/api/og"],
+  };
+}

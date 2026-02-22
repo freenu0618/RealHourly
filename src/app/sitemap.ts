@@ -8,7 +8,6 @@ const staticPages = [
   "",           // landing
   "/features",
   "/calculator",
-  "/login",
   "/terms",
   "/privacy",
   "/contact",
@@ -26,7 +25,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority:
           page === "" ? 1.0
           : page === "/features" || page === "/calculator" ? 0.8
-          : page === "/login" ? 0.7
           : 0.5,
       });
     }
