@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
+import { getAlternates } from "@/lib/seo/metadata";
 import { LandingContent } from "@/components/landing/LandingContent";
 
 type Props = {
@@ -48,13 +49,7 @@ export async function generateMetadata({ params }: Props) {
             "hidden cost calculator",
             "time tracking",
           ],
-    alternates: {
-      canonical: `${siteUrl}/${locale}`,
-      languages: {
-        ko: `${siteUrl}/ko`,
-        en: `${siteUrl}/en`,
-      },
-    },
+    alternates: getAlternates(locale),
     openGraph: {
       title:
         locale === "ko"

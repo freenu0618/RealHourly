@@ -6,6 +6,8 @@ const baseUrl = getBaseUrl();
 // Only public pages — authenticated pages must NOT be in sitemap
 const staticPages = [
   "",           // landing
+  "/features",
+  "/calculator",
   "/login",
   "/terms",
   "/privacy",
@@ -21,7 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${baseUrl}/${locale}${page}`,
         lastModified: new Date(),
         changeFrequency: page === "" ? "weekly" : "monthly",
-        priority: page === "" ? 1.0 : page === "/login" ? 0.8 : 0.5,
+        priority:
+          page === "" ? 1.0
+          : page === "/features" || page === "/calculator" ? 0.8
+          : page === "/login" ? 0.7
+          : 0.5,
       });
     }
   }

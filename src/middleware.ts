@@ -30,12 +30,25 @@ export async function middleware(request: NextRequest) {
   // 2. Intl routing (locale prefix)
   const intlResponse = intlMiddleware(request);
 
+  // Convert locale redirects from 307 (temporary) to 301 (permanent) for SEO
+  const status = intlResponse.status;
+  if (status === 307 || status === 302) {
+    const location = intlResponse.headers.get("location");
+    if (location) {
+      const permanent = NextResponse.redirect(new URL(location, request.url), 301);
+      sessionResponse.cookies.getAll().forEach((cookie) => {
+        permanent.cookies.set(cookie.name, cookie.value, cookie);
+      });
+      return permanent;
+    }
+  }
+
   // Copy Supabase cookies to intl response
   sessionResponse.cookies.getAll().forEach((cookie) => {
     intlResponse.cookies.set(cookie.name, cookie.value, cookie);
   });
 
-  // 3. Auth redirect for protected routes
+  // 3. Auth check for protected paths
   const { pathname } = request.nextUrl;
   if (!isPublicPath(pathname)) {
     const {
