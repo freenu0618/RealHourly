@@ -7,6 +7,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { Slider } from "@/components/ui/slider";
 import { ArrowRight, Calculator } from "lucide-react";
 
 /**
@@ -52,7 +53,6 @@ export function FullCalculator() {
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent]);
 
   const ni = "w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary";
-  const ri = "w-full accent-primary h-2 rounded-lg cursor-pointer bg-muted [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-lg [&::-webkit-slider-runnable-track]:bg-muted [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-lg [&::-moz-range-track]:bg-muted [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer";
 
   const breakdowns = [
     { label: t("calcNetIncome"), val: r.net, pct: r.netPct, c: "bg-green-600 dark:bg-green-400", tc: "text-green-600 dark:text-green-400" },
@@ -93,11 +93,11 @@ export function FullCalculator() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></label>
-            <input type="range" value={feeRate} onChange={(e) => setFeeRate(Number(e.target.value))} min={0} max={30} step={1} className={ri} aria-label={t("calcFeeLabel")} />
+            <Slider value={[feeRate]} onValueChange={(v) => setFeeRate(v[0])} min={0} max={30} step={1} aria-label={t("calcFeeLabel")} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span></label>
-            <input type="range" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} min={0} max={50} step={1} className={ri} aria-label={t("calcTaxLabel")} />
+            <Slider value={[taxRate]} onValueChange={(v) => setTaxRate(v[0])} min={0} max={50} step={1} aria-label={t("calcTaxLabel")} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span></label>
@@ -120,7 +120,7 @@ export function FullCalculator() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">{c("revisionPercent")} <span className="text-muted-foreground">({revisionPercent}%)</span></label>
-              <input type="range" value={revisionPercent} onChange={(e) => setRevisionPercent(Number(e.target.value))} min={0} max={60} step={1} className={ri} aria-label={c("revisionPercent")} />
+              <Slider value={[revisionPercent]} onValueChange={(v) => setRevisionPercent(v[0])} min={0} max={60} step={1} aria-label={c("revisionPercent")} />
             </div>
           </div>
         </FadeIn>

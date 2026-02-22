@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { Slider } from "@/components/ui/slider";
 import { ArrowRight } from "lucide-react";
 
 export function InteractiveCalcSection() {
@@ -56,16 +57,19 @@ export function InteractiveCalcSection() {
             {/* Project Amount */}
             <div>
               <label className="block text-sm font-medium mb-2">
-                {t("calcInputAmount")} <span className="text-muted-foreground">({amount})</span>
+                {t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span>
               </label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                min={0}
-                step={100}
-                className="w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  min={0}
+                  step={100}
+                  className="w-full rounded-xl border bg-background pl-9 pr-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
             </div>
 
             {/* Expected Hours */}
@@ -88,14 +92,13 @@ export function InteractiveCalcSection() {
               <label className="block text-sm font-medium mb-2">
                 {t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span>
               </label>
-              <input
-                type="range"
-                value={feeRate}
-                onChange={(e) => setFeeRate(Number(e.target.value))}
+              <Slider
+                value={[feeRate]}
+                onValueChange={(v) => setFeeRate(v[0])}
                 min={0}
                 max={30}
                 step={1}
-                className="w-full accent-primary h-2 rounded-lg appearance-none cursor-pointer"
+                aria-label={t("calcFeeLabel")}
               />
             </div>
 
@@ -104,30 +107,32 @@ export function InteractiveCalcSection() {
               <label className="block text-sm font-medium mb-2">
                 {t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span>
               </label>
-              <input
-                type="range"
-                value={taxRate}
-                onChange={(e) => setTaxRate(Number(e.target.value))}
+              <Slider
+                value={[taxRate]}
+                onValueChange={(v) => setTaxRate(v[0])}
                 min={0}
                 max={50}
                 step={1}
-                className="w-full accent-primary h-2 rounded-lg appearance-none cursor-pointer"
+                aria-label={t("calcTaxLabel")}
               />
             </div>
 
             {/* Tool Costs */}
             <div>
               <label className="block text-sm font-medium mb-2">
-                {t("calcToolLabel")} <span className="text-muted-foreground">({toolCost})</span>
+                {t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span>
               </label>
-              <input
-                type="number"
-                value={toolCost}
-                onChange={(e) => setToolCost(Number(e.target.value))}
-                min={0}
-                step={10}
-                className="w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
+                <input
+                  type="number"
+                  value={toolCost}
+                  onChange={(e) => setToolCost(Number(e.target.value))}
+                  min={0}
+                  step={10}
+                  className="w-full rounded-xl border bg-background pl-9 pr-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
             </div>
           </FadeIn>
 
@@ -140,7 +145,7 @@ export function InteractiveCalcSection() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{t("calcNominalLabel")}</span>
-                  <span className="font-mono">{nominalRate.toFixed(2)}</span>
+                  <span className="font-mono">${nominalRate.toFixed(2)}</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
@@ -154,7 +159,7 @@ export function InteractiveCalcSection() {
               <div className="text-center py-6 border-y">
                 <p className="text-sm text-muted-foreground mb-2">{t("calcResultLabel")}</p>
                 <div className="text-5xl font-bold text-primary">
-                  <NumberTicker value={realRate} decimalPlaces={2} />
+                  $<NumberTicker value={realRate} decimalPlaces={2} />
                 </div>
               </div>
 
@@ -163,7 +168,7 @@ export function InteractiveCalcSection() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className="text-green-600 dark:text-green-400">{t("calcNetIncome")}</span>
-                    <span className="font-mono">{net.toFixed(0)}</span>
+                    <span className="font-mono">${net.toFixed(0)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div
@@ -176,7 +181,7 @@ export function InteractiveCalcSection() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className="text-orange-600 dark:text-orange-400">{t("calcFeeAmount")}</span>
-                    <span className="font-mono">{feeAmount.toFixed(0)}</span>
+                    <span className="font-mono">${feeAmount.toFixed(0)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div
@@ -189,7 +194,7 @@ export function InteractiveCalcSection() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className="text-red-600 dark:text-red-400">{t("calcTaxAmount")}</span>
-                    <span className="font-mono">{taxAmount.toFixed(0)}</span>
+                    <span className="font-mono">${taxAmount.toFixed(0)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div
@@ -202,7 +207,7 @@ export function InteractiveCalcSection() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-600 dark:text-gray-400">{t("calcToolAmount")}</span>
-                    <span className="font-mono">{toolCost.toFixed(0)}</span>
+                    <span className="font-mono">${toolCost.toFixed(0)}</span>
                   </div>
                   <div className="h-3 bg-muted rounded overflow-hidden">
                     <div
