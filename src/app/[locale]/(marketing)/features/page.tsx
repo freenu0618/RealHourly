@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props) {
           "AI time tracking",
           "freelancer invoice",
         ],
+    robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/features"),
     openGraph: getOpenGraph(locale, "/features", title, description),
     twitter: getTwitter(title, description),

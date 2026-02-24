@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props) {
   return {
     title,
     description,
+    robots: { index: false, follow: true },
     alternates: getAlternates(locale, "/privacy"),
     openGraph: getOpenGraph(locale, "/privacy", title, description),
     twitter: getTwitter(title, description),

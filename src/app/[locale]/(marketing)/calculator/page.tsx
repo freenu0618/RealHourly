@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props) {
           "Upwork fees",
           "freelance earnings",
         ],
+    robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/calculator"),
     openGraph: getOpenGraph(locale, "/calculator", title, description),
     twitter: getTwitter(title, description),

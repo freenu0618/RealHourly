@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -5,6 +6,10 @@ import { ErrorBoundary } from "@/components/error-boundary";
 import { NotificationBell } from "@/components/ai-actions/NotificationBell";
 import { AIChatWrapper } from "@/components/chat/AIChatWrapper";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function DashboardLayout({
   children,
