@@ -1308,7 +1308,9 @@
     "shareTitle": "Share results",
     "shareCopied": "Link copied",
     "ctaLabel": "Get Started Free",
-    "backToLanding": "← Back to main"
+    "backToLanding": "← Back to main",
+    "trackCta": "Track this project and see your real rate update in real-time",
+    "trackCtaButton": "Start tracking for free →"
   },
   "guide": {
     "title": "Feature Guide",

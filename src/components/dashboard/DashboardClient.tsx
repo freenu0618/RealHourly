@@ -3,9 +3,11 @@
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useDashboardData } from "./use-dashboard-data";
 import { computeMetrics } from "./types";
 import { DashboardKPICards } from "./DashboardKPICards";
@@ -34,6 +36,39 @@ export function DashboardClient() {
   const tProjects = useTranslations("projects");
   const tTimeLog = useTranslations("timeLog");
   const { data, loading } = useDashboardData();
+  const router = useRouter();
+  const [quickStarting, setQuickStarting] = useState(false);
+
+  async function createQuickProject() {
+    setQuickStarting(true);
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "My Project",
+          currency: "USD",
+          platformFeePreset: "upwork",
+          platformFeeRate: 0.2,
+          expectedFee: 0,
+          expectedHours: 0,
+          taxEnabled: false,
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        const projectId = json.data?.id ?? json.id;
+        if (projectId) {
+          router.push(`/time?project=${projectId}`);
+          return;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    setQuickStarting(false);
+    router.push("/projects/new");
+  }
 
   if (loading) return <DashboardSkeleton />;
 
@@ -41,16 +76,24 @@ export function DashboardClient() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="text-7xl">{"\u2615"}</span>
-          <h1 className="text-2xl font-bold md:text-3xl">{t("emptyTitle")}</h1>
-          <p className="max-w-sm text-muted-foreground">{t("emptyDescription")}</p>
+          <span className="text-7xl">👋</span>
+          <h2 className="text-2xl font-bold md:text-3xl">Welcome to RealHourly!</h2>
+          <p className="max-w-sm text-muted-foreground">Start tracking your first project in seconds.</p>
         </div>
-        <Button asChild className="rounded-xl bg-primary px-6 py-3 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]">
-          <Link href="/projects">
-            <Plus className="mr-2 size-5" />
-            {t("createProject")}
-          </Link>
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-2">
+          <Button
+            onClick={createQuickProject}
+            disabled={quickStarting}
+            className="rounded-xl bg-primary px-6 py-3 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
+          >
+            {quickStarting ? "⏳ Creating..." : "⚡ Quick Start (no setup)"}
+          </Button>
+          <Button variant="outline" asChild className="rounded-xl px-6 py-3 text-base font-semibold">
+            <Link href="/projects/new">
+              📋 Create detailed project
+            </Link>
+          </Button>
+        </div>
       </div>
     );
   }

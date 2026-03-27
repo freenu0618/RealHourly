@@ -8,7 +8,17 @@ import { NumberTicker } from "@/components/ui/number-ticker";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator } from "lucide-react";
+import { toast } from "sonner";
+
+const PLATFORM_PRESETS = [
+  { name: "Upwork", fee: 20, icon: "🟢" },
+  { name: "Fiverr", fee: 20, icon: "🟢" },
+  { name: "Toptal", fee: 0, icon: "🟣" },
+  { name: "Direct", fee: 0, icon: "⚪" },
+  { name: "Custom", fee: null, icon: "⚙️" },
+] as const;
 
 /**
  * FullCalculator — Standalone calculator page extending InteractiveCalcSection
@@ -22,6 +32,7 @@ export function FullCalculator() {
   const [amount, setAmount] = useState(3000);
   const [hours, setHours] = useState(40);
   const [feeRate, setFeeRate] = useState(20);
+  const [selectedPreset, setSelectedPreset] = useState<string>("Upwork");
   const [taxRate, setTaxRate] = useState(10);
   const [toolCost, setToolCost] = useState(50);
   const [meetingHours, setMeetingHours] = useState(3);
@@ -51,6 +62,24 @@ export function FullCalculator() {
       withBar: nominal > 0 ? Math.min(100, (realWith / nominal) * 100) : 0,
     };
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent]);
+
+  function handlePresetClick(preset: (typeof PLATFORM_PRESETS)[number]) {
+    setSelectedPreset(preset.name);
+    if (preset.fee !== null) {
+      setFeeRate(preset.fee);
+    }
+  }
+
+  function handleShare() {
+    const text = `My contract rate: $${r.nominal.toFixed(0)}/hr → Real rate: $${r.realWith.toFixed(0)}/hr (after fees, taxes & hidden time). Calculate yours at real-hourly.com`;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        toast.success(c("shareCopied"));
+      });
+    }
+  }
 
   const ni = "w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary";
 
@@ -93,7 +122,26 @@ export function FullCalculator() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></label>
-            <Slider value={[feeRate]} onValueChange={(v) => setFeeRate(v[0])} min={0} max={30} step={1} aria-label={t("calcFeeLabel")} />
+            {/* Platform presets */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {PLATFORM_PRESETS.map((preset) => (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => handlePresetClick(preset)}
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    selectedPreset === preset.name
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-border hover:border-primary hover:text-foreground"
+                  }`}
+                >
+                  <span>{preset.icon}</span>
+                  <span>{preset.name}</span>
+                  {preset.fee !== null && <span className="opacity-70">({preset.fee}%)</span>}
+                </button>
+              ))}
+            </div>
+            <Slider value={[feeRate]} onValueChange={(v) => { setFeeRate(v[0]); setSelectedPreset("Custom"); }} min={0} max={30} step={1} aria-label={t("calcFeeLabel")} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span></label>
@@ -187,6 +235,13 @@ export function FullCalculator() {
               </p>
             </div>
 
+            {/* Share button */}
+            <div className="flex justify-center">
+              <Button variant="outline" size="sm" onClick={handleShare}>
+                📊 {c("shareTitle")}
+              </Button>
+            </div>
+
             {/* CTA */}
             <div className="space-y-2 pt-1">
               <Link href="/login" className="block w-full">
@@ -196,6 +251,16 @@ export function FullCalculator() {
                 </ShimmerButton>
               </Link>
               <p className="text-center text-xs text-muted-foreground">{c("saveResultDesc")}</p>
+            </div>
+
+            {/* SaaS conversion CTA */}
+            <div className="mt-2 p-4 rounded-xl border bg-muted/50 text-center">
+              <p className="text-sm text-muted-foreground mb-3">{c("trackCta")}</p>
+              <Link href="/login">
+                <ShimmerButton className="justify-center text-sm font-semibold" shimmerDuration="2.5s">
+                  {c("trackCtaButton")}
+                </ShimmerButton>
+              </Link>
             </div>
           </div>
         </FadeIn>

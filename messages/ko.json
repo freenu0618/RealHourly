@@ -1308,7 +1308,9 @@
     "shareTitle": "결과 공유하기",
     "shareCopied": "링크가 복사되었습니다",
     "ctaLabel": "무료로 시작하기",
-    "backToLanding": "← 메인으로 돌아가기"
+    "backToLanding": "← 메인으로 돌아가기",
+    "trackCta": "이 프로젝트를 추적하고 실제 시급이 실시간으로 업데이트되는 것을 확인하세요",
+    "trackCtaButton": "무료로 추적 시작 →"
   },
   "guide": {
     "title": "기능 가이드",
