@@ -1,18 +1,15 @@
 import { LandingNav } from "./LandingNav";
 import { HeroSection } from "./HeroSection";
 import { InteractiveCalcSection } from "./InteractiveCalcSection";
-import { SocialProofSection } from "./SocialProofSection";
 import { FeatureSection } from "./FeatureSection";
-import { CountUpSection } from "./CountUpSection";
-import { EmpathySection } from "./EmpathySection";
 import { ComparisonSection } from "./ComparisonSection";
-import { StepsSection } from "./StepsSection";
-import { ProductDemoSection } from "./ProductDemoSection";
-import { UseCaseSection } from "./UseCaseSection";
 import { PricingSection } from "./PricingSection";
 import { FaqSection } from "./FaqSection";
 import { CtaSection } from "./CtaSection";
 import { LandingFooter } from "./LandingFooter";
+
+// Removed from landing (kept for /features page reuse):
+// SocialProofSection, CountUpSection, EmpathySection, StepsSection, ProductDemoSection, UseCaseSection
 
 export function LandingContent() {
   return (
@@ -20,14 +17,8 @@ export function LandingContent() {
       <LandingNav />
       <HeroSection />
       <InteractiveCalcSection />
-      <SocialProofSection />
       <FeatureSection />
-      <CountUpSection />
-      <EmpathySection />
       <ComparisonSection />
-      <StepsSection />
-      <ProductDemoSection />
-      <UseCaseSection />
       <PricingSection />
       <FaqSection />
       <CtaSection />

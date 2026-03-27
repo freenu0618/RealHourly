@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
-import { PulsatingButton } from "@/components/ui/pulsating-button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 
@@ -43,14 +43,13 @@ export function CtaSection() {
 
         <FadeIn delay={0.2}>
           <div className="flex flex-col items-center gap-4">
-            <PulsatingButton
+            <ShimmerButton
               onClick={handleCtaClick}
-              pulseColor="var(--primary)"
-              duration="2s"
-              className="rounded-xl bg-primary px-10 py-5 text-lg font-semibold text-primary-foreground transition-all hover:-translate-y-1 hover:shadow-2xl md:px-12 md:py-6 md:text-xl"
+              shimmerDuration="2s"
+              className="rounded-xl px-10 py-5 text-lg font-semibold transition-all hover:-translate-y-1 hover:shadow-2xl md:px-12 md:py-6 md:text-xl"
             >
               {t("ctaCta")} →
-            </PulsatingButton>
+            </ShimmerButton>
 
             <p className="text-sm text-muted-foreground md:text-base">
               {t("heroCtaSub")}

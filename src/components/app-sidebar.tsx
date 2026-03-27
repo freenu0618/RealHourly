@@ -16,7 +16,9 @@ import {
   Sparkles,
   Users,
   BookOpen,
+  ChevronDown,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -40,20 +42,53 @@ export function AppSidebar() {
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const [moreOpen, setMoreOpen] = useState(false);
 
-  const mainNav = [
+  // Primary nav — always visible
+  const primaryNav = [
     { href: "/dashboard", label: t("dashboard"), icon: Home },
-    { href: "/projects", label: t("projects"), icon: FolderKanban },
     { href: "/time-log", label: t("newEntry"), icon: Clock, exact: true },
-    { href: "/time-log/history", label: t("history"), icon: ClipboardList },
-    { href: "/timesheets", label: t("timesheets"), icon: ClipboardCheck },
-    { href: "/analytics", label: t("analytics"), icon: BarChart3 },
+    { href: "/projects", label: t("projects"), icon: FolderKanban },
     { href: "/reports", label: t("reports"), icon: FileText },
+  ];
+
+  // Secondary nav — inside "More" collapsible
+  const secondaryNav = [
     { href: "/clients", label: t("clients"), icon: Users },
+    { href: "/analytics", label: t("analytics"), icon: BarChart3 },
+    { href: "/timesheets", label: t("timesheets"), icon: ClipboardCheck },
+    { href: "/chat", label: t("aiConsultant") ?? "AI Consultant", icon: Sparkles },
+    { href: "/guide", label: t("guide") ?? "Guide", icon: BookOpen },
   ];
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
+
+  const NavItem = ({ href, label, icon: Icon, exact }: { href: string; label: string; icon: React.ElementType; exact?: boolean }) => {
+    const active = isActive(href, exact);
+    return (
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          isActive={active}
+          className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
+        >
+          <Link href={href}>
+            <div
+              className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                active
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              <Icon className="size-4" />
+            </div>
+            <span>{label}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  };
 
   return (
     <Sidebar>
@@ -72,121 +107,51 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Main navigation */}
+        {/* Primary navigation */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-3">
             {t("menu") ?? "Menu"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNav.map((item) => {
-                const active = isActive(item.href, item.exact);
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={active}
-                      className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
-                    >
-                      <Link href={item.href}>
-                        <div
-                          className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                            active
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          <item.icon className="size-4" />
-                        </div>
-                        <span>{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              {primaryNav.map((item) => (
+                <NavItem key={item.href} {...item} />
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarSeparator />
 
-        {/* AI & Tools */}
+        {/* Secondary nav — collapsible "More" group */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-3">
-            AI
-          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive("/chat")}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
-                >
-                  <Link href="/chat">
-                    <div
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                        isActive("/chat")
-                          ? "bg-brand-orange text-white"
-                          : "bg-orange-50 text-brand-orange dark:bg-orange-950/30"
-                      }`}
-                    >
-                      <Sparkles className="size-4" />
-                    </div>
-                    <span>{t("aiConsultant") ?? "AI Consultant"}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
+            <SidebarMenuButton
+                onClick={() => setMoreOpen((v) => !v)}
+                className="rounded-xl px-3 py-2.5 text-sm font-medium w-full justify-between"
+              >
+                <span className="text-muted-foreground">More</span>
+                <ChevronDown
+                  className={`size-4 text-muted-foreground transition-transform ${moreOpen ? "rotate-180" : ""}`}
+                />
+              </SidebarMenuButton>
+              {moreOpen && (
+                <SidebarMenu className="mt-1">
+                  {secondaryNav.map((item) => (
+                    <NavItem key={item.href} {...item} />
+                  ))}
+                </SidebarMenu>
+              )}
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarSeparator />
 
-        {/* Guide & Settings */}
+        {/* Settings */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive("/guide")}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
-                >
-                  <Link href="/guide">
-                    <div
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                        isActive("/guide")
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <BookOpen className="size-4" />
-                    </div>
-                    <span>{t("guide") ?? "Guide"}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive("/settings")}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
-                >
-                  <Link href="/settings">
-                    <div
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                        isActive("/settings")
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <Settings className="size-4" />
-                    </div>
-                    <span>{t("settings")}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <NavItem href="/settings" label={t("settings")} icon={Settings} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
