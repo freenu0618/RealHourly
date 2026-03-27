@@ -13,7 +13,7 @@ import { ArrowRight, Calculator } from "lucide-react";
 import { toast } from "sonner";
 
 const PLATFORM_PRESETS = [
-  { name: "Upwork", fee: 20, icon: "🟢" },
+  { name: "Upwork", fee: 10, icon: "🟢" },
   { name: "Fiverr", fee: 20, icon: "🟢" },
   { name: "Toptal", fee: 0, icon: "🟣" },
   { name: "Direct", fee: 0, icon: "⚪" },
@@ -31,7 +31,7 @@ export function FullCalculator() {
 
   const [amount, setAmount] = useState(3000);
   const [hours, setHours] = useState(40);
-  const [feeRate, setFeeRate] = useState(20);
+  const [feeRate, setFeeRate] = useState(10);
   const [selectedPreset, setSelectedPreset] = useState<string>("Upwork");
   const [taxRate, setTaxRate] = useState(10);
   const [toolCost, setToolCost] = useState(50);

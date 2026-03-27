@@ -12,7 +12,7 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 
 const PLATFORM_PRESETS = [
-  { name: "Upwork", fee: 20, icon: "🟢" },
+  { name: "Upwork", fee: 10, icon: "🟢" },
   { name: "Fiverr", fee: 20, icon: "🟢" },
   { name: "Toptal", fee: 0, icon: "🟣" },
   { name: "Direct", fee: 0, icon: "⚪" },
@@ -25,7 +25,7 @@ export function InteractiveCalcSection() {
   // Simple inputs
   const [amount, setAmount] = useState(3000);
   const [hours, setHours] = useState(40);
-  const [feeRate, setFeeRate] = useState(20);
+  const [feeRate, setFeeRate] = useState(10);
   const [selectedPreset, setSelectedPreset] = useState<string>("Upwork");
 
   // Advanced inputs
