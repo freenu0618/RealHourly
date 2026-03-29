@@ -102,45 +102,69 @@ function buildJsonLd(locale: string) {
     ? [
         {
           q: "RealHourly는 무료로 사용할 수 있나요?",
-          a: "네, Free 플랜으로 프로젝트 2개, AI 시간 파싱 월 20회, AI 채팅 월 10회를 영구 무료로 이용할 수 있어요.",
+          a: "네, Free 플랜으로 프로젝트 2개, AI 시간 파싱 월 20회, AI 채팅 월 10회를 영구 무료로 이용할 수 있어요. 카드 정보 없이 바로 시작할 수 있습니다.",
         },
         {
           q: "Pro 플랜의 가격은 얼마인가요?",
-          a: "Pro는 월 $9(약 12,000원) 또는 연간 $84(월 $7)입니다. 연간 결제 시 22% 할인됩니다.",
+          a: "Pro는 월 $9(약 12,000원) 또는 연간 $84(월 $7, 약 9,300원)입니다. 연간 결제 시 22% 할인됩니다. 언제든 해지할 수 있습니다.",
         },
         {
-          q: "'실제 시급'이 뭔가요?",
-          a: "실제 시급은 플랫폼 수수료, 세금, 도구 비용 등 모든 숨겨진 비용을 차감한 후 실제 투입 시간으로 나눈 값입니다.",
+          q: "어떤 플랫폼을 지원하나요?",
+          a: "Upwork, Fiverr, 크몽, 숨고, Freelancer.com 등 주요 프리랜서 플랫폼의 수수료를 프리셋으로 제공합니다. 커스텀 수수료 입력도 지원합니다.",
         },
         {
-          q: "스코프 크립 알림은 어떻게 작동하나요?",
-          a: "시간 사용률, 수정 작업 비율을 실시간 모니터링하여 범위 초과를 감지하고 AI가 클라이언트 메시지를 자동 생성합니다.",
+          q: "'실제 시급'이 뭔가요? 어떻게 계산되나요?",
+          a: "실제 시급은 플랫폼 수수료, 세금, 도구 비용 등 모든 숨겨진 비용을 차감한 후 실제 투입 시간(미팅, 이메일, 수정 포함)으로 나눈 값입니다.",
+        },
+        {
+          q: "스코프 크립(범위 초과) 알림은 어떻게 작동하나요?",
+          a: "프로젝트의 시간 사용률, 수정 작업 비율, 수정 횟수를 실시간 모니터링합니다. 범위 초과가 감지되면 AI가 클라이언트에게 보낼 메시지를 정중/중립/단호 3가지 톤으로 생성합니다.",
         },
         {
           q: "데이터는 안전한가요?",
-          a: "Supabase(PostgreSQL) 기반 암호화 저장, 행 수준 보안(RLS)으로 본인만 접근 가능합니다.",
+          a: "Supabase(PostgreSQL) 기반으로 데이터가 암호화 저장되며, 행 수준 보안(RLS)으로 본인의 데이터만 접근 가능합니다.",
+        },
+        {
+          q: "Pro에서 Free로 다운그레이드하면 데이터가 삭제되나요?",
+          a: "아니요, 모든 데이터는 그대로 유지됩니다. 다만 Free 플랜의 제한(프로젝트 2개, AI 파싱 20회/월)이 적용됩니다.",
+        },
+        {
+          q: "영어와 한국어를 모두 지원하나요?",
+          a: "네, UI는 한국어/영어를 모두 지원하고 브라우저 언어를 자동 감지합니다. AI 시간 기록도 한국어와 영어 자연어로 입력할 수 있어요.",
         },
       ]
     : [
         {
           q: "Is RealHourly free to use?",
-          a: "Yes, the Free plan includes up to 2 projects, 20 AI time parses/month, and 10 AI chats/month — forever free.",
+          a: "Yes, the Free plan includes up to 2 projects, 20 AI time parses/month, and 10 AI chats/month — forever free. No credit card required.",
         },
         {
           q: "How much does the Pro plan cost?",
           a: "Pro is $9/month or $84/year ($7/month). Save 22% with annual billing. Cancel anytime.",
         },
         {
-          q: "What is 'real hourly rate'?",
-          a: "Your real hourly rate subtracts all hidden costs from gross revenue, then divides by actual hours worked.",
+          q: "Which freelance platforms are supported?",
+          a: "We provide fee presets for Upwork, Fiverr, Freelancer.com, and more. Custom fee input is also supported.",
+        },
+        {
+          q: "What is 'real hourly rate' and how is it calculated?",
+          a: "Your real hourly rate subtracts all hidden costs (platform fees, taxes, tool costs) from gross revenue, then divides by actual hours worked including meetings, emails, and revisions.",
         },
         {
           q: "How do scope creep alerts work?",
-          a: "We monitor time usage and revision ratios in real-time. AI generates client messages in 3 tones when scope creep is detected.",
+          a: "We monitor time usage, revision work ratio, and revision count in real-time. When scope creep is detected, AI generates client messages in 3 tones: polite, neutral, and firm.",
         },
         {
-          q: "Is my data safe?",
-          a: "Data is encrypted on Supabase (PostgreSQL) with Row Level Security. Only you can access your data.",
+          q: "Is my data safe and private?",
+          a: "Data is encrypted and stored on Supabase (PostgreSQL) with Row Level Security (RLS). Only you can access your data.",
+        },
+        {
+          q: "If I downgrade from Pro to Free, will I lose my data?",
+          a: "No, all your data is preserved. Free plan limits (2 projects, 20 AI parses/month) will apply, but previous data remains accessible.",
+        },
+        {
+          q: "Does RealHourly support both English and Korean?",
+          a: "Yes, the UI supports both English and Korean with automatic browser language detection. AI time logging also accepts natural language in both languages.",
         },
       ];
 

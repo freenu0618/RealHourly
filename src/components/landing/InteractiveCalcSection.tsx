@@ -14,6 +14,8 @@ import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 const PLATFORM_PRESETS = [
   { name: "Upwork", fee: 10, icon: "🟢" },
   { name: "Fiverr", fee: 20, icon: "🟢" },
+  { name: "크몽", fee: 20, icon: "🟠" },
+  { name: "숨고", fee: 15, icon: "🔵" },
   { name: "Toptal", fee: 0, icon: "🟣" },
   { name: "Direct", fee: 0, icon: "⚪" },
   { name: "Custom", fee: null, icon: "⚙️" },
