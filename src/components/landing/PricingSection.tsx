@@ -125,7 +125,7 @@ export function PricingSection() {
               </p>
             </div>
 
-            <Link href="/login">
+            <Link href="/login?view=signup">
               <button
                 type="button"
                 className="w-full rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-muted"
@@ -207,7 +207,7 @@ export function PricingSection() {
               </p>
             </div>
 
-            <Link href="/login">
+            <Link href="/login?view=signup">
               <ShimmerButton
                 shimmerColor="#ffffff"
                 background="var(--primary)"

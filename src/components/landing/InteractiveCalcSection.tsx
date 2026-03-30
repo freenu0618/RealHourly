@@ -293,7 +293,7 @@ export function InteractiveCalcSection() {
               </div>
 
               {/* CTA */}
-              <Link href="/login" className="block w-full">
+              <Link href="/login?view=signup" className="block w-full">
                 <ShimmerButton className="w-full justify-center gap-2 text-sm font-semibold" shimmerDuration="2.5s">
                   {t("calcCta")}
                   <ArrowRight className="w-4 h-4" />

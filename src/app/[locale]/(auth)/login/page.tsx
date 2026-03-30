@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,9 @@ type View = "login" | "signup" | "reset";
 export default function LoginPage() {
   const t = useTranslations("auth");
   const router = useRouter();
-  const [view, setView] = useState<View>("login");
+  const searchParams = useSearchParams();
+  const initialView = searchParams.get("view") === "signup" ? "signup" : "login";
+  const [view, setView] = useState<View>(initialView);
 
   return (
     <main className="relative w-full max-w-[480px] overflow-hidden rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_20px_40px_-10px_rgba(212,184,156,0.4)] backdrop-blur-sm dark:border-white/10 dark:bg-card/80 md:p-12">

@@ -95,7 +95,7 @@ export function HeroSection() {
             {/* CTA with ShimmerButton + Sub CTA text */}
             <FadeIn delay={0.6}>
               <div className="flex flex-col items-center justify-center gap-3">
-                <Link href="/login">
+                <Link href="/login?view=signup">
                   <ShimmerButton
                     background="var(--primary)"
                     shimmerColor="#ffffff"

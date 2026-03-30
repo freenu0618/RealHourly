@@ -12,7 +12,7 @@ export function CtaSection() {
   const router = useRouter();
 
   const handleCtaClick = () => {
-    router.push("/login");
+    router.push("/login?view=signup");
   };
 
   return (
