@@ -24,6 +24,15 @@ function isPublicPath(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host") ?? "";
+  if (host === "real-hourly.com") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.hostname = "www.real-hourly.com";
+    redirectUrl.protocol = "https:";
+    redirectUrl.port = "";
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
   // 1. Supabase session refresh
   const sessionResponse = await updateSession(request);
 

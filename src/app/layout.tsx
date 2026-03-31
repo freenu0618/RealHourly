@@ -21,8 +21,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
-  title: "RealHourly",
-  description: "AI-powered freelancer profitability dashboard",
+  title: {
+    default: "RealHourly - Find Your Real Hourly Rate",
+    template: "%s | RealHourly",
+  },
+  description: "AI-powered freelancer revenue analytics that calculates your real hourly rate after fees, taxes, and hidden costs.",
   icons: {
     icon: "/favicon.ico",
     apple: "/icons/icon-192x192.png",
