@@ -103,7 +103,7 @@ export function LandingNav() {
         </div>
 
         {/* Mobile hamburger */}
-        <button type="button" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? t("nav.close") : "Menu"}>
+        <button type="button" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? t("nav.close") : "Menu"} aria-expanded={mobileOpen}>
           {mobileOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
