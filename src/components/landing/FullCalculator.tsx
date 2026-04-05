@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
@@ -9,7 +9,7 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calculator } from "lucide-react";
+import { ArrowRight, Calculator, Trophy, Target } from "lucide-react";
 import { toast } from "sonner";
 
 const PLATFORM_PRESETS = [
@@ -21,6 +21,8 @@ const PLATFORM_PRESETS = [
   { name: "Direct", fee: 0, icon: "⚪" },
   { name: "Custom", fee: null, icon: "⚙️" },
 ] as const;
+
+const MONTHS_PER_WEEK = 4.33;
 
 /**
  * FullCalculator — Standalone calculator page extending InteractiveCalcSection
@@ -40,6 +42,9 @@ export function FullCalculator() {
   const [meetingHours, setMeetingHours] = useState(3);
   const [emailHours, setEmailHours] = useState(2);
   const [revisionPercent, setRevisionPercent] = useState(15);
+  const [targetIncome, setTargetIncome] = useState(6000);
+  const [workingDays, setWorkingDays] = useState(20);
+  const [maxHoursDay, setMaxHoursDay] = useState(6);
 
   const r = useMemo(() => {
     const revisionHours = hours * (revisionPercent / 100);
@@ -53,26 +58,79 @@ export function FullCalculator() {
     const realWith = adjustedHours > 0 ? net / adjustedHours : 0;
     const realWithout = hours > 0 ? net / hours : 0;
     const pct = (n: number) => (amount > 0 ? (n / amount) * 100 : 0);
+
     return {
-      feeAmount, taxAmount, net, nominal, realWith, realWithout,
-      totalUnbilled: totalUnbilled.toFixed(1),
+      feeAmount,
+      taxAmount,
+      net,
+      nominal,
+      realWith,
+      realWithout,
+      totalUnbilled,
       lossPercent: amount > 0 ? Math.round((totalCost / amount) * 100) : 0,
       timeLoss: adjustedHours > 0 ? Math.round((totalUnbilled / adjustedHours) * 100) : 0,
-      netPct: pct(net), feePct: pct(feeAmount), taxPct: pct(taxAmount),
+      netPct: pct(net),
+      feePct: pct(feeAmount),
+      taxPct: pct(taxAmount),
       toolPct: pct(toolCost),
       withoutBar: nominal > 0 ? Math.min(100, (realWithout / nominal) * 100) : 0,
       withBar: nominal > 0 ? Math.min(100, (realWith / nominal) * 100) : 0,
     };
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent]);
 
-  function handlePresetClick(preset: (typeof PLATFORM_PRESETS)[number]) {
+  const platformComparison = useMemo(() => {
+    return PLATFORM_PRESETS
+      .filter((preset) => preset.fee !== null)
+      .map((preset) => {
+        const feeAmount = amount * ((preset.fee ?? 0) / 100);
+        const taxAmount = amount * (taxRate / 100);
+        const revisionHours = hours * (revisionPercent / 100);
+        const adjustedHours = hours + meetingHours + emailHours + revisionHours;
+        const net = amount - feeAmount - taxAmount - toolCost;
+        const realRate = adjustedHours > 0 ? net / adjustedHours : 0;
+
+        return {
+          name: preset.name,
+          icon: preset.icon,
+          fee: preset.fee ?? 0,
+          net,
+          realRate,
+        };
+      })
+      .sort((a, b) => b.realRate - a.realRate);
+  }, [amount, hours, taxRate, toolCost, revisionPercent, meetingHours, emailHours]);
+
+  const goal = useMemo(() => {
+    const monthlyCapacity = workingDays * maxHoursDay;
+    const monthlyAdminHours = (meetingHours + emailHours) * MONTHS_PER_WEEK;
+    const revisionMultiplier = 1 + revisionPercent / 100;
+    const availableBillableHours = Math.max(0, (monthlyCapacity - monthlyAdminHours) / revisionMultiplier);
+    const retentionRate = Math.max(0.05, 1 - feeRate / 100 - taxRate / 100);
+    const requiredGross = (targetIncome + toolCost) / retentionRate;
+    const requiredRate = availableBillableHours > 0 ? requiredGross / availableBillableHours : 0;
+    const requiredHoursWeek = availableBillableHours / MONTHS_PER_WEEK;
+    const projectsNeeded = r.net > 0 ? targetIncome / r.net : 0;
+    const rateRatio = r.nominal > 0 ? requiredRate / r.nominal : Infinity;
+    const status = rateRatio <= 1 ? "goalAchievable" : rateRatio <= 1.3 ? "goalTight" : "goalExceeds";
+
+    return {
+      monthlyCapacity,
+      availableBillableHours,
+      requiredRate,
+      requiredHoursWeek,
+      projectsNeeded,
+      status,
+    };
+  }, [workingDays, maxHoursDay, meetingHours, emailHours, revisionPercent, feeRate, taxRate, targetIncome, toolCost, r.net, r.nominal]);
+
+  const handlePresetClick = useCallback((preset: (typeof PLATFORM_PRESETS)[number]) => {
     setSelectedPreset(preset.name);
     if (preset.fee !== null) {
       setFeeRate(preset.fee);
     }
-  }
+  }, []);
 
-  function handleShare() {
+  const handleShare = useCallback(() => {
     const text = `My contract rate: $${r.nominal.toFixed(0)}/hr → Real rate: $${r.realWith.toFixed(0)}/hr (after fees, taxes & hidden time). Calculate yours at real-hourly.com`;
     if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({ text }).catch(() => {});
@@ -81,7 +139,7 @@ export function FullCalculator() {
         toast.success(c("shareCopied"));
       });
     }
-  }
+  }, [c, r.nominal, r.realWith]);
 
   const ni = "w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary";
 
@@ -109,7 +167,6 @@ export function FullCalculator() {
       </FadeIn>
 
       <div className="grid md:grid-cols-2 gap-8 items-start">
-        {/* Left: Input form */}
         <FadeIn delay={0.1} className="space-y-5">
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span></label>
@@ -124,7 +181,6 @@ export function FullCalculator() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></label>
-            {/* Platform presets */}
             <div className="flex flex-wrap gap-2 mb-3">
               {PLATFORM_PRESETS.map((preset) => (
                 <button
@@ -157,7 +213,6 @@ export function FullCalculator() {
             </div>
           </div>
 
-          {/* Unbilled time section */}
           <div className="pt-5 border-t space-y-4">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{c("unbilledTitle")}</h2>
             <div>
@@ -175,7 +230,6 @@ export function FullCalculator() {
           </div>
         </FadeIn>
 
-        {/* Right: Results panel */}
         <FadeIn delay={0.2} className="relative overflow-hidden rounded-[24px] border bg-card p-8">
           <BorderBeam size={250} duration={12} delay={9} />
           <div className="space-y-6">
@@ -184,7 +238,6 @@ export function FullCalculator() {
               <span className="font-mono">${r.nominal.toFixed(2)}</span>
             </div>
 
-            {/* Real rate hero */}
             <div className="text-center py-5 border-y">
               <p className="text-sm text-muted-foreground mb-2">{t("calcResultLabel")}</p>
               <div className="text-5xl font-bold text-primary">
@@ -192,7 +245,6 @@ export function FullCalculator() {
               </div>
             </div>
 
-            {/* Rate comparison bars */}
             <div className="space-y-2">
               <p className="text-xs font-medium text-muted-foreground">{c("comparison")}</p>
               {[
@@ -211,7 +263,6 @@ export function FullCalculator() {
               ))}
             </div>
 
-            {/* Cost breakdown bars */}
             <div className="space-y-2">
               {breakdowns.map(({ label, val, pct, c: cls, tc }) => (
                 <div key={label} className="space-y-1">
@@ -226,10 +277,9 @@ export function FullCalculator() {
               ))}
             </div>
 
-            {/* Unbilled summary */}
             <div className="rounded-lg bg-muted/50 px-4 py-3 text-sm text-center">
               <p>
-                <span className="font-semibold">{r.totalUnbilled}h</span> {c("totalUnbilled")}{" "}
+                <span className="font-semibold">{r.totalUnbilled.toFixed(1)}h</span> {c("totalUnbilled")}{" "}
                 <span className="text-destructive font-medium">= {r.timeLoss}%</span>
               </p>
               <p className="text-xs text-muted-foreground mt-1">
@@ -237,14 +287,12 @@ export function FullCalculator() {
               </p>
             </div>
 
-            {/* Share button */}
             <div className="flex justify-center">
               <Button variant="outline" size="sm" onClick={handleShare}>
                 📊 {c("shareTitle")}
               </Button>
             </div>
 
-            {/* CTA */}
             <div className="space-y-2 pt-1">
               <Link href="/login" className="block w-full">
                 <ShimmerButton className="w-full justify-center gap-2 text-sm font-semibold" shimmerDuration="2.5s">
@@ -255,7 +303,6 @@ export function FullCalculator() {
               <p className="text-center text-xs text-muted-foreground">{c("saveResultDesc")}</p>
             </div>
 
-            {/* SaaS conversion CTA */}
             <div className="mt-2 p-4 rounded-xl border bg-muted/50 text-center">
               <p className="text-sm text-muted-foreground mb-3">{c("trackCta")}</p>
               <Link href="/login">
@@ -267,6 +314,101 @@ export function FullCalculator() {
           </div>
         </FadeIn>
       </div>
+
+      <FadeIn delay={0.25} className="mt-8 grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
+        <div className="rounded-[24px] border bg-card p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Trophy className="w-5 h-5 text-amber-500" />
+            <h2 className="text-xl font-semibold">{c("comparePlatforms")}</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">{c("comparePlatformsDesc")}</p>
+          <div className="overflow-hidden rounded-2xl border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/60">
+                <tr>
+                  <th className="px-4 py-3 text-left font-medium">{c("platformName")}</th>
+                  <th className="px-4 py-3 text-right font-medium">{c("feePercent")}</th>
+                  <th className="px-4 py-3 text-right font-medium">{c("netIncome")}</th>
+                  <th className="px-4 py-3 text-right font-medium">{c("realRate")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {platformComparison.map((platform, index) => (
+                  <tr key={platform.name} className="border-t">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2 font-medium">
+                        <span>{platform.icon}</span>
+                        <span>{platform.name}</span>
+                        {index === 0 && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                            {c("bestOption")}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{platform.fee}%</td>
+                    <td className="px-4 py-3 text-right font-mono">${platform.net.toFixed(0)}</td>
+                    <td className="px-4 py-3 text-right font-mono font-semibold">${platform.realRate.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="rounded-[24px] border bg-card p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-5 h-5 text-primary" />
+            <h2 className="text-xl font-semibold">{c("goalTitle")}</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">{c("goalDesc")}</p>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">{c("targetIncome")}</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
+                <input type="number" value={targetIncome} onChange={(e) => setTargetIncome(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={c("targetIncome")} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">{c("workingDays")}</label>
+                <input type="number" value={workingDays} onChange={(e) => setWorkingDays(Number(e.target.value))} min={1} max={31} step={1} className={ni} aria-label={c("workingDays")} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">{c("maxHoursDay")}</label>
+                <input type="number" value={maxHoursDay} onChange={(e) => setMaxHoursDay(Number(e.target.value))} min={1} max={24} step={0.5} className={ni} aria-label={c("maxHoursDay")} />
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-muted/50 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">{c("requiredRate")}</span>
+                <span className="text-2xl font-bold text-primary">${goal.requiredRate.toFixed(2)}{c("perHour")}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="rounded-xl bg-background p-3 border">
+                  <p className="text-muted-foreground mb-1">{c("requiredHoursWeek")}</p>
+                  <p className="font-semibold">{goal.requiredHoursWeek.toFixed(1)} {c("hoursUnit")}</p>
+                </div>
+                <div className="rounded-xl bg-background p-3 border">
+                  <p className="text-muted-foreground mb-1">{c("requiredProjects")}</p>
+                  <p className="font-semibold">{goal.projectsNeeded.toFixed(1)} {c("projectsUnit")}</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">{c("billableCapacity")}</span>
+                <span className="font-medium">{goal.availableBillableHours.toFixed(1)} / {goal.monthlyCapacity.toFixed(1)}h</span>
+              </div>
+              <div className="inline-flex rounded-full border px-3 py-1 text-xs font-semibold">
+                {c(goal.status)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
     </div>
   );
 }
