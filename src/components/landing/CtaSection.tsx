@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { DotPattern } from "@/components/ui/dot-pattern";
@@ -43,13 +43,21 @@ export function CtaSection() {
 
         <FadeIn delay={0.2}>
           <div className="flex flex-col items-center gap-4">
-            <ShimmerButton
-              onClick={handleCtaClick}
-              shimmerDuration="2s"
-              className="rounded-xl px-10 py-5 text-lg font-semibold transition-all hover:-translate-y-1 hover:shadow-2xl md:px-12 md:py-6 md:text-xl"
-            >
-              {t("ctaCta")} →
-            </ShimmerButton>
+            <div className="flex flex-col items-center gap-3 sm:flex-row">
+              <ShimmerButton
+                onClick={handleCtaClick}
+                shimmerDuration="2s"
+                className="rounded-xl px-10 py-5 text-lg font-semibold transition-all hover:-translate-y-1 hover:shadow-2xl md:px-12 md:py-6 md:text-xl"
+              >
+                {t("ctaCta")} →
+              </ShimmerButton>
+              <Link
+                href="/calculator"
+                className="inline-flex items-center justify-center rounded-xl border border-border bg-background/80 px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-background md:min-h-[64px] md:px-10"
+              >
+                {t("ctaSecondaryCta")}
+              </Link>
+            </div>
 
             <p className="text-sm text-muted-foreground md:text-base">
               {t("heroCtaSub")}
