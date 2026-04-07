@@ -22,10 +22,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
-    default: "RealHourly - Find Your Real Hourly Rate",
+    default: "RealHourly - Freelancer Hourly Rate Calculator & Profitability Dashboard",
     template: "%s | RealHourly",
   },
-  description: "AI-powered freelancer revenue analytics that calculates your real hourly rate after fees, taxes, and hidden costs.",
+  description: "AI-powered freelancer hourly rate calculator and profitability dashboard. See your real hourly rate after fees, taxes, and hidden costs.",
   icons: {
     icon: "/favicon.ico",
     apple: "/icons/icon-192x192.png",
@@ -37,14 +37,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "RealHourly",
-    description: "AI-powered freelancer profitability dashboard. Find your real hourly rate.",
+    description: "AI-powered freelancer hourly rate calculator and profitability dashboard. Find your real hourly rate.",
     images: ["/api/og"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "RealHourly",
-    description: "AI-powered freelancer profitability dashboard. Find your real hourly rate.",
+    description: "AI-powered freelancer hourly rate calculator and profitability dashboard.",
     images: ["/api/og"],
   },
 };

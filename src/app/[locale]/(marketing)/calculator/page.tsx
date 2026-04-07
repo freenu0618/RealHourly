@@ -11,11 +11,11 @@ export async function generateMetadata({ params }: Props) {
   const isKo = locale === "ko";
 
   const title = isKo
-    ? "프리랜서 실제 시급 계산기 - 숨겨진 비용 포함 | RealHourly"
-    : "Freelancer Real Rate Calculator - Including Hidden Costs | RealHourly";
+    ? "프리랜서 실제 시급 계산기 - 수수료·세금·비청구 시간 반영 | RealHourly"
+    : "Freelancer Hourly Rate Calculator - Fees, Taxes & Unbilled Time | RealHourly";
   const description = isKo
-    ? "플랫폼 수수료, 세금, 비청구 시간을 모두 반영한 진짜 시급을 계산하세요. 무료 온라인 계산기로 프리랜서 수익을 정확히 파악하세요."
-    : "Calculate your real hourly rate after platform fees, taxes, and unbilled time. Free online calculator to accurately measure freelancer earnings.";
+    ? "플랫폼 수수료, 세금, 비청구 시간을 모두 반영한 진짜 시급을 계산하세요. 무료 온라인 계산기로 프리랜서 수익성과 최소 수주 단가를 더 정확히 파악할 수 있습니다."
+    : "Calculate your real hourly rate after platform fees, taxes, and unbilled time. Free online calculator to measure freelancer profitability and set a smarter minimum rate.";
 
   return {
     title,

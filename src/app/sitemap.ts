@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const page of staticPages) {
       entries.push({
         url: `${baseUrl}/${locale}${page}`,
-        lastModified: "2026-02-24",
+        lastModified: "2026-04-08",
         changeFrequency: page === "" ? "weekly" : "monthly",
         priority:
           page === "" ? 1.0

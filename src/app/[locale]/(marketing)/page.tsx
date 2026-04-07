@@ -17,12 +17,12 @@ export async function generateMetadata({ params }: Props) {
   return {
     title:
       locale === "ko"
-        ? "RealHourly - 프리랜서 실제 시급 계산기 | AI 수익 분석 도구"
-        : "RealHourly - Find Your Real Hourly Rate | AI Freelancer Revenue Analytics",
+        ? "RealHourly - 프리랜서 실제 시급 계산기 | 수익성 분석·시간 추적"
+        : "RealHourly - Freelancer Hourly Rate Calculator | Profitability & Time Tracking",
     description:
       locale === "ko"
-        ? "플랫폼 수수료, 세금, 숨겨진 비용을 차감한 진짜 시급을 확인하세요. AI가 시간을 자동 기록하고, 스코프 크립을 감지하고, 수익성을 분석합니다. 프리랜서를 위한 무료 수익 관리 도구."
-        : "Discover your real hourly rate after platform fees, taxes, and hidden costs. AI auto-logs time, detects scope creep, and analyzes profitability. Free revenue management tool for freelancers.",
+        ? "플랫폼 수수료, 세금, 비청구 시간, 숨겨진 비용을 차감한 진짜 시급을 확인하세요. AI가 시간을 자동 기록하고, 스코프 크립을 감지하고, 프로젝트 수익성을 분석합니다. 프리랜서를 위한 무료 수익 관리 도구입니다."
+        : "Discover your real hourly rate after platform fees, taxes, unbilled time, and hidden costs. AI auto-logs time, detects scope creep, and analyzes project profitability. Free revenue management tool for freelancers.",
     keywords:
       locale === "ko"
         ? [
@@ -53,12 +53,12 @@ export async function generateMetadata({ params }: Props) {
     openGraph: {
       title:
         locale === "ko"
-          ? "RealHourly - 당신의 진짜 시급을 알고 계신가요?"
-          : "RealHourly - Do You Know Your Real Hourly Rate?",
+          ? "RealHourly - 프리랜서 실제 시급 계산기"
+          : "RealHourly - Freelancer Hourly Rate Calculator",
       description:
         locale === "ko"
-          ? "계약 시급 $75 → 실제 시급 $23. AI가 숨겨진 비용을 분석하고 프리랜서의 진짜 수익을 계산합니다."
-          : "Contract rate $75/hr → Real rate $23/hr. AI analyzes hidden costs and calculates your true freelancer earnings.",
+          ? "계약 시급이 아닌 실제 시급을 확인하세요. AI가 숨겨진 비용, 비청구 시간, 수익성을 분석합니다."
+          : "See your real hourly rate, not just your contract rate. AI analyzes hidden costs, unbilled time, and profitability.",
       type: "website" as const,
       url: `${siteUrl}/${locale}`,
       siteName: "RealHourly",
@@ -77,11 +77,11 @@ export async function generateMetadata({ params }: Props) {
       title:
         locale === "ko"
           ? "RealHourly - 프리랜서 실제 시급 계산기"
-          : "RealHourly - Find Your Real Hourly Rate",
+          : "RealHourly - Freelancer Hourly Rate Calculator",
       description:
         locale === "ko"
-          ? "계약 시급이 아닌 '진짜 시급'을 확인하세요. 무료로 시작."
-          : "See your real rate, not your contract rate. Start free.",
+          ? "계약 시급이 아닌 진짜 시급을 확인하세요. 수수료·세금·비청구 시간까지 반영합니다."
+          : "See your real rate, not your contract rate. Includes fees, taxes, and unbilled time.",
       images: ["/api/og"],
     },
     robots: {

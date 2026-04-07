@@ -11,11 +11,11 @@ export async function generateMetadata({ params }: Props) {
   const isKo = locale === "ko";
 
   const title = isKo
-    ? "RealHourly 기능 가이드 - 7가지 핵심 기능 소개"
-    : "RealHourly Features - 7 Key Features Guide";
+    ? "RealHourly 기능 가이드 - AI 시간 기록·실제 시급·수익성 분석"
+    : "RealHourly Features - AI Time Tracking, Real Rates & Profitability";
   const description = isKo
-    ? "NLP 시간 기록, 실제 시급 계산, 스코프 크립 감지 등 RealHourly의 핵심 기능을 자세히 알아보세요. 프리랜서 수익 관리를 위한 올인원 도구."
-    : "Explore RealHourly's key features: NLP time logging, real rate calculator, scope creep detection, and more. All-in-one tool for freelancer revenue management.";
+    ? "AI 시간 기록, 실제 시급 계산, 스코프 크립 감지, 인보이스 생성까지 RealHourly의 핵심 기능을 자세히 알아보세요. 프리랜서 수익 관리를 위한 올인원 도구입니다."
+    : "Explore RealHourly's key features: AI time tracking, real hourly rate calculation, scope creep detection, invoicing, and more. All-in-one tool for freelancer revenue management.";
 
   return {
     title,
