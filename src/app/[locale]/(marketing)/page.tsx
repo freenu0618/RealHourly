@@ -110,7 +110,7 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "어떤 플랫폼을 지원하나요?",
-          a: "Upwork, Fiverr, 크몽, 숨고, Freelancer.com 등 주요 프리랜서 플랫폼의 수수료를 프리셋으로 제공합니다. 커스텀 수수료 입력도 지원합니다.",
+          a: "Upwork, Fiverr, 크몽, 숨고, Freelancer.com 등 주요 프리랜서 플랫폼의 수수료 프리셋을 제공합니다. 다만 Upwork처럼 계약별로 수수료가 달라질 수 있는 플랫폼도 있어, 프리셋은 시작점으로 보고 실제 계약 수수료에 맞춰 커스텀 입력하는 것을 권장합니다.",
         },
         {
           q: "'실제 시급'이 뭔가요? 어떻게 계산되나요?",
@@ -144,7 +144,7 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "Which freelance platforms are supported?",
-          a: "We provide fee presets for Upwork, Fiverr, Freelancer.com, and more. Custom fee input is also supported.",
+          a: "We provide fee presets for Upwork, Fiverr, Freelancer.com, and more. Some platforms, including Upwork, can have contract-specific fee variations, so the preset should be treated as a starting point and adjusted with the custom fee input when needed.",
         },
         {
           q: "What is 'real hourly rate' and how is it calculated?",
