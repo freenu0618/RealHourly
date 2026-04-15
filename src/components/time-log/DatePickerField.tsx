@@ -14,16 +14,21 @@ import { cn } from "@/lib/utils";
 interface DatePickerFieldProps {
   value: string; // YYYY-MM-DD
   onChange: (value: string) => void;
+  id?: string;
+  ariaLabel?: string;
 }
 
-export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
+export function DatePickerField({ value, onChange, id, ariaLabel }: DatePickerFieldProps) {
   const date = value ? parseUserDate(value) ?? undefined : undefined;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          id={id}
+          type="button"
           variant="outline"
+          aria-label={ariaLabel}
           className={cn(
             "h-9 w-full justify-start text-left text-sm font-normal",
             !value && "text-muted-foreground",

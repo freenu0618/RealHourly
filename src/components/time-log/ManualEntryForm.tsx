@@ -35,6 +35,11 @@ interface ManualEntryFormProps {
 
 export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
   const t = useTranslations("timeLog");
+  const projectFieldId = "manual-entry-project";
+  const dateFieldId = "manual-entry-date";
+  const minutesFieldId = "manual-entry-minutes";
+  const categoryFieldId = "manual-entry-category";
+  const taskFieldId = "manual-entry-task";
   const { register, handleSubmit, setValue, watch, formState } =
     useForm<ManualEntryValues>({
       defaultValues: {
@@ -105,12 +110,12 @@ export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2 space-y-1">
-          <Label className="text-xs">{t("project")}</Label>
+          <Label htmlFor={projectFieldId} className="text-xs">{t("project")}</Label>
           <Select
             value={watch("projectId")}
-            onValueChange={(v) => setValue("projectId", v)}
+            onValueChange={(v) => setValue("projectId", v, { shouldValidate: true, shouldDirty: true })}
           >
-            <SelectTrigger>
+            <SelectTrigger id={projectFieldId} aria-label={t("project")}>
               <SelectValue placeholder={t("selectProject")} />
             </SelectTrigger>
             <SelectContent>
@@ -124,16 +129,19 @@ export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs">{t("date")}</Label>
+          <Label htmlFor={dateFieldId} className="text-xs">{t("date")}</Label>
           <DatePickerField
+            id={dateFieldId}
+            ariaLabel={t("date")}
             value={watch("date")}
-            onChange={(d) => setValue("date", d)}
+            onChange={(d) => setValue("date", d, { shouldValidate: true, shouldDirty: true })}
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs">{t("duration")}</Label>
+          <Label htmlFor={minutesFieldId} className="text-xs">{t("duration")}</Label>
           <Input
+            id={minutesFieldId}
             type="number"
             min={1}
             max={1440}
@@ -142,12 +150,12 @@ export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs">{t("category")}</Label>
+          <Label htmlFor={categoryFieldId} className="text-xs">{t("category")}</Label>
           <Select
             value={watch("category")}
-            onValueChange={(v) => setValue("category", v as Category)}
+            onValueChange={(v) => setValue("category", v as Category, { shouldValidate: true, shouldDirty: true })}
           >
-            <SelectTrigger>
+            <SelectTrigger id={categoryFieldId} aria-label={t("category")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -161,8 +169,8 @@ export function ManualEntryForm({ projects, onCancel }: ManualEntryFormProps) {
         </div>
 
         <div className="col-span-2 space-y-1">
-          <Label className="text-xs">{t("task")}</Label>
-          <Input {...register("taskDescription")} />
+          <Label htmlFor={taskFieldId} className="text-xs">{t("task")}</Label>
+          <Input id={taskFieldId} {...register("taskDescription")} />
         </div>
       </div>
 
