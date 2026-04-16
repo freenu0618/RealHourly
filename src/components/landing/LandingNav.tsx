@@ -48,7 +48,7 @@ export function LandingNav() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/images/logo.png" alt="RealHourly" width={28} height={28} className="rounded-lg" />
+          <Image src="/images/logo.webp" alt="RealHourly" width={28} height={28} className="rounded-lg" />
           <span className="text-lg font-bold text-foreground">RealHourly</span>
         </Link>
 

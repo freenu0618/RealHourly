@@ -34,7 +34,7 @@ export default function LoginPage() {
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-2">
         <Image
-          src="/images/logo.png"
+          src="/images/logo.webp"
           alt="RealHourly"
           width={72}
           height={72}

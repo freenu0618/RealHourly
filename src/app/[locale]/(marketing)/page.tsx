@@ -211,7 +211,7 @@ function buildJsonLd(locale: string) {
       featureList: isKo
         ? "실제 시급 계산, AI 시간 기록, 스코프 크립 감지, 수익 대시보드, PDF 인보이스, 음성 입력"
         : "Real hourly rate, AI time logging, scope creep detection, revenue dashboard, PDF invoices, voice input",
-      screenshot: `${siteUrl}/images/screenshots/dashboard.png`,
+      screenshot: `${siteUrl}/images/screenshots/dashboard.webp`,
     },
     {
       "@context": "https://schema.org",
@@ -230,7 +230,7 @@ function buildJsonLd(locale: string) {
       "@type": "Organization",
       name: "RealHourly",
       url: siteUrl,
-      logo: `${siteUrl}/images/logo.png`,
+      logo: `${siteUrl}/images/logo.webp`,
       description: isKo
         ? "프리랜서를 위한 AI 수익 분석 도구"
         : "AI revenue analytics tool for freelancers",

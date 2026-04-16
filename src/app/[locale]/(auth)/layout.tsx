@@ -16,7 +16,7 @@ export default function AuthLayout({
       {/* Navigation bar */}
       <nav className="fixed top-0 z-50 flex h-14 w-full items-center px-6">
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <Image src="/images/logo.png" alt="RealHourly" width={28} height={28} className="rounded-lg" />
+          <Image src="/images/logo.webp" alt="RealHourly" width={28} height={28} className="rounded-lg" />
           <span className="text-lg font-bold">RealHourly</span>
         </Link>
       </nav>

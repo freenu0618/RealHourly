@@ -114,7 +114,7 @@ export function PublicReportClient({
         {/* Logo */}
         <div className="flex items-center gap-2">
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="RealHourly"
             width={28}
             height={28}

@@ -38,16 +38,16 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     screenshots: [
       {
-        src: "/images/screenshots/dashboard-ko-light.png",
+        src: "/images/screenshots/dashboard-ko-light.webp",
         sizes: "1280x720",
-        type: "image/png",
+        type: "image/webp",
         form_factor: "wide",
         label: "Dashboard — Korean light mode",
       },
       {
-        src: "/images/screenshots/dashboard-ko-dark.png",
+        src: "/images/screenshots/dashboard-ko-dark.webp",
         sizes: "1280x720",
-        type: "image/png",
+        type: "image/webp",
         form_factor: "wide",
         label: "Dashboard — Korean dark mode",
       },

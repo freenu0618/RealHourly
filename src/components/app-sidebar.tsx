@@ -96,7 +96,7 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border px-5 py-4">
         <Link href="/dashboard" className="flex items-center gap-3">
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="RealHourly"
             width={32}
             height={32}
