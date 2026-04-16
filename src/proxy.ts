@@ -23,7 +23,7 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathWithoutLocale.startsWith(p));
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   if (host === "real-hourly.com") {
     const redirectUrl = request.nextUrl.clone();
