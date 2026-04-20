@@ -62,6 +62,17 @@ export function CtaSection() {
             <p className="text-sm text-muted-foreground md:text-base">
               {t("heroCtaSub")}
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs text-muted-foreground md:text-sm">
+              {[t("pricingTrust1"), t("pricingTrust2"), t("pricingTrust3")].map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-border/60 bg-background/70 px-3 py-1"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
         </FadeIn>
       </div>
