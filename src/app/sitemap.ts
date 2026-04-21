@@ -13,12 +13,13 @@ const staticPages = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
+  const lastModified = new Date().toISOString().split("T")[0];
 
   for (const locale of ["ko", "en"]) {
     for (const page of staticPages) {
       entries.push({
         url: `${baseUrl}/${locale}${page}`,
-        lastModified: "2026-04-08",
+        lastModified,
         changeFrequency: page === "" ? "weekly" : "monthly",
         priority:
           page === "" ? 1.0
