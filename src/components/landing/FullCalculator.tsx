@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -24,6 +25,31 @@ const PLATFORM_PRESETS = [
 
 const MONTHS_PER_WEEK = 4.33;
 
+const DEFAULT_VALUES = {
+  amount: 3000,
+  hours: 40,
+  feeRate: 10,
+  taxRate: 10,
+  toolCost: 50,
+  meetingHours: 3,
+  emailHours: 2,
+  revisionPercent: 15,
+  targetIncome: 6000,
+  workingDays: 20,
+  maxHoursDay: 6,
+} as const;
+
+const getNumberParam = (value: string | null, fallback: number) => {
+  if (value === null || value === "") return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const getPresetName = (feeRate: number) => {
+  const preset = PLATFORM_PRESETS.find((item) => item.fee === feeRate);
+  return preset?.name ?? "Custom";
+};
+
 /**
  * FullCalculator — Standalone calculator page extending InteractiveCalcSection
  * with unbilled time inputs. Shows nominal/real rates, cost breakdown, and CTA.
@@ -32,19 +58,44 @@ const MONTHS_PER_WEEK = 4.33;
 export function FullCalculator() {
   const t = useTranslations("landing");
   const c = useTranslations("calculatorPage");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [amount, setAmount] = useState(3000);
-  const [hours, setHours] = useState(40);
-  const [feeRate, setFeeRate] = useState(10);
-  const [selectedPreset, setSelectedPreset] = useState<string>("Upwork");
-  const [taxRate, setTaxRate] = useState(10);
-  const [toolCost, setToolCost] = useState(50);
-  const [meetingHours, setMeetingHours] = useState(3);
-  const [emailHours, setEmailHours] = useState(2);
-  const [revisionPercent, setRevisionPercent] = useState(15);
-  const [targetIncome, setTargetIncome] = useState(6000);
-  const [workingDays, setWorkingDays] = useState(20);
-  const [maxHoursDay, setMaxHoursDay] = useState(6);
+  const initialValues = useMemo(() => {
+    const values = {
+      amount: getNumberParam(searchParams.get("amount"), DEFAULT_VALUES.amount),
+      hours: getNumberParam(searchParams.get("hours"), DEFAULT_VALUES.hours),
+      feeRate: getNumberParam(searchParams.get("fee"), DEFAULT_VALUES.feeRate),
+      taxRate: getNumberParam(searchParams.get("tax"), DEFAULT_VALUES.taxRate),
+      toolCost: getNumberParam(searchParams.get("tool"), DEFAULT_VALUES.toolCost),
+      meetingHours: getNumberParam(searchParams.get("meeting"), DEFAULT_VALUES.meetingHours),
+      emailHours: getNumberParam(searchParams.get("email"), DEFAULT_VALUES.emailHours),
+      revisionPercent: getNumberParam(searchParams.get("revision"), DEFAULT_VALUES.revisionPercent),
+      targetIncome: getNumberParam(searchParams.get("target"), DEFAULT_VALUES.targetIncome),
+      workingDays: getNumberParam(searchParams.get("days"), DEFAULT_VALUES.workingDays),
+      maxHoursDay: getNumberParam(searchParams.get("maxDay"), DEFAULT_VALUES.maxHoursDay),
+    };
+
+    return {
+      ...values,
+      selectedPreset: getPresetName(values.feeRate),
+    };
+  }, [searchParams]);
+
+  const [amount, setAmount] = useState(initialValues.amount);
+  const [hours, setHours] = useState(initialValues.hours);
+  const [feeRate, setFeeRate] = useState(initialValues.feeRate);
+  const [selectedPreset, setSelectedPreset] = useState<string>(initialValues.selectedPreset);
+  const [taxRate, setTaxRate] = useState(initialValues.taxRate);
+  const [toolCost, setToolCost] = useState(initialValues.toolCost);
+  const [meetingHours, setMeetingHours] = useState(initialValues.meetingHours);
+  const [emailHours, setEmailHours] = useState(initialValues.emailHours);
+  const [revisionPercent, setRevisionPercent] = useState(initialValues.revisionPercent);
+  const [targetIncome, setTargetIncome] = useState(initialValues.targetIncome);
+  const [workingDays, setWorkingDays] = useState(initialValues.workingDays);
+  const [maxHoursDay, setMaxHoursDay] = useState(initialValues.maxHoursDay);
 
   const r = useMemo(() => {
     const revisionHours = hours * (revisionPercent / 100);
@@ -130,16 +181,71 @@ export function FullCalculator() {
     }
   }, []);
 
-  const handleShare = useCallback(() => {
-    const text = `My contract rate: $${r.nominal.toFixed(0)}/hr → Real rate: $${r.realWith.toFixed(0)}/hr (after fees, taxes & hidden time). Calculate yours at real-hourly.com`;
-    if (typeof navigator !== "undefined" && navigator.share) {
-      navigator.share({ text }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        toast.success(c("shareCopied"));
-      });
+  const shareUrl = useMemo(() => {
+    const params = new URLSearchParams({
+      amount: String(amount),
+      hours: String(hours),
+      fee: String(feeRate),
+      tax: String(taxRate),
+      tool: String(toolCost),
+      meeting: String(meetingHours),
+      email: String(emailHours),
+      revision: String(revisionPercent),
+      target: String(targetIncome),
+      days: String(workingDays),
+      maxDay: String(maxHoursDay),
+    });
+
+    if (typeof window === "undefined") {
+      return `${pathname}?${params.toString()}`;
     }
-  }, [c, r.nominal, r.realWith]);
+
+    return `${window.location.origin}${pathname}?${params.toString()}`;
+  }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent, targetIncome, workingDays, maxHoursDay, pathname]);
+
+  useEffect(() => {
+    router.replace(`${pathname}?${shareUrl.split("?")[1]}`, { scroll: false });
+  }, [router, pathname, shareUrl]);
+
+  const handleShare = useCallback(() => {
+    const text = locale === "ko"
+      ? `계약 단가 $${r.nominal.toFixed(0)}/시간, 실제 시급 $${r.realWith.toFixed(0)}/시간으로 계산됐어요. 직접 계산해보기: ${shareUrl}`
+      : `My contract rate is $${r.nominal.toFixed(0)}/hr, but my real rate is $${r.realWith.toFixed(0)}/hr. Calculate yours: ${shareUrl}`;
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ text, url: shareUrl }).catch(() => {});
+      return;
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => {
+          toast.success(c("shareCopied"));
+        })
+        .catch(() => {
+          toast.error(c("shareCopyFailed"));
+        });
+      return;
+    }
+
+    toast.error(c("shareUnsupported"));
+  }, [c, locale, r.nominal, r.realWith, shareUrl]);
+
+  const handleReset = useCallback(() => {
+    setAmount(DEFAULT_VALUES.amount);
+    setHours(DEFAULT_VALUES.hours);
+    setFeeRate(DEFAULT_VALUES.feeRate);
+    setSelectedPreset(getPresetName(DEFAULT_VALUES.feeRate));
+    setTaxRate(DEFAULT_VALUES.taxRate);
+    setToolCost(DEFAULT_VALUES.toolCost);
+    setMeetingHours(DEFAULT_VALUES.meetingHours);
+    setEmailHours(DEFAULT_VALUES.emailHours);
+    setRevisionPercent(DEFAULT_VALUES.revisionPercent);
+    setTargetIncome(DEFAULT_VALUES.targetIncome);
+    setWorkingDays(DEFAULT_VALUES.workingDays);
+    setMaxHoursDay(DEFAULT_VALUES.maxHoursDay);
+    toast.success(c("resetDone"));
+  }, [c]);
 
   const ni = "w-full rounded-xl border bg-background px-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-primary";
 
@@ -287,9 +393,12 @@ export function FullCalculator() {
               </p>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-2">
               <Button variant="outline" size="sm" onClick={handleShare}>
                 📊 {c("shareTitle")}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleReset}>
+                ↺ {c("resetButton")}
               </Button>
             </div>
 

@@ -87,6 +87,7 @@ export function LandingNav() {
             type="button"
             onClick={toggleLocale}
             className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={locale === "ko" ? "Switch language to English" : "언어를 한국어로 변경"}
           >
             <Globe className="size-3.5" />
             {locale === "ko" ? "KR" : "EN"}
@@ -129,11 +130,21 @@ export function LandingNav() {
             <Link href="/calculator" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.calculator")}
             </Link>
-            <button type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground">
+            <button
+              type="button"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
               {theme === "dark" ? "Light Mode" : "Dark Mode"}
             </button>
-            <button type="button" onClick={toggleLocale} className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground">
+            <button
+              type="button"
+              onClick={toggleLocale}
+              className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
+              aria-label={locale === "ko" ? "Switch language to English" : "언어를 한국어로 변경"}
+            >
               <Globe className="size-4" />
               {locale === "ko" ? "English" : "한국어"}
             </button>

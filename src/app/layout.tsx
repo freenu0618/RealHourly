@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: "RealHourly - Freelancer Hourly Rate Calculator & Profitability Dashboard",
     template: "%s | RealHourly",
   },
-  description: "AI-powered freelancer hourly rate calculator and profitability dashboard. See your real hourly rate after fees, taxes, and hidden costs.",
+  description: "AI-powered freelancer hourly rate calculator and profitability dashboard. See your real hourly rate after fees, taxes, hidden costs, and unbilled time, then set a smarter minimum rate.",
   icons: {
     icon: "/favicon.ico",
     apple: "/icons/icon-192x192.png",
@@ -37,14 +37,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "RealHourly",
-    description: "AI-powered freelancer hourly rate calculator and profitability dashboard. Find your real hourly rate.",
+    description: "AI-powered freelancer hourly rate calculator and profitability dashboard. Find your real hourly rate and smarter minimum freelance rate.",
     images: ["/api/og"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "RealHourly",
-    description: "AI-powered freelancer hourly rate calculator and profitability dashboard.",
+    description: "AI-powered freelancer hourly rate calculator, minimum rate tool, and profitability dashboard.",
     images: ["/api/og"],
   },
 };
