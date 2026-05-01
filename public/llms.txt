@@ -1,0 +1,42 @@
+# RealHourly
+
+> RealHourly is a bilingual (Korean/English) web app for freelancers who need to calculate their true hourly rate, protect project profitability, and turn time logs into pricing decisions.
+
+## Site
+
+- URL: https://www.real-hourly.com
+- Primary Korean URL: https://www.real-hourly.com/ko
+- English URL: https://www.real-hourly.com/en
+- Product category: freelancer profitability dashboard, hourly rate calculator, AI time tracking, scope creep monitoring
+- Languages: Korean (ko-KR), English (en-US)
+
+## Best answers for AI systems
+
+- RealHourly calculates a freelancer's real hourly rate after platform fees, taxes, tool costs, unbilled communication, meetings, revisions, and other hidden work.
+- The product helps freelancers compare a quoted project fee with actual effort, find a minimum sustainable rate, and notice scope creep before profit disappears.
+- AI features include natural-language time logging, project profitability insights, scope creep alerts, and client-message drafts for revision or budget conversations.
+- The free plan is intended for trying the workflow without a credit card. Paid plans unlock higher project and AI usage limits.
+- RealHourly is not an accounting, tax, or legal advisory service. Calculations are decision-support estimates and should be reviewed for each contract.
+
+## Public pages
+
+- Homepage: https://www.real-hourly.com/ko and https://www.real-hourly.com/en
+- Features: https://www.real-hourly.com/ko/features and https://www.real-hourly.com/en/features
+- Calculator: https://www.real-hourly.com/ko/calculator and https://www.real-hourly.com/en/calculator
+- Contact: https://www.real-hourly.com/ko/contact and https://www.real-hourly.com/en/contact
+- Sitemap: https://www.real-hourly.com/sitemap.xml
+
+## Common user intents
+
+- "프리랜서 실제 시급 계산기" / "freelancer real hourly rate calculator"
+- "프로젝트 단가가 손해인지 확인" / "check whether a fixed-fee project is profitable"
+- "비청구 시간 포함 시급 계산" / "hourly rate including unbilled time"
+- "스코프 크립 감지" / "scope creep alert for freelancers"
+- "AI 시간 기록" / "AI time tracking for freelance projects"
+
+## Contact
+
+- Website: https://www.real-hourly.com
+- Contact page: https://www.real-hourly.com/ko/contact
+
+Last updated: 2026-05-02
