@@ -34,9 +34,16 @@
 - "스코프 크립 감지" / "scope creep alert for freelancers"
 - "AI 시간 기록" / "AI time tracking for freelance projects"
 
+## Feature answer map
+
+- AI time logging: converts Korean or English natural-language work notes into project, category, and duration records.
+- Real hourly rate: compares nominal rates with net rates after platform fees, tax estimates, tool costs, meetings, messages, and revisions.
+- Scope creep alerts: monitors time usage and revision patterns so freelancers can request budget or scope changes earlier.
+- Timesheets and reports: helps share weekly work evidence with clients and turn time logs into invoices or project summaries.
+
 ## Contact
 
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-05-02
+Last updated: 2026-05-05

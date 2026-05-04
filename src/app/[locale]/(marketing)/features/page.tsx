@@ -50,6 +50,44 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
+  const featureIds = [
+    "nlp-time-log",
+    "real-rate",
+    "scope-creep",
+    "dashboard",
+    "analytics",
+    "timesheets",
+    "invoice-report",
+  ];
+  const featureItems = (isKo
+    ? [
+        ["AI 타임로그", "한국어·영어 자연어 입력을 프로젝트, 카테고리, 시간으로 자동 분류합니다."],
+        ["실제 시급 계산", "플랫폼 수수료, 세금, 툴 구독료, 비청구 시간을 반영한 진짜 시급을 보여줍니다."],
+        ["스코프 크립 경고", "시간 초과와 수정 요청 증가를 감지하고 추가 청구 메시지를 준비합니다."],
+        ["대시보드 & KPI", "총 수입, 작업 시간, 평균 실제 시급, 진행 프로젝트를 한 화면에서 확인합니다."],
+        ["비교 분석", "프로젝트별 시급 랭킹과 카테고리별 시간 분배로 수익성 높은 일을 찾습니다."],
+        ["타임시트 승인", "주간 타임시트를 매직 링크로 공유하고 승인된 기록을 잠급니다."],
+        ["인보이스 & 리포트", "작업 기록 기반 인보이스와 공유 가능한 클라이언트 리포트를 생성합니다."],
+      ]
+    : [
+        ["AI Time Logging", "Turns Korean or English natural-language entries into project, category, and duration data."],
+        ["Real Hourly Rate", "Shows the true rate after platform fees, taxes, tool subscriptions, and unbilled work."],
+        ["Scope Creep Alerts", "Detects time overruns and revision growth, then prepares additional-billing messages."],
+        ["Dashboard & KPIs", "Summarizes revenue, work hours, average real rate, and active projects in one view."],
+        ["Comparative Analytics", "Ranks project rates and time distribution so freelancers can find profitable work."],
+        ["Timesheet Approval", "Shares weekly timesheets by magic link and locks approved entries."],
+        ["Invoices & Reports", "Creates invoice drafts and client-shareable reports from time logs."],
+      ]).map(([name, description], index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SoftwareApplication",
+          name,
+          applicationCategory: "BusinessApplication",
+          description,
+          url: `${siteUrl}/${locale}/features#${featureIds[index]}`,
+        },
+      }));
 
   return [
     {
@@ -67,6 +105,18 @@ function buildJsonLd(locale: string) {
         name: "RealHourly",
         url: siteUrl,
       },
+      about: featureItems.map(({ item }) => item),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo ? "RealHourly 핵심 기능 목록" : "RealHourly core feature list",
+      description: isKo
+        ? "RealHourly가 프리랜서 수익 관리를 돕는 7가지 기능 요약"
+        : "Seven RealHourly features that support freelancer revenue management",
+      url: `${siteUrl}/${locale}/features`,
+      numberOfItems: featureItems.length,
+      itemListElement: featureItems,
     },
     {
       "@context": "https://schema.org",
