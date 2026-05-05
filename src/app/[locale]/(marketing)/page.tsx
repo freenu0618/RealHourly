@@ -247,11 +247,11 @@ function buildJsonLd(locale: string) {
       url: siteUrl,
       inLanguage: [isKo ? "ko-KR" : "en-US"],
       potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: `${siteUrl}/${locale}/features`,
-        },
+        "@type": "UseAction",
+        name: isKo
+          ? "무료 실제 시급 계산기 사용"
+          : "Use the free real hourly rate calculator",
+        target: `${siteUrl}/${locale}/calculator`,
       },
     },
   ];
