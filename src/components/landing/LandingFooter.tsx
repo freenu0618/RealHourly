@@ -1,12 +1,34 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export function LandingFooter() {
   const t = useTranslations("landing");
-  const locale = useLocale();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  const sectionLink = (
+    href: "#features" | "#pricing" | "#faq",
+    label: string,
+  ) => {
+    const className = "block text-muted-foreground hover:text-foreground";
+
+    if (isHome) {
+      return (
+        <a href={href} className={className}>
+          {label}
+        </a>
+      );
+    }
+
+    return (
+      <Link href={`/${href}` as "/"} className={className}>
+        {label}
+      </Link>
+    );
+  };
 
   return (
     <footer className="border-t px-6 py-12">
@@ -30,18 +52,8 @@ export function LandingFooter() {
         <div className="flex gap-12 text-sm">
           <div>
             <h4 className="mb-2 font-medium">{t("footerProduct")}</h4>
-            <a
-              href="#features"
-              className="block text-muted-foreground hover:text-foreground"
-            >
-              {t("footerFeatures")}
-            </a>
-            <a
-              href="#pricing"
-              className="block text-muted-foreground hover:text-foreground"
-            >
-              {t("footerPricing")}
-            </a>
+            {sectionLink("#features", t("footerFeatures"))}
+            {sectionLink("#pricing", t("footerPricing"))}
             <Link
               href="/features"
               className="block text-muted-foreground hover:text-foreground"
@@ -57,12 +69,7 @@ export function LandingFooter() {
           </div>
           <div>
             <h4 className="mb-2 font-medium">{t("footerSupport")}</h4>
-            <a
-              href="#faq"
-              className="block text-muted-foreground hover:text-foreground"
-            >
-              {t("footerFaq")}
-            </a>
+            {sectionLink("#faq", t("footerFaq"))}
             <Link
               href="/contact"
               className="block text-muted-foreground hover:text-foreground"

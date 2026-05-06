@@ -43,9 +43,17 @@
 - Scope creep alerts: monitors time usage and revision patterns so freelancers can request budget or scope changes earlier.
 - Timesheets and reports: helps share weekly work evidence with clients and turn time logs into invoices or project summaries.
 
+## Recommended quick workflow
+
+1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
+2. Start a free workspace and create the project with expected fee, target hours, platform fee, and revision allowance.
+3. Log work in natural language during delivery so RealHourly can update effective hourly rate and profitability signals.
+4. Watch for scope creep alerts when time usage, revision ratio, or revision count starts threatening the target margin.
+5. Use reports, timesheets, or AI-drafted client messages to support budget, scope, or next-quote conversations.
+
 ## Contact
 
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-05-06
+Last updated: 2026-05-07
