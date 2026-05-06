@@ -1,4 +1,4 @@
-# RealHourly
+const llmsTxt = `# RealHourly
 
 > RealHourly is a bilingual (Korean/English) web app for freelancers who need to calculate their true hourly rate, protect project profitability, and turn time logs into pricing decisions.
 
@@ -57,3 +57,13 @@
 - Contact page: https://www.real-hourly.com/ko/contact
 
 Last updated: 2026-05-07
+`;
+
+export function GET() {
+  return new Response(llmsTxt, {
+    headers: {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/plain; charset=utf-8",
+    },
+  });
+}
