@@ -102,6 +102,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
+  const language = isKo ? "ko-KR" : "en-US";
 
   const faqs = isKo
     ? [
@@ -173,6 +174,44 @@ function buildJsonLd(locale: string) {
         },
       ];
 
+  const workflowSteps = isKo
+    ? [
+        {
+          name: "계약 금액과 목표 시간 입력",
+          text: "프로젝트 수입, 예상 작업 시간, 플랫폼 수수료와 세금률을 입력해 견적의 기준선을 만듭니다.",
+        },
+        {
+          name: "비청구 시간과 숨은 비용 반영",
+          text: "미팅, 메시지, 수정, 리서치, 도구 구독료처럼 실제 수익을 낮추는 요소를 함께 계산합니다.",
+        },
+        {
+          name: "실제 시급과 최소 단가 확인",
+          text: "순수입을 실제 투입 시간으로 나눈 실제 시급을 확인하고 다음 견적의 최소 수주 단가를 정합니다.",
+        },
+        {
+          name: "진행 중 시간 기록과 스코프 크립 점검",
+          text: "자연어로 시간을 기록하며 예상 대비 진행률, 수정 비중, 수익성 변화를 확인합니다.",
+        },
+      ]
+    : [
+        {
+          name: "Enter project fee and target hours",
+          text: "Add the project revenue, expected work hours, platform fee, and tax rate to set a pricing baseline.",
+        },
+        {
+          name: "Include unbilled time and hidden costs",
+          text: "Account for meetings, messages, revisions, research, and tool subscriptions that reduce real profit.",
+        },
+        {
+          name: "Review real hourly rate and minimum rate",
+          text: "Divide net revenue by real working time to find your real hourly rate and minimum sustainable quote.",
+        },
+        {
+          name: "Track delivery and watch scope creep",
+          text: "Log time in natural language and monitor progress, revision load, and profitability while the project is active.",
+        },
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -181,9 +220,16 @@ function buildJsonLd(locale: string) {
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       url: siteUrl,
+      inLanguage: language,
       description: isKo
         ? "AI 기반 프리랜서 수익 분석 대시보드. 숨겨진 비용을 차감한 실제 시급을 계산합니다."
         : "AI-powered freelancer revenue analytics dashboard. Calculate your real hourly rate after hidden costs.",
+      audience: {
+        "@type": "Audience",
+        audienceType: isKo
+          ? "프리랜서, 1인 사업자, 독립 컨설턴트, 에이전시 운영자"
+          : "Freelancers, solo operators, independent consultants, and agency owners",
+      },
       offers: [
         {
           "@type": "Offer",
@@ -217,6 +263,29 @@ function buildJsonLd(locale: string) {
         ? "실제 시급 계산, AI 시간 기록, 스코프 크립 감지, 수익 대시보드, PDF 인보이스, 음성 입력"
         : "Real hourly rate, AI time logging, scope creep detection, revenue dashboard, PDF invoices, voice input",
       screenshot: `${siteUrl}/images/screenshots/dashboard.webp`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: isKo
+        ? "프리랜서 프로젝트의 실제 시급을 확인하는 방법"
+        : "How to find the real hourly rate of a freelance project",
+      description: isKo
+        ? "RealHourly로 견적 전후의 수수료, 세금, 비청구 시간, 스코프 크립 위험을 점검하는 4단계 흐름입니다."
+        : "A four-step workflow for checking fees, taxes, unbilled time, and scope creep risk with RealHourly.",
+      totalTime: "PT3M",
+      inLanguage: language,
+      tool: [
+        {
+          "@type": "HowToTool",
+          name: "RealHourly",
+        },
+      ],
+      step: workflowSteps.map((step, index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        ...step,
+      })),
     },
     {
       "@context": "https://schema.org",

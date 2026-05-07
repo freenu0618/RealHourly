@@ -56,7 +56,7 @@ const llmsTxt = `# RealHourly
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-05-07
+Last updated: 2026-05-08
 `;
 
 export function GET() {
