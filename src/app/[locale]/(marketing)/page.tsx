@@ -308,6 +308,29 @@ function buildJsonLd(locale: string) {
       description: isKo
         ? "프리랜서를 위한 AI 수익 분석 도구"
         : "AI revenue analytics tool for freelancers",
+      areaServed: "Worldwide",
+      availableLanguage: ["Korean", "English"],
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "support@real-hourly.com",
+        contactType: "customer support",
+        availableLanguage: ["Korean", "English"],
+      },
+      knowsAbout: isKo
+        ? [
+            "프리랜서 실제 시급 계산",
+            "프로젝트 수익성 분석",
+            "비청구 시간 추적",
+            "스코프 크립 감지",
+            "프리랜서 견적 기준선",
+          ]
+        : [
+            "freelancer real hourly rate calculation",
+            "project profitability analysis",
+            "unbilled time tracking",
+            "scope creep detection",
+            "freelance pricing baselines",
+          ],
     },
     {
       "@context": "https://schema.org",
