@@ -337,7 +337,20 @@ function buildJsonLd(locale: string) {
       "@type": "WebSite",
       name: "RealHourly",
       url: siteUrl,
-      inLanguage: [isKo ? "ko-KR" : "en-US"],
+      inLanguage: ["ko-KR", "en-US"],
+      about: isKo
+        ? [
+            "프리랜서 실제 시급 계산",
+            "고정가 프로젝트 수익성 판단",
+            "비청구 시간과 숨겨진 비용 반영",
+            "스코프 크립 대응",
+          ]
+        : [
+            "freelancer real hourly rate calculation",
+            "fixed-fee project profitability checks",
+            "unbilled time and hidden cost accounting",
+            "scope creep response",
+          ],
       potentialAction: {
         "@type": "UseAction",
         name: isKo
