@@ -89,6 +89,42 @@ function buildJsonLd(locale: string) {
         },
       }));
 
+  const featureFaqs = isKo
+    ? [
+        {
+          question: "RealHourly는 일반 시간 추적기와 무엇이 다른가요?",
+          answer:
+            "RealHourly는 시간을 기록하는 데서 끝나지 않고 플랫폼 수수료, 세금, 도구 비용, 비청구 시간을 반영해 프로젝트의 실제 시급과 수익성을 보여줍니다.",
+        },
+        {
+          question: "스코프 크립 감지는 어떤 상황에 유용한가요?",
+          answer:
+            "수정 요청이 늘어나거나 예상 시간 대비 사용률이 빠르게 올라갈 때 유용합니다. RealHourly는 추가 청구나 범위 조정을 논의할 수 있도록 신호와 메시지 초안을 제공합니다.",
+        },
+        {
+          question: "AI 시간 기록은 한국어 입력도 지원하나요?",
+          answer:
+            "네. 한국어와 영어 자연어 메모를 프로젝트, 작업 카테고리, 시간 기록으로 정리할 수 있어 프리랜서가 작업 중단 없이 기록을 남기기 쉽습니다.",
+        },
+      ]
+    : [
+        {
+          question: "How is RealHourly different from a regular time tracker?",
+          answer:
+            "RealHourly goes beyond recording hours. It combines platform fees, taxes, tool costs, and unbilled work to show the real hourly rate and profitability of each project.",
+        },
+        {
+          question: "When are scope creep alerts useful?",
+          answer:
+            "They are useful when revisions increase or time usage rises faster than planned. RealHourly surfaces signals and message drafts so freelancers can discuss extra billing or scope adjustments earlier.",
+        },
+        {
+          question: "Does AI time logging support Korean entries?",
+          answer:
+            "Yes. RealHourly can organize Korean and English natural-language notes into project, work category, and duration records so freelancers can keep logging without interrupting delivery.",
+        },
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -117,6 +153,18 @@ function buildJsonLd(locale: string) {
       url: `${siteUrl}/${locale}/features`,
       numberOfItems: featureItems.length,
       itemListElement: featureItems,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: featureFaqs.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
     },
     {
       "@context": "https://schema.org",
