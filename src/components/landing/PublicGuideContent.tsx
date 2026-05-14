@@ -9,8 +9,11 @@ import {
   ClipboardCheck,
   FileText,
   ArrowRight,
+  CheckCircle2,
+  HelpCircle,
+  ShieldAlert,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
 import { GuideSection } from "@/components/guide/GuideSection";
@@ -27,6 +30,55 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
  * @example
  * <PublicGuideContent />
  */
+
+const QUICK_ANSWER = {
+  ko: {
+    eyebrow: "빠른 판단 가이드",
+    title: "RealHourly는 어떤 프리랜서에게 가장 맞나요?",
+    description:
+      "단순 출퇴근 기록보다 견적·수익성·스코프 크립 판단이 중요한 고정가·혼합형 프로젝트에 최적화되어 있습니다.",
+    cards: [
+      {
+        icon: CheckCircle2,
+        title: "추천 상황",
+        body: "고정가 프로젝트, 플랫폼 계약, 반복 수정이 많은 작업, 미팅·메시지처럼 비청구 시간이 큰 프리랜서에게 유용합니다.",
+      },
+      {
+        icon: HelpCircle,
+        title: "해결하는 질문",
+        body: "이 견적이 손해인지, 실제 시급이 목표 시급보다 높은지, 추가 수정 요청을 언제 논의해야 하는지 확인합니다.",
+      },
+      {
+        icon: ShieldAlert,
+        title: "주의할 점",
+        body: "세무·회계·법률 판단을 대신하지 않습니다. RealHourly는 계약 전후 의사결정을 돕는 수익성 추정 도구입니다.",
+      },
+    ],
+  },
+  en: {
+    eyebrow: "Quick decision guide",
+    title: "Who is RealHourly best for?",
+    description:
+      "RealHourly is optimized for fixed-fee and blended freelance work where pricing, profitability, and scope creep matter more than simple clock-in tracking.",
+    cards: [
+      {
+        icon: CheckCircle2,
+        title: "Best-fit situations",
+        body: "Useful for fixed-fee projects, platform contracts, revision-heavy work, and freelancers with meaningful unbilled meetings or client messages.",
+      },
+      {
+        icon: HelpCircle,
+        title: "Questions it answers",
+        body: "Check whether a quote is profitable, whether the real rate clears your target rate, and when extra revision requests should trigger a scope conversation.",
+      },
+      {
+        icon: ShieldAlert,
+        title: "Important caveat",
+        body: "It does not replace tax, accounting, or legal advice. RealHourly is a profitability estimate and decision-support workflow.",
+      },
+    ],
+  },
+} as const;
 
 const SECTION_CONFIGS = [
   {
@@ -76,8 +128,10 @@ const SECTION_CONFIGS = [
 ] as const;
 
 export function PublicGuideContent() {
+  const locale = useLocale();
   const t = useTranslations("guide");
   const tf = useTranslations("featuresPage");
+  const quickAnswer = locale === "ko" ? QUICK_ANSWER.ko : QUICK_ANSWER.en;
 
   const navSections = SECTION_CONFIGS.map((cfg) => ({
     id: cfg.id,
@@ -108,6 +162,47 @@ export function PublicGuideContent() {
             <p className="text-xs text-muted-foreground">{tf("ctaSub")}</p>
           </div>
         </div>
+      </FadeIn>
+
+      <FadeIn delay={0.1}>
+        <section
+          aria-labelledby="features-answer-title"
+          className="mb-10 rounded-2xl border border-border/70 bg-muted/30 p-5 shadow-sm md:p-6"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            {quickAnswer.eyebrow}
+          </p>
+          <h2 id="features-answer-title" className="mt-2 text-2xl font-bold tracking-tight">
+            {quickAnswer.title}
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            {quickAnswer.description}
+          </p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {quickAnswer.cards.map((card) => {
+              const Icon = card.icon;
+              return (
+                <article key={card.title} className="rounded-xl border border-border/60 bg-background p-4">
+                  <div className="mb-3 flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Icon className="size-4" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-semibold tracking-tight">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{card.body}</p>
+                </article>
+              );
+            })}
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3 text-sm">
+            <Link href="/calculator" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+              {locale === "ko" ? "실제 시급 계산해보기" : "Try the real-rate calculator"}
+              <ArrowRight className="size-3.5" />
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground hover:underline">
+              {locale === "ko" ? "도입 전 질문하기" : "Ask a pre-adoption question"}
+              <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        </section>
       </FadeIn>
 
       {/* Nav + Sections */}
