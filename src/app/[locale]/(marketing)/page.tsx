@@ -215,6 +215,49 @@ function buildJsonLd(locale: string) {
   return [
     {
       "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: isKo
+        ? "RealHourly 프리랜서 실제 시급 계산 및 수익성 분석"
+        : "RealHourly freelancer real-rate and profitability analytics",
+      description: isKo
+        ? "프리랜서가 견적 전후에 실제 시급, 숨겨진 비용, 비청구 시간, 스코프 크립 위험을 한 번에 판단하도록 돕는 랜딩 페이지입니다."
+        : "Landing page for freelancers who need to judge real hourly rate, hidden costs, unbilled time, and scope creep risk before and during projects.",
+      url: `${siteUrl}/${locale}`,
+      inLanguage: language,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "RealHourly",
+        url: siteUrl,
+      },
+      about: isKo
+        ? [
+            "프리랜서 실제 시급 계산",
+            "고정가 프로젝트 수익성 분석",
+            "비청구 시간과 숨겨진 비용",
+            "스코프 크립 대응",
+          ]
+        : [
+            "freelancer real hourly rate calculation",
+            "fixed-fee project profitability analysis",
+            "unbilled time and hidden costs",
+            "scope creep response",
+          ],
+      primaryEntity: {
+        "@type": "SoftwareApplication",
+        name: "RealHourly",
+        applicationCategory: "BusinessApplication",
+        url: siteUrl,
+      },
+      potentialAction: {
+        "@type": "UseAction",
+        name: isKo
+          ? "무료 실제 시급 계산기 사용"
+          : "Use the free real hourly rate calculator",
+        target: `${siteUrl}/${locale}/calculator`,
+      },
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       name: "RealHourly",
       applicationCategory: "BusinessApplication",
@@ -358,6 +401,18 @@ function buildJsonLd(locale: string) {
           : "Use the free real hourly rate calculator",
         target: `${siteUrl}/${locale}/calculator`,
       },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "RealHourly",
+          item: `${siteUrl}/${locale}`,
+        },
+      ],
     },
   ];
 }
