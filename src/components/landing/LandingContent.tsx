@@ -5,6 +5,7 @@ import { FeatureSection } from "./FeatureSection";
 import { StepsSection } from "./StepsSection";
 import { ComparisonSection } from "./ComparisonSection";
 import { DecisionSignalsSection } from "./DecisionSignalsSection";
+import { DecisionChecklistSection } from "./DecisionChecklistSection";
 import { PricingSection } from "./PricingSection";
 import { FaqSection } from "./FaqSection";
 import { CtaSection } from "./CtaSection";
@@ -23,6 +24,7 @@ export function LandingContent() {
       <FeatureSection />
       <ComparisonSection />
       <DecisionSignalsSection />
+      <DecisionChecklistSection />
       <PricingSection />
       <FaqSection />
       <CtaSection />
