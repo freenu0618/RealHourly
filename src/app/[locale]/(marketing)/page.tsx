@@ -212,6 +212,48 @@ function buildJsonLd(locale: string) {
         },
       ];
 
+  const routeItems = isKo
+    ? [
+        {
+          name: "견적 전 실제 시급 기준선 계산",
+          url: `${siteUrl}/${locale}/calculator`,
+          description:
+            "계약 금액, 수수료, 세금, 비청구 시간을 넣어 실제 시급과 최소 수주 단가를 먼저 확인합니다.",
+        },
+        {
+          name: "시간 기록·스코프 크립 대응 흐름 확인",
+          url: `${siteUrl}/${locale}/features`,
+          description:
+            "자연어 시간 기록, 수익성 대시보드, 스코프 크립 알림, 클라이언트 리포트 흐름을 비교합니다.",
+        },
+        {
+          name: "도입 전 문의와 파트너십 상담",
+          url: `${siteUrl}/${locale}/contact`,
+          description:
+            "팀 도입, 기능 제안, 결제·파트너십 질문은 공식 문의 페이지에서 확인합니다.",
+        },
+      ]
+    : [
+        {
+          name: "Estimate a real-rate baseline before quoting",
+          url: `${siteUrl}/${locale}/calculator`,
+          description:
+            "Enter project fee, platform fees, taxes, and unbilled work to check real hourly rate and minimum quote.",
+        },
+        {
+          name: "Review the time logging and scope-creep workflow",
+          url: `${siteUrl}/${locale}/features`,
+          description:
+            "Compare natural-language time logs, profitability dashboards, scope creep alerts, and client reports.",
+        },
+        {
+          name: "Ask adoption, billing, or partnership questions",
+          url: `${siteUrl}/${locale}/contact`,
+          description:
+            "Use the official contact page for team adoption, feature suggestions, billing, or partnership questions.",
+        },
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -328,6 +370,22 @@ function buildJsonLd(locale: string) {
         "@type": "HowToStep",
         position: index + 1,
         ...step,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo
+        ? "RealHourly 상황별 공개 페이지 안내"
+        : "RealHourly public page routing by intent",
+      description: isKo
+        ? "견적 전 계산, 기능 비교, 도입 문의처럼 프리랜서의 의도에 맞는 공개 페이지를 안내합니다."
+        : "Guides freelancers to the right public page for pre-quote calculation, feature comparison, or adoption questions.",
+      numberOfItems: routeItems.length,
+      itemListElement: routeItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        ...item,
       })),
     },
     {
