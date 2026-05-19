@@ -904,7 +904,13 @@
     "_pricingLegacyRemoved": true,
     "demoTitle": "실제로 이렇게 보여요",
     "demoSubtitle": "RealHourly 대시보드에서 프로젝트 수익성을 한눈에 확인하세요",
-    "demoCta": "직접 사용해보기 →"
+    "demoCta": "직접 사용해보기 →",
+    "calcAdvancedShow": "고급 입력 열기",
+    "calcAdvancedHide": "고급 입력 닫기",
+    "calcMeetingHoursLabel": "비청구 미팅 시간",
+    "calcAdminHoursLabel": "메시지·관리 시간",
+    "calcRevisionTimeLabel": "수정 작업 비율",
+    "calcRevisionTimeSuffix": "예상 작업 시간 대비"
   },
   "profitabilityPreview": {
     "title": "수익성 프리뷰",

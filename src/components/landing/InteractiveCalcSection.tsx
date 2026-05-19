@@ -39,7 +39,7 @@ export function InteractiveCalcSection() {
   const [revisionPercent, setRevisionPercent] = useState(15);
 
   const {
-    gross, feeAmount, taxAmount, totalCost, net,
+    feeAmount, taxAmount, net,
     nominalRate, realRate, lossPercent,
     netPercent, feePercent, taxPercent, toolPercent,
   } = useMemo(() => {
@@ -59,7 +59,7 @@ export function InteractiveCalcSection() {
     const taxPercent = gross > 0 ? (taxAmount / gross) * 100 : 0;
     const toolPercent = gross > 0 ? (toolCost / gross) * 100 : 0;
 
-    return { gross, feeAmount, taxAmount, totalCost, net, nominalRate, realRate, lossPercent, netPercent, feePercent, taxPercent, toolPercent };
+    return { feeAmount, taxAmount, net, nominalRate, realRate, lossPercent, netPercent, feePercent, taxPercent, toolPercent };
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent, showAdvanced]);
 
   function handlePresetClick(preset: (typeof PLATFORM_PRESETS)[number]) {
@@ -164,7 +164,7 @@ export function InteractiveCalcSection() {
                 className="gap-1 text-xs"
               >
                 {showAdvanced ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                {showAdvanced ? "Hide advanced options" : "Show advanced options"}
+                {showAdvanced ? t("calcAdvancedHide") : t("calcAdvancedShow")}
               </Button>
             </div>
 
@@ -203,7 +203,7 @@ export function InteractiveCalcSection() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Meeting hours / week <span className="text-muted-foreground">({meetingHours}h)</span>
+                    {t("calcMeetingHoursLabel")} <span className="text-muted-foreground">({meetingHours}h)</span>
                   </label>
                   <input
                     type="number"
@@ -212,11 +212,12 @@ export function InteractiveCalcSection() {
                     min={0}
                     step={0.5}
                     className={ni}
+                    aria-label={t("calcMeetingHoursLabel")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Email / admin hours / week <span className="text-muted-foreground">({emailHours}h)</span>
+                    {t("calcAdminHoursLabel")} <span className="text-muted-foreground">({emailHours}h)</span>
                   </label>
                   <input
                     type="number"
@@ -225,11 +226,12 @@ export function InteractiveCalcSection() {
                     min={0}
                     step={0.5}
                     className={ni}
+                    aria-label={t("calcAdminHoursLabel")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Revision time <span className="text-muted-foreground">({revisionPercent}% of billed)</span>
+                    {t("calcRevisionTimeLabel")} <span className="text-muted-foreground">({revisionPercent}% · {t("calcRevisionTimeSuffix")})</span>
                   </label>
                   <Slider
                     value={[revisionPercent]}
@@ -237,6 +239,7 @@ export function InteractiveCalcSection() {
                     min={0}
                     max={60}
                     step={1}
+                    aria-label={t("calcRevisionTimeLabel")}
                   />
                 </div>
               </div>

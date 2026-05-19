@@ -904,7 +904,13 @@
     "_pricingLegacyRemoved": true,
     "demoTitle": "See it in action",
     "demoSubtitle": "Check project profitability at a glance on your RealHourly dashboard",
-    "demoCta": "Try it yourself →"
+    "demoCta": "Try it yourself →",
+    "calcAdvancedShow": "Show advanced inputs",
+    "calcAdvancedHide": "Hide advanced inputs",
+    "calcMeetingHoursLabel": "Unbilled meeting hours",
+    "calcAdminHoursLabel": "Message and admin hours",
+    "calcRevisionTimeLabel": "Revision time ratio",
+    "calcRevisionTimeSuffix": "of expected work hours"
   },
   "profitabilityPreview": {
     "title": "Profitability Preview",
