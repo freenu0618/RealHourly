@@ -202,9 +202,9 @@ export default async function FeaturesPage({ params }: Props) {
         />
       ))}
       <LandingNav />
-      <div className="pt-20">
+      <main id="main-content" tabIndex={-1} className="pt-20">
         <PublicGuideContent />
-      </div>
+      </main>
       <LandingFooter />
     </>
   );

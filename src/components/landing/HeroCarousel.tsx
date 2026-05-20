@@ -67,7 +67,10 @@ function CarouselColumn({ children, direction }: { children: ReactNode[]; direct
 
 export function HeroCarousel() {
   return (
-    <div className="absolute inset-0 overflow-hidden opacity-40 dark:opacity-25">
+    <div
+      className="absolute inset-0 overflow-hidden opacity-40 dark:opacity-25"
+      aria-hidden="true"
+    >
       {/* Mobile: 2 columns */}
       <div className="flex h-full gap-3 px-3 md:hidden">
         {COLUMNS.slice(0, 2).map((col, i) => (

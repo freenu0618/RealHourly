@@ -19,17 +19,19 @@ export function LandingContent() {
   return (
     <>
       <LandingNav />
-      <HeroSection />
-      <InteractiveCalcSection />
-      <StepsSection />
-      <FeatureSection />
-      <ComparisonSection />
-      <DecisionSignalsSection />
-      <DecisionChecklistSection />
-      <CalculationDisclosureSection />
-      <PricingSection />
-      <FaqSection />
-      <CtaSection />
+      <main id="main-content" tabIndex={-1}>
+        <HeroSection />
+        <InteractiveCalcSection />
+        <StepsSection />
+        <FeatureSection />
+        <ComparisonSection />
+        <DecisionSignalsSection />
+        <DecisionChecklistSection />
+        <CalculationDisclosureSection />
+        <PricingSection />
+        <FaqSection />
+        <CtaSection />
+      </main>
       <LandingFooter />
     </>
   );

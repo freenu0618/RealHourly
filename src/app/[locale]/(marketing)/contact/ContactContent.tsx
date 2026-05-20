@@ -59,7 +59,7 @@ export default function ContactContent() {
     <div className="min-h-screen flex flex-col">
       <LandingNav />
 
-      <main className="flex-1 py-16 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold tracking-tight mb-4">
