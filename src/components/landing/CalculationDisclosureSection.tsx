@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { AlertTriangle, CheckCircle2, ListChecks } from "lucide-react";
 import { FadeIn } from "@/components/ui/fade-in";
 
@@ -22,6 +23,27 @@ const columns = [
   },
 ] as const;
 
+const answerRoutes = [
+  {
+    labelKey: "answerRoute1Label",
+    titleKey: "answerRoute1Title",
+    bodyKey: "answerRoute1Body",
+    href: "/calculator",
+  },
+  {
+    labelKey: "answerRoute2Label",
+    titleKey: "answerRoute2Title",
+    bodyKey: "answerRoute2Body",
+    href: "/features",
+  },
+  {
+    labelKey: "answerRoute3Label",
+    titleKey: "answerRoute3Title",
+    bodyKey: "answerRoute3Body",
+    href: "/contact",
+  },
+] as const;
+
 export function CalculationDisclosureSection() {
   const t = useTranslations("landing");
 
@@ -38,6 +60,42 @@ export function CalculationDisclosureSection() {
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
             {t("calcDisclosureSubtitle")}
           </p>
+        </div>
+      </FadeIn>
+
+      <FadeIn>
+        <div className="mx-auto mb-6 max-w-5xl rounded-2xl border border-primary/15 bg-primary/5 p-5 shadow-sm sm:p-6">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                {t("answerSummaryEyebrow")}
+              </p>
+              <h3 className="mt-2 text-lg font-bold">{t("answerSummaryTitle")}</h3>
+            </div>
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+              {t("answerSummarySubtitle")}
+            </p>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            {answerRoutes.map((route) => (
+              <Link
+                key={route.href}
+                href={route.href}
+                className="group rounded-xl border bg-background/80 p-4 transition hover:border-primary/40 hover:bg-background hover:shadow-md"
+                aria-label={`${t(route.labelKey)}: ${t(route.titleKey)}`}
+              >
+                <p className="text-xs font-semibold text-primary">{t(route.labelKey)}</p>
+                <h4 className="mt-2 text-sm font-bold">{t(route.titleKey)}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {t(route.bodyKey)}
+                </p>
+                <span className="mt-3 inline-flex text-sm font-semibold text-primary group-hover:underline">
+                  {t("answerRouteCta")}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </FadeIn>
 
