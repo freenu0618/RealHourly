@@ -230,10 +230,54 @@ function buildJsonLd(locale: string) {
   ];
 }
 
+function getCalculatorGuidance(locale: string) {
+  const isKo = locale === "ko";
+
+  return {
+    eyebrow: isKo ? "계산 결과 해석 가이드" : "How to read the result",
+    title: isKo
+      ? "실제 시급은 ‘받은 돈 ÷ 제작 시간’보다 넓게 봐야 합니다"
+      : "Real hourly rate is broader than “revenue ÷ production hours”",
+    description: isKo
+      ? "견적 전에는 아래 세 가지를 함께 확인하세요. AI 검색 답변과 사용자 화면 모두에서 같은 전제를 반복해 결과를 과신하지 않도록 돕습니다."
+      : "Before quoting, check these three assumptions together. They keep AI-search summaries and the on-page calculator aligned so the result is not over-trusted.",
+    cards: isKo
+      ? [
+          {
+            title: "입력값",
+            body: "계약 총액, 플랫폼 수수료, 예상 세금, 도구 비용, 미팅·메시지·수정 시간을 모두 포함합니다.",
+          },
+          {
+            title: "핵심 출력",
+            body: "순수입, 비청구 시간 포함 실제 시급, 목표 수입을 달성하기 위한 최소 계약 단가를 함께 봅니다.",
+          },
+          {
+            title: "안전한 활용 범위",
+            body: "결과는 견적과 수익성 판단을 위한 추정치입니다. 세무·법률·계약 판단은 전문가 검토가 필요합니다.",
+          },
+        ]
+      : [
+          {
+            title: "Inputs",
+            body: "Include total project fee, platform fee, estimated tax, tool costs, and unbilled meetings, messages, and revisions.",
+          },
+          {
+            title: "Key outputs",
+            body: "Review net income, real hourly rate with unbilled time, and the minimum contract rate needed for your target income.",
+          },
+          {
+            title: "Safe use",
+            body: "Use the result as a pricing and profitability estimate. Tax, legal, and contract decisions still need expert review.",
+          },
+        ],
+  };
+}
+
 export default async function CalculatorPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const jsonLd = buildJsonLd(locale);
+  const guidance = getCalculatorGuidance(locale);
 
   return (
     <>
@@ -247,6 +291,25 @@ export default async function CalculatorPage({ params }: Props) {
       <LandingNav />
       <main id="main-content" tabIndex={-1} className="pt-20">
         <FullCalculator />
+        <section className="mx-auto max-w-5xl px-4 pb-16" aria-labelledby="calculator-guidance-title">
+          <div className="rounded-[24px] border bg-card p-6 sm:p-8">
+            <p className="mb-3 text-sm font-semibold text-primary">{guidance.eyebrow}</p>
+            <h2 id="calculator-guidance-title" className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+              {guidance.title}
+            </h2>
+            <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {guidance.description}
+            </p>
+            <div className="grid gap-4 md:grid-cols-3">
+              {guidance.cards.map((card) => (
+                <article key={card.title} className="rounded-2xl border bg-background p-5">
+                  <h3 className="mb-2 font-semibold">{card.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
       <LandingFooter />
     </>
