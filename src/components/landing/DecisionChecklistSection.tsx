@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { FadeIn } from "@/components/ui/fade-in";
 
