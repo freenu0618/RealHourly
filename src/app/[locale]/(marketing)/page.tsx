@@ -103,6 +103,12 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
+  const dateModified = "2026-05-26";
+  const publicDecisionLinks = [
+    `${siteUrl}/${locale}/calculator`,
+    `${siteUrl}/${locale}/features`,
+    `${siteUrl}/${locale}/contact`,
+  ];
 
   const faqs = isKo
     ? [
@@ -266,6 +272,8 @@ function buildJsonLd(locale: string) {
         : "Landing page for freelancers who need to judge real hourly rate, hidden costs, unbilled time, and scope creep risk before and during projects.",
       url: `${siteUrl}/${locale}`,
       inLanguage: language,
+      dateModified,
+      significantLink: publicDecisionLinks,
       isPartOf: {
         "@type": "WebSite",
         name: "RealHourly",
@@ -306,9 +314,15 @@ function buildJsonLd(locale: string) {
       operatingSystem: "Web",
       url: siteUrl,
       inLanguage: language,
+      dateModified,
       description: isKo
         ? "AI 기반 프리랜서 수익 분석 대시보드. 숨겨진 비용을 차감한 실제 시급을 계산합니다."
         : "AI-powered freelancer revenue analytics dashboard. Calculate your real hourly rate after hidden costs.",
+      publisher: {
+        "@type": "Organization",
+        name: "RealHourly",
+        url: siteUrl,
+      },
       audience: {
         "@type": "Audience",
         audienceType: isKo
@@ -360,6 +374,7 @@ function buildJsonLd(locale: string) {
         : "A four-step workflow for checking fees, taxes, unbilled time, and scope creep risk with RealHourly.",
       totalTime: "PT3M",
       inLanguage: language,
+      dateModified,
       tool: [
         {
           "@type": "HowToTool",
@@ -382,6 +397,7 @@ function buildJsonLd(locale: string) {
         ? "견적 전 계산, 기능 비교, 도입 문의처럼 프리랜서의 의도에 맞는 공개 페이지를 안내합니다."
         : "Guides freelancers to the right public page for pre-quote calculation, feature comparison, or adoption questions.",
       numberOfItems: routeItems.length,
+      dateModified,
       itemListElement: routeItems.map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -391,6 +407,8 @@ function buildJsonLd(locale: string) {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      inLanguage: language,
+      dateModified,
       mainEntity: faqs.map((f) => ({
         "@type": "Question",
         name: f.q,
@@ -411,6 +429,7 @@ function buildJsonLd(locale: string) {
         : "AI revenue analytics tool for freelancers",
       areaServed: "Worldwide",
       availableLanguage: ["Korean", "English"],
+      dateModified,
       contactPoint: {
         "@type": "ContactPoint",
         email: "support@real-hourly.com",
@@ -439,6 +458,8 @@ function buildJsonLd(locale: string) {
       name: "RealHourly",
       url: siteUrl,
       inLanguage: ["ko-KR", "en-US"],
+      dateModified,
+      significantLink: publicDecisionLinks,
       about: isKo
         ? [
             "프리랜서 실제 시급 계산",
