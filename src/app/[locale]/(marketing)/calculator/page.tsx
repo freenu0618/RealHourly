@@ -54,6 +54,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
+  const dateModified = "2026-05-27";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -70,12 +71,28 @@ function buildJsonLd(locale: string) {
       description: calculatorDescription,
       url: `${siteUrl}/${locale}/calculator`,
       inLanguage: isKo ? "ko-KR" : "en-US",
+      dateModified,
       applicationCategory: "FinanceApplication",
       operatingSystem: "Web",
       isAccessibleForFree: true,
       keywords: isKo
         ? "프리랜서 실제 시급 계산기, 프로젝트 단가 계산, 플랫폼 수수료, 세금, 비청구 시간, 최소 수주 단가"
         : "freelancer hourly rate calculator, project pricing, platform fees, taxes, unbilled time, minimum freelance rate",
+      about: isKo
+        ? [
+            "프리랜서 실제 시급",
+            "고정가 프로젝트 수익성",
+            "비청구 시간",
+            "플랫폼 수수료",
+            "최소 수주 단가",
+          ]
+        : [
+            "freelancer real hourly rate",
+            "fixed-fee project profitability",
+            "unbilled time",
+            "platform fees",
+            "minimum project quote",
+          ],
       featureList: isKo
         ? [
             "프로젝트 총액 기반 실제 시급 계산",
@@ -105,6 +122,14 @@ function buildJsonLd(locale: string) {
         name: "RealHourly",
         url: siteUrl,
       },
+      mainEntityOfPage: `${siteUrl}/${locale}/calculator`,
+      potentialAction: {
+        "@type": "UseAction",
+        name: isKo
+          ? "비청구 시간을 포함한 실제 시급 계산"
+          : "Calculate real hourly rate including unbilled time",
+        target: `${siteUrl}/${locale}/calculator`,
+      },
     },
     {
       "@context": "https://schema.org",
@@ -114,6 +139,7 @@ function buildJsonLd(locale: string) {
         : "How to calculate your real freelance hourly rate",
       description: calculatorDescription,
       totalTime: "PT3M",
+      dateModified,
       tool: [
         {
           "@type": "HowToTool",
@@ -166,6 +192,7 @@ function buildJsonLd(locale: string) {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      dateModified,
       mainEntity: (isKo
         ? [
             {
