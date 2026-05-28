@@ -54,7 +54,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-05-27";
+  const dateModified = "2026-05-29";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -62,6 +62,25 @@ function buildJsonLd(locale: string) {
   const calculatorDescription = isKo
     ? "플랫폼 수수료, 세금, 비청구 시간을 반영한 실제 시급 계산기"
     : "Calculate your real hourly rate after platform fees, taxes, and unbilled time";
+  const inputChecklist = isKo
+    ? [
+        ["계약 총액", "클라이언트와 합의한 고정가 프로젝트 금액 또는 예상 총매출"],
+        ["플랫폼 수수료", "Upwork, Fiverr, 크몽 등 마켓플레이스 또는 결제 수수료"],
+        ["예상 세금률", "거주지와 계약 조건에 맞춰 보수적으로 입력하는 세금 추정치"],
+        ["도구·외주 비용", "구독 도구, 폰트·소스 구매, 외주·하청 비용처럼 프로젝트별로 빠지는 비용"],
+        ["제작 시간", "디자인, 개발, 번역, 집필 등 직접 산출물을 만드는 청구 가능 작업 시간"],
+        ["비청구 시간", "견적, 미팅, 메시지, 리서치, QA, 수정, 관리처럼 실제로 쓰지만 청구에서 빠지기 쉬운 시간"],
+        ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
+      ]
+    : [
+        ["Gross project fee", "The fixed project amount or expected total revenue agreed with the client"],
+        ["Platform fee", "Marketplace or payment fees from Upwork, Fiverr, local platforms, or processors"],
+        ["Estimated tax rate", "A conservative tax estimate based on the freelancer's location and contract context"],
+        ["Tool and subcontractor costs", "Project-specific subscriptions, assets, contractors, or specialist support"],
+        ["Production hours", "Billable work time spent creating the actual deliverable"],
+        ["Unbilled hours", "Quoting, meetings, messages, research, QA, revisions, and admin time that still reduce margin"],
+        ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
+      ];
 
   return [
     {
@@ -187,6 +206,24 @@ function buildJsonLd(locale: string) {
         "@type": "HowToStep",
         position: index + 1,
         ...step,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo
+        ? "프리랜서 실제 시급 계산 입력 체크리스트"
+        : "Freelancer real-rate calculator input checklist",
+      description: isKo
+        ? "고정가 프로젝트나 플랫폼 계약을 수락하기 전에 실제 시급 계산에 넣어야 하는 핵심 입력값입니다."
+        : "Core inputs to check before accepting a fixed-fee or platform freelance project.",
+      dateModified,
+      numberOfItems: inputChecklist.length,
+      itemListElement: inputChecklist.map(([name, description], index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
+        description,
       })),
     },
     {
