@@ -14,7 +14,14 @@ const staticPages = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const entries: MetadataRoute.Sitemap = [];
+  const entries: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/llms.txt`,
+      lastModified: "2026-05-31",
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+  ];
   const lastModified = new Date().toISOString().split("T")[0];
 
   for (const locale of ["ko", "en"]) {

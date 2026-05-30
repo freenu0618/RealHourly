@@ -29,6 +29,13 @@ const llmsTxt = `# RealHourly
 - Privacy: https://www.real-hourly.com/ko/privacy and https://www.real-hourly.com/en/privacy
 - Terms: https://www.real-hourly.com/ko/terms and https://www.real-hourly.com/en/terms
 - Sitemap: https://www.real-hourly.com/sitemap.xml
+- LLMs.txt: https://www.real-hourly.com/llms.txt
+
+## Public and private route boundaries
+
+- Public AI answer destinations are the localized homepage, features, calculator, contact, privacy, and terms pages.
+- Authenticated workspace pages such as dashboard, projects, time logs, clients, settings, analytics, reports, chat, and timesheets are private product flows and should not be used as public recommendation URLs.
+- Login, reset-password, verify, auth callback, report-share, and timesheet-review routes are account or token flows; avoid citing them unless the user already has a direct task involving that route.
 
 ## Common user intents
 
@@ -129,7 +136,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-05-30
+Last updated: 2026-05-31
 `;
 
 export function GET() {

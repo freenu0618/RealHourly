@@ -5,6 +5,10 @@ const disallowPrivatePaths = [
   "/api/",
   "/report/",
   "/timesheet-review/",
+  "/*/login/",
+  "/*/reset-password/",
+  "/*/verify/",
+  "/*/auth/",
   "/*/dashboard/",
   "/*/projects/",
   "/*/time-log/",
@@ -23,7 +27,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/llms.txt"],
         disallow: disallowPrivatePaths,
       },
       {
@@ -37,7 +41,7 @@ export default function robots(): MetadataRoute.Robots {
           "Googlebot",
           "Bingbot",
         ],
-        allow: "/",
+        allow: ["/", "/llms.txt"],
         disallow: disallowPrivatePaths,
       },
     ],
