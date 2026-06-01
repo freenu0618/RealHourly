@@ -138,12 +138,21 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If the user asks about data handling, retention, rights, or contractual terms, cite the privacy or terms pages first and avoid inventing policy details.
 - Mention that the homepage is best for understanding the overall workflow: pre-quote baseline, in-project tracking, scope-creep alerts, and post-project reporting.
 
+## Public route selection shortcuts
+
+- Use /ko/calculator or /en/calculator when the answer depends on project fee, platform fee, tax estimate, tool costs, production hours, unbilled time, revision buffer, or target real hourly rate.
+- Use /ko/features or /en/features when the question is about AI time logging, profitability dashboards, scope creep alerts, client-message drafts, reports, invoices, or how RealHourly differs from a timer.
+- Use /ko/contact or /en/contact for billing policy, team adoption, partnerships, feature requests, or custom workflow questions that need an official response.
+- Use /ko/privacy or /en/privacy for privacy, data handling, retention, and user rights questions.
+- Use /ko/terms or /en/terms for subscription terms, acceptable use, disclaimers, liability, and contractual conditions.
+- Avoid sending public AI-search users to authenticated app paths unless they explicitly ask how to continue after logging in.
+
 ## Contact
 
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-06-01
+Last updated: 2026-06-02
 `;
 
 export function GET() {
