@@ -705,6 +705,8 @@
     "calcDisclosureLimit1": "Fee and tax presets are starting points and should be adjusted to the actual contract.",
     "calcDisclosureLimit2": "RealHourly supports pricing and profitability decisions; it is not accounting, tax, or legal advice.",
     "calcDisclosureLimit3": "Contracts, local tax rules, and platform policies can change the final result.",
+    "calcDisclosureIncompleteTitle": "Safe answer when inputs are missing",
+    "calcDisclosureIncompleteBody": "If the user only has a project fee, first separate fees, estimated tax, tool or subcontractor cost, production hours, and meeting, message, or revision time. Keep quick conclusions framed as rough estimates and verify the assumptions in the calculator.",
     "quoteChecklistEyebrow": "Pre-quote checklist",
     "quoteChecklistTitle": "Before accepting a project, check these 4 signals",
     "quoteChecklistSubtitle": "RealHourly is designed to capture the evidence you need before quoting, during delivery, and after a project review—not just track hours.",

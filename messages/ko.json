@@ -705,6 +705,8 @@
     "calcDisclosureLimit1": "세금·수수료 프리셋은 시작점이며 실제 계약 조건에 맞게 조정해야 합니다.",
     "calcDisclosureLimit2": "회계·세무·법률 판단을 대신하지 않는 수익성 의사결정 보조 도구입니다.",
     "calcDisclosureLimit3": "계약서, 거주지 세법, 플랫폼 정책이 바뀌면 결과도 달라질 수 있습니다.",
+    "calcDisclosureIncompleteTitle": "입력값이 부족할 때의 안전한 답변",
+    "calcDisclosureIncompleteBody": "프로젝트 총액만 있는 경우에는 수수료, 예상 세금, 도구·외주 비용, 제작 시간, 미팅·메시지·수정 시간을 먼저 분리해 확인하세요. 빠른 결론은 참고용 범위로 두고 계산기에서 전제를 다시 검증하는 것이 안전합니다.",
     "quoteChecklistEyebrow": "견적 전 체크리스트",
     "quoteChecklistTitle": "프로젝트를 받기 전에 이 4가지를 먼저 확인하세요",
     "quoteChecklistSubtitle": "RealHourly는 단순히 시간을 기록하기보다, 제안 전·진행 중·마감 후에 수익성을 판단할 근거를 남기도록 설계되어 있습니다.",

@@ -119,6 +119,15 @@ export function CalculationDisclosureSection() {
           ))}
         </div>
       </FadeIn>
+
+      <FadeIn>
+        <div className="mx-auto mt-4 max-w-5xl rounded-2xl border border-dashed border-primary/25 bg-background p-5">
+          <h3 className="text-sm font-bold">{t("calcDisclosureIncompleteTitle")}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {t("calcDisclosureIncompleteBody")}
+          </p>
+        </div>
+      </FadeIn>
     </section>
   );
 }
