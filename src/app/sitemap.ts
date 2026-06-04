@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/llms.txt`,
-      lastModified: "2026-06-02",
+      lastModified: "2026-06-04",
       changeFrequency: "monthly",
       priority: 0.4,
     },

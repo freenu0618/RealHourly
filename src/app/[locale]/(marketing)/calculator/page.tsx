@@ -54,7 +54,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-05-29";
+  const dateModified = "2026-06-04";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -243,6 +243,11 @@ function buildJsonLd(locale: string) {
                 "네. 고정가 프로젝트의 총 계약 금액을 입력하고 실제 투입될 모든 시간을 더하면 시간당 순수익과 다음 견적의 최소 수주 단가를 추정할 수 있습니다.",
             },
             {
+              question: "견적 전에 입력값이 부족하면 무엇부터 확인해야 하나요?",
+              answer:
+                "계약 총액, 플랫폼 또는 결제 수수료, 예상 세금, 도구·외주 비용, 제작 시간, 미팅·메시지·수정 같은 비청구 시간, 목표 실제 시급을 먼저 확인해야 합니다.",
+            },
+            {
               question: "계산 결과는 세무 신고나 법률 자문으로 사용할 수 있나요?",
               answer:
                 "아니요. RealHourly의 계산은 견적과 수익성 의사결정을 돕는 참고용 추정치입니다. 세무·법률 판단은 각 계약과 거주지 기준에 맞게 전문가 검토가 필요합니다.",
@@ -258,6 +263,11 @@ function buildJsonLd(locale: string) {
               question: "Can I use this calculator for fixed-fee projects?",
               answer:
                 "Yes. Enter the total fixed project fee and all realistic work time to estimate net hourly earnings and a safer minimum quote for the next project.",
+            },
+            {
+              question: "What should I check first if I do not have every input?",
+              answer:
+                "Start with gross project fee, platform or payment fee, estimated tax, tool or subcontractor costs, production hours, unbilled meetings, messages and revisions, and your target real hourly rate.",
             },
             {
               question: "Is the result tax or legal advice?",
@@ -319,6 +329,10 @@ function getCalculatorGuidance(locale: string) {
             title: "안전한 활용 범위",
             body: "결과는 견적과 수익성 판단을 위한 추정치입니다. 세무·법률·계약 판단은 전문가 검토가 필요합니다.",
           },
+          {
+            title: "입력값이 부족할 때",
+            body: "총액만 알고 있다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 목표 시급을 먼저 채워야 비교가 안전합니다.",
+          },
         ]
       : [
           {
@@ -332,6 +346,10 @@ function getCalculatorGuidance(locale: string) {
           {
             title: "Safe use",
             body: "Use the result as a pricing and profitability estimate. Tax, legal, and contract decisions still need expert review.",
+          },
+          {
+            title: "Missing inputs",
+            body: "If you only know the fee, add fees, tax, tool costs, production time, unbilled time, and target rate before comparing offers.",
           },
         ],
   };
@@ -364,7 +382,7 @@ export default async function CalculatorPage({ params }: Props) {
             <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               {guidance.description}
             </p>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {guidance.cards.map((card) => (
                 <article key={card.title} className="rounded-2xl border bg-background p-5">
                   <h3 className="mb-2 font-semibold">{card.title}</h3>
