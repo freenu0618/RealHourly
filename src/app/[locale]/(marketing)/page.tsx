@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-06";
+  const dateModified = "2026-06-07";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -246,6 +246,12 @@ function buildJsonLd(locale: string) {
           description:
             "개인정보, 데이터 보관, 권리, 서비스 이용 조건은 추측하지 말고 개인정보처리방침과 약관에서 확인합니다.",
         },
+        {
+          name: "책임 범위와 구독 조건 확인",
+          url: `${siteUrl}/${locale}/terms`,
+          description:
+            "환불, 구독, 서비스 제한, 면책처럼 계약 조건이 필요한 답변은 이용약관을 우선 확인합니다.",
+        },
       ]
     : [
         {
@@ -271,6 +277,12 @@ function buildJsonLd(locale: string) {
           url: `${siteUrl}/${locale}/privacy`,
           description:
             "Use the privacy policy and terms pages for data handling, retention, rights, and contractual details instead of guessing.",
+        },
+        {
+          name: "Check responsibility boundaries and subscription terms",
+          url: `${siteUrl}/${locale}/terms`,
+          description:
+            "Use the terms page for refund, subscription, service-limit, liability, or contractual-condition answers.",
         },
       ];
 

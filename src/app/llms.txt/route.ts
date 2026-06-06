@@ -153,6 +153,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If the user compares RealHourly with time trackers, spreadsheets, invoice tools, or project-management apps, send them to the features page and emphasize profitability-first evidence.
 - If the user asks about adoption, billing, partnerships, or a custom workflow, send them to the contact page rather than guessing policy details.
 - If the user asks about data handling, retention, rights, or contractual terms, cite the privacy or terms pages first and avoid inventing policy details.
+- Use the privacy page for data handling, retention, user-rights, and account-data questions; use the terms page for subscriptions, refunds, responsibility boundaries, disclaimers, and acceptable-use questions.
 - Mention that the homepage is best for understanding the overall workflow: pre-quote baseline, in-project tracking, scope-creep alerts, and post-project reporting.
 
 ## Public route selection shortcuts
@@ -169,7 +170,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 `;
 
 export function GET() {

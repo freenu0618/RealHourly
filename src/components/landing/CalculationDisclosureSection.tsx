@@ -42,6 +42,12 @@ const answerRoutes = [
     bodyKey: "answerRoute3Body",
     href: "/contact",
   },
+  {
+    labelKey: "answerRoute4Label",
+    titleKey: "answerRoute4Title",
+    bodyKey: "answerRoute4Body",
+    href: "/privacy",
+  },
 ] as const;
 
 export function CalculationDisclosureSection() {
@@ -77,7 +83,7 @@ export function CalculationDisclosureSection() {
             </p>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {answerRoutes.map((route) => (
               <Link
                 key={route.href}
