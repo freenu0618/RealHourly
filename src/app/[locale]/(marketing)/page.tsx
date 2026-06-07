@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-07";
+  const dateModified = "2026-06-08";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -340,6 +340,10 @@ function buildJsonLd(locale: string) {
       operatingSystem: "Web",
       url: siteUrl,
       inLanguage: language,
+      isAccessibleForFree: true,
+      applicationSubCategory: isKo
+        ? "프리랜서 단가·수익성 의사결정 도구"
+        : "Freelance pricing and profitability decision support",
       dateModified,
       description: isKo
         ? "AI 기반 프리랜서 수익 분석 대시보드. 숨겨진 비용을 차감한 실제 시급을 계산합니다."
