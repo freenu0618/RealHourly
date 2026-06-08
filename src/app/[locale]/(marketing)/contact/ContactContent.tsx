@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Mail, Send } from "lucide-react";
+import { Bug, CreditCard, Lightbulb, Mail, Send, Users } from "lucide-react";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,63 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const CONTACT_GUIDE = {
+  ko: {
+    title: "더 빠른 답변을 위한 문의 유형",
+    description:
+      "문의 내용을 아래 흐름에 맞춰 정리하면 담당자가 기능, 버그, 결제, 도입 질문을 더 정확히 확인할 수 있습니다.",
+    items: [
+      {
+        icon: Lightbulb,
+        title: "기능 제안",
+        body: "어떤 프리랜서 워크플로에서 필요한지와 기대하는 결과를 함께 적어주세요.",
+      },
+      {
+        icon: Bug,
+        title: "버그 신고",
+        body: "발생한 페이지, 브라우저, 입력값, 재현 단계를 포함하면 확인이 빨라집니다.",
+      },
+      {
+        icon: CreditCard,
+        title: "결제 문의",
+        body: "플랜, 영수증, 구독 상태처럼 확인이 필요한 항목을 구체적으로 남겨주세요.",
+      },
+      {
+        icon: Users,
+        title: "도입 상담",
+        body: "팀 규모, 프로젝트 방식, 필요한 리포트나 승인 흐름을 알려주세요.",
+      },
+    ],
+  },
+  en: {
+    title: "Inquiry types that help us answer faster",
+    description:
+      "Framing your note this way helps the team route feature, bug, billing, and adoption questions accurately.",
+    items: [
+      {
+        icon: Lightbulb,
+        title: "Feature requests",
+        body: "Share the freelance workflow, the pain point, and the outcome you expect.",
+      },
+      {
+        icon: Bug,
+        title: "Bug reports",
+        body: "Include the page, browser, inputs, and steps that reproduce the issue.",
+      },
+      {
+        icon: CreditCard,
+        title: "Billing questions",
+        body: "Mention the plan, receipt, subscription state, or policy detail to check.",
+      },
+      {
+        icon: Users,
+        title: "Adoption questions",
+        body: "Tell us your team size, project model, and reporting or approval needs.",
+      },
+    ],
+  },
+} as const;
+
 /**
  * Contact Page
  *
@@ -26,6 +83,7 @@ import {
 export default function ContactContent() {
   const t = useTranslations("contact");
   const locale = useLocale();
+  const guide = locale === "ko" ? CONTACT_GUIDE.ko : CONTACT_GUIDE.en;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -89,6 +147,34 @@ export default function ContactContent() {
               </div>
             </div>
           </div>
+
+          <section
+            aria-labelledby="contact-guide-title"
+            className="mb-8 rounded-lg border bg-muted/30 p-5"
+          >
+            <h2 id="contact-guide-title" className="text-lg font-semibold">
+              {guide.title}
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {guide.description}
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {guide.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article key={item.title} className="rounded-md border bg-background p-4">
+                    <div className="mb-3 flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Icon className="size-4" aria-hidden="true" />
+                    </div>
+                    <h3 className="text-sm font-semibold">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
