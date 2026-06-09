@@ -50,6 +50,15 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
+  const language = isKo ? "ko-KR" : "en-US";
+  const dateModified = "2026-06-10";
+  const publicDecisionLinks = [
+    `${siteUrl}/${locale}/calculator`,
+    `${siteUrl}/${locale}/features`,
+    `${siteUrl}/${locale}/contact`,
+    `${siteUrl}/${locale}/privacy`,
+    `${siteUrl}/${locale}/terms`,
+  ];
   const featureIds = [
     "nlp-time-log",
     "real-rate",
@@ -136,12 +145,22 @@ function buildJsonLd(locale: string) {
         ? "프리랜서를 위한 AI 수익 분석 도구의 7가지 핵심 기능"
         : "7 key features of AI revenue analytics tool for freelancers",
       url: `${siteUrl}/${locale}/features`,
+      inLanguage: language,
+      dateModified,
+      significantLink: publicDecisionLinks,
       isPartOf: {
         "@type": "WebSite",
         name: "RealHourly",
         url: siteUrl,
       },
       about: featureItems.map(({ item }) => item),
+      potentialAction: {
+        "@type": "UseAction",
+        name: isKo
+          ? "기능 확인 후 실제 시급 계산기로 이동"
+          : "Review features and open the real-rate calculator",
+        target: `${siteUrl}/${locale}/calculator`,
+      },
     },
     {
       "@context": "https://schema.org",
@@ -151,12 +170,16 @@ function buildJsonLd(locale: string) {
         ? "RealHourly가 프리랜서 수익 관리를 돕는 7가지 기능 요약"
         : "Seven RealHourly features that support freelancer revenue management",
       url: `${siteUrl}/${locale}/features`,
+      inLanguage: language,
+      dateModified,
       numberOfItems: featureItems.length,
       itemListElement: featureItems,
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      inLanguage: language,
+      dateModified,
       mainEntity: featureFaqs.map((item) => ({
         "@type": "Question",
         name: item.question,
@@ -165,6 +188,22 @@ function buildJsonLd(locale: string) {
           text: item.answer,
         },
       })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "RealHourly",
+      url: siteUrl,
+      inLanguage: ["ko-KR", "en-US"],
+      dateModified,
+      significantLink: publicDecisionLinks,
+      potentialAction: {
+        "@type": "UseAction",
+        name: isKo
+          ? "무료 실제 시급 계산기 사용"
+          : "Use the free real hourly rate calculator",
+        target: `${siteUrl}/${locale}/calculator`,
+      },
     },
     {
       "@context": "https://schema.org",
