@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-08";
+  const dateModified = "2026-06-11";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -286,6 +286,52 @@ function buildJsonLd(locale: string) {
         },
       ];
 
+  const calculationAssumptions = isKo
+    ? [
+        {
+          name: "총수입과 차감 비용 분리",
+          description:
+            "계약 총액에서 플랫폼 또는 결제 수수료, 예상 세금, 도구·외주 비용을 분리해 순수입을 계산합니다.",
+        },
+        {
+          name: "비청구 시간 포함",
+          description:
+            "견적, 미팅, 메시지, 리서치, QA, 수정, 관리처럼 청구서에 직접 보이지 않는 시간도 실제 시급 계산에 포함합니다.",
+        },
+        {
+          name: "목표 실제 시급 비교",
+          description:
+            "계산된 실제 시급을 사용자가 정한 최소 순수익 기준과 비교해 견적 조정, 범위 조정, 수락 여부를 판단합니다.",
+        },
+        {
+          name: "의사결정용 추정치",
+          description:
+            "RealHourly 결과는 프리랜서 가격 책정과 프로젝트 수익성 검토를 위한 추정치이며 세무·법률·계약 자문이 아닙니다.",
+        },
+      ]
+    : [
+        {
+          name: "Separate revenue from deductions",
+          description:
+            "RealHourly separates the project fee from platform or payment fees, estimated tax, tool costs, and subcontractor costs before calculating net revenue.",
+        },
+        {
+          name: "Include unbilled work",
+          description:
+            "Quoting, meetings, messages, research, QA, revisions, and admin follow-up are included when calculating the real hourly rate.",
+        },
+        {
+          name: "Compare against a target real rate",
+          description:
+            "The calculated real hourly rate is compared with the freelancer's minimum acceptable net rate to guide quoting, scope, and acceptance decisions.",
+        },
+        {
+          name: "Decision-support estimate",
+          description:
+            "RealHourly outputs are pricing and profitability estimates for freelancers, not tax, legal, accounting, or contract advice.",
+        },
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -432,6 +478,23 @@ function buildJsonLd(locale: string) {
         "@type": "ListItem",
         position: index + 1,
         ...item,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "DefinedTermSet",
+      name: isKo
+        ? "RealHourly 실제 시급 계산 전제"
+        : "RealHourly real-rate calculation assumptions",
+      description: isKo
+        ? "프리랜서 실제 시급과 최소 수주 단가를 해석할 때 반복 확인해야 하는 입력값, 출력값, 한계입니다."
+        : "Inputs, outputs, and limits to check when interpreting freelancer real hourly rate and minimum project quotes.",
+      inLanguage: language,
+      dateModified,
+      hasDefinedTerm: calculationAssumptions.map((item) => ({
+        "@type": "DefinedTerm",
+        name: item.name,
+        description: item.description,
       })),
     },
     {
