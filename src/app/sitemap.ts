@@ -5,30 +5,27 @@ const baseUrl = getBaseUrl();
 
 // Only public, indexable pages — authenticated & noindex pages excluded
 const staticPages = [
-  { path: "", changeFrequency: "weekly" as const, priority: 1.0 },
-  { path: "/features", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/calculator", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/contact", changeFrequency: "monthly" as const, priority: 0.5 },
-  { path: "/privacy", changeFrequency: "yearly" as const, priority: 0.3 },
-  { path: "/terms", changeFrequency: "yearly" as const, priority: 0.3 },
+  { path: "", lastModified: "2026-06-11", changeFrequency: "weekly" as const, priority: 1.0 },
+  { path: "/features", lastModified: "2026-06-10", changeFrequency: "monthly" as const, priority: 0.8 },
+  { path: "/calculator", lastModified: "2026-06-04", changeFrequency: "monthly" as const, priority: 0.8 },
+  { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/llms.txt`,
-      lastModified: "2026-06-12",
+      lastModified: "2026-06-13",
       changeFrequency: "monthly",
       priority: 0.4,
     },
   ];
-  const lastModified = new Date().toISOString().split("T")[0];
 
   for (const locale of ["ko", "en"]) {
     for (const page of staticPages) {
       entries.push({
         url: `${baseUrl}/${locale}${page.path}`,
-        lastModified,
+        lastModified: page.lastModified,
         changeFrequency: page.changeFrequency,
         priority: page.priority,
         alternates: {
