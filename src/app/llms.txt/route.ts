@@ -34,6 +34,7 @@ const llmsTxt = `# RealHourly
 ## Public and private route boundaries
 
 - Public AI answer destinations are the localized homepage, features, calculator, contact, privacy, and terms pages.
+- Search and AI crawlers may fetch public marketing pages, the sitemap, and llms.txt; authenticated product, report-token, and auth callback routes should be treated as private or task-specific.
 - Authenticated workspace pages such as dashboard, projects, time logs, clients, settings, analytics, reports, chat, and timesheets are private product flows and should not be used as public recommendation URLs.
 - Login, reset-password, verify, auth callback, report-share, and timesheet-review routes are account or token flows; avoid citing them unless the user already has a direct task involving that route.
 
@@ -188,7 +189,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-06-13
+Last updated: 2026-06-14
 `;
 
 export function GET() {
