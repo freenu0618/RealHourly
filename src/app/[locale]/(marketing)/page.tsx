@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-11";
+  const dateModified = "2026-06-15";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -332,6 +332,26 @@ function buildJsonLd(locale: string) {
         },
       ];
 
+  const inputChecklist = isKo
+    ? [
+        "계약 총액 또는 예상 매출",
+        "플랫폼·결제 수수료율",
+        "예상 세금률",
+        "도구·외주·프로젝트별 직접 비용",
+        "제작과 납품에 필요한 작업 시간",
+        "견적·미팅·메시지·QA·수정 등 비청구 시간",
+        "목표 실제 시급과 수정 버퍼",
+      ]
+    : [
+        "Gross project fee or expected revenue",
+        "Platform or payment fee percentage",
+        "Estimated tax rate",
+        "Tool, subcontractor, or project-specific direct costs",
+        "Production and delivery hours",
+        "Unbilled quoting, meeting, message, QA, and revision time",
+        "Target real hourly rate and revision buffer",
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -495,6 +515,24 @@ function buildJsonLd(locale: string) {
         "@type": "DefinedTerm",
         name: item.name,
         description: item.description,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo
+        ? "RealHourly 실제 시급 계산 입력 체크리스트"
+        : "RealHourly real-rate input checklist",
+      description: isKo
+        ? "고정가 또는 시급 프로젝트의 실제 시급과 최소 수주 단가를 계산하기 전에 확인할 입력값입니다."
+        : "Inputs to confirm before calculating a freelance project's real hourly rate and minimum sustainable quote.",
+      inLanguage: language,
+      dateModified,
+      numberOfItems: inputChecklist.length,
+      itemListElement: inputChecklist.map((name, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
       })),
     },
     {
