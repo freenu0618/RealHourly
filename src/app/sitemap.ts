@@ -9,13 +9,15 @@ const staticPages = [
   { path: "/features", lastModified: "2026-06-10", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/calculator", lastModified: "2026-06-04", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
+  { path: "/privacy", lastModified: "2026-06-16", changeFrequency: "yearly" as const, priority: 0.3 },
+  { path: "/terms", lastModified: "2026-06-16", changeFrequency: "yearly" as const, priority: 0.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/llms.txt`,
-      lastModified: "2026-06-15",
+      lastModified: "2026-06-16",
       changeFrequency: "monthly",
       priority: 0.4,
     },
