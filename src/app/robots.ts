@@ -33,11 +33,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: [
           "GPTBot",
+          "OAI-SearchBot",
           "ChatGPT-User",
           "Claude-Web",
           "ClaudeBot",
+          "Claude-SearchBot",
           "Anthropic-AI",
           "PerplexityBot",
+          "Perplexity-User",
           "Google-Extended",
           "Googlebot",
           "Bingbot",
