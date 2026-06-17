@@ -1,4 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getAlternates, getOpenGraph, getTwitter } from "@/lib/seo/metadata";
 import { FullCalculator } from "@/components/landing/FullCalculator";
 import { LandingNav } from "@/components/landing/LandingNav";
@@ -54,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-06-04";
+  const dateModified = "2026-06-18";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -141,6 +142,12 @@ function buildJsonLd(locale: string) {
         name: "RealHourly",
         url: siteUrl,
       },
+      significantLink: [
+        `${siteUrl}/${locale}/features`,
+        `${siteUrl}/${locale}/contact`,
+        `${siteUrl}/${locale}/privacy`,
+        `${siteUrl}/${locale}/terms`,
+      ],
       mainEntityOfPage: `${siteUrl}/${locale}/calculator`,
       potentialAction: {
         "@type": "UseAction",
@@ -352,6 +359,35 @@ function getCalculatorGuidance(locale: string) {
             body: "If you only know the fee, add fees, tax, tool costs, production time, unbilled time, and target rate before comparing offers.",
           },
         ],
+    nextSteps: isKo
+      ? [
+          {
+            label: "계산 후 수익성이 낮다면",
+            title: "기록·알림 흐름 확인",
+            body: "진행 중 실제 시간이 늘어날 때 스코프 크립 신호와 클라이언트 설명 근거를 어떻게 남기는지 확인하세요.",
+            href: "/features",
+          },
+          {
+            label: "정책·도입 문의가 필요하다면",
+            title: "공식 문의로 연결",
+            body: "팀 도입, 결제, 맞춤 워크플로우처럼 추측하면 안 되는 질문은 문의 경로에서 확인하세요.",
+            href: "/contact",
+          },
+        ]
+      : [
+          {
+            label: "If the quote looks weak",
+            title: "Review the logging and alert workflow",
+            body: "See how RealHourly keeps evidence when actual time, revisions, and scope risk grow during delivery.",
+            href: "/features",
+          },
+          {
+            label: "If policy or adoption is unclear",
+            title: "Use the official contact path",
+            body: "Route team adoption, billing, and custom workflow questions to contact instead of guessing.",
+            href: "/contact",
+          },
+        ],
   };
 }
 
@@ -388,6 +424,20 @@ export default async function CalculatorPage({ params }: Props) {
                   <h3 className="mb-2 font-semibold">{card.title}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{card.body}</p>
                 </article>
+              ))}
+            </div>
+            <div className="mt-6 grid gap-3 border-t pt-5 sm:grid-cols-2">
+              {guidance.nextSteps.map((step) => (
+                <Link
+                  key={step.href}
+                  href={step.href}
+                  className="group rounded-2xl border border-primary/15 bg-primary/5 p-4 transition hover:border-primary/35 hover:bg-primary/10"
+                  aria-label={`${step.label}: ${step.title}`}
+                >
+                  <p className="text-xs font-semibold text-primary">{step.label}</p>
+                  <h3 className="mt-2 text-sm font-bold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
+                </Link>
               ))}
             </div>
           </div>
