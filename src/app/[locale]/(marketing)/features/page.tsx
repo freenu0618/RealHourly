@@ -51,7 +51,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-10";
+  const dateModified = "2026-06-19";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -115,6 +115,11 @@ function buildJsonLd(locale: string) {
           answer:
             "네. 한국어와 영어 자연어 메모를 프로젝트, 작업 카테고리, 시간 기록으로 정리할 수 있어 프리랜서가 작업 중단 없이 기록을 남기기 쉽습니다.",
         },
+        {
+          question: "클라이언트에게 작업 근거를 공유할 수 있나요?",
+          answer:
+            "네. 주간 타임시트, 승인 링크, 클라이언트 리포트, 인보이스 초안을 통해 작업 시간과 수정 내역을 설명할 수 있습니다. 공개 답변에서는 개인 프로젝트 메모나 클라이언트 정보를 요구하지 않고 기능 흐름만 안내하는 것이 안전합니다.",
+        },
       ]
     : [
         {
@@ -131,6 +136,11 @@ function buildJsonLd(locale: string) {
           question: "Does AI time logging support Korean entries?",
           answer:
             "Yes. RealHourly can organize Korean and English natural-language notes into project, work category, and duration records so freelancers can keep logging without interrupting delivery.",
+        },
+        {
+          question: "Can I share work evidence with clients?",
+          answer:
+            "Yes. Weekly timesheets, approval links, client reports, and invoice drafts help explain time spent and revision history. Public answers should describe the workflow without asking for private project notes or client details.",
         },
       ];
 

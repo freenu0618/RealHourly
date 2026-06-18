@@ -6,7 +6,7 @@ const baseUrl = getBaseUrl();
 // Only public, indexable pages — authenticated & noindex pages excluded
 const staticPages = [
   { path: "", lastModified: "2026-06-15", changeFrequency: "weekly" as const, priority: 1.0 },
-  { path: "/features", lastModified: "2026-06-10", changeFrequency: "monthly" as const, priority: 0.8 },
+  { path: "/features", lastModified: "2026-06-19", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/calculator", lastModified: "2026-06-18", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/privacy", lastModified: "2026-06-16", changeFrequency: "yearly" as const, priority: 0.3 },
