@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-15";
+  const dateModified = "2026-06-20";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -120,27 +120,27 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "Pro 플랜의 가격은 얼마인가요?",
-          a: "Pro는 월 $9(약 12,000원) 또는 연간 $84(월 $7, 약 9,300원)입니다. 연간 결제 시 22% 할인됩니다. 언제든 해지할 수 있습니다.",
+          a: "Pro는 월 $9(약 12,000원) 또는 연간 $84(월 $7, 약 9,300원)입니다. 연간 결제 시 22% 할인됩니다. 언제든 해지할 수 있어요.",
         },
         {
           q: "어떤 플랫폼을 지원하나요?",
-          a: "Upwork, Fiverr, 크몽, 숨고, Freelancer.com 등 주요 프리랜서 플랫폼의 수수료 프리셋을 제공합니다. 다만 Upwork처럼 계약별로 수수료가 달라질 수 있는 플랫폼도 있어, 프리셋은 시작점으로 보고 실제 계약 수수료에 맞춰 커스텀 입력하는 것을 권장합니다.",
+          a: "Upwork, Fiverr, 크몽, 숨고, Freelancer.com 등 주요 프리랜서 플랫폼의 수수료 프리셋을 제공합니다. 다만 Upwork처럼 계약 구조에 따라 수수료가 달라질 수 있는 플랫폼도 있어, 프리셋은 시작점으로 보고 실제 계약 수수료에 맞춰 커스텀 입력하는 것을 권장해요.",
         },
         {
           q: "'실제 시급'이 뭔가요? 어떻게 계산되나요?",
-          a: "실제 시급은 플랫폼 수수료, 세금, 도구 비용 등 모든 숨겨진 비용을 차감한 후 실제 투입 시간(미팅, 이메일, 수정 포함)으로 나눈 값입니다.",
+          a: "실제 시급은 플랫폼 수수료, 세금, 도구 비용 등 모든 숨겨진 비용을 차감한 후 실제 투입 시간으로 나눈 값입니다. 계약 시급이 $50이어도 실제로는 $23일 수 있습니다.",
         },
         {
           q: "스코프 크립(범위 초과) 알림은 어떻게 작동하나요?",
-          a: "프로젝트의 시간 사용률, 수정 작업 비율, 수정 횟수를 실시간 모니터링합니다. 범위 초과가 감지되면 AI가 클라이언트에게 보낼 메시지를 정중/중립/단호 3가지 톤으로 생성합니다.",
+          a: "프로젝트의 시간 사용률, 수정 작업 비율, 수정 횟수를 실시간 모니터링합니다. 범위 초과가 감지되면 클라이언트에게 보낼 메시지를 정중/중립/단호한 3가지 톤으로 AI가 자동 생성합니다.",
         },
         {
           q: "데이터는 안전한가요?",
-          a: "Supabase(PostgreSQL) 기반으로 데이터가 암호화 저장되며, 행 수준 보안(RLS)으로 본인의 데이터만 접근 가능합니다.",
+          a: "Supabase(PostgreSQL) 기반으로 데이터가 암호화 저장되며, 행 수준 보안(RLS)으로 본인의 데이터만 접근 가능합니다. 다른 사용자에게 절대 공유되지 않아요.",
         },
         {
           q: "Pro에서 Free로 다운그레이드하면 데이터가 삭제되나요?",
-          a: "아니요, 모든 데이터는 그대로 유지됩니다. 다만 Free 플랜의 제한(프로젝트 2개, AI 파싱 20회/월)이 적용됩니다.",
+          a: "아니요, 모든 데이터는 그대로 유지됩니다. 다만 Free 플랜의 제한(프로젝트 2개, AI 파싱 20회/월)이 적용됩니다. 이전 데이터는 언제든 조회할 수 있어요.",
         },
         {
           q: "영어와 한국어를 모두 지원하나요?",
@@ -154,7 +154,7 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "How much does the Pro plan cost?",
-          a: "Pro is $9/month or $84/year ($7/month). Save 22% with annual billing. Cancel anytime.",
+          a: "Pro is $9/month or $84/year ($7/month). Save 22% with annual billing. Cancel anytime with no questions asked.",
         },
         {
           q: "Which freelance platforms are supported?",
@@ -162,7 +162,7 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "What is 'real hourly rate' and how is it calculated?",
-          a: "Your real hourly rate subtracts all hidden costs (platform fees, taxes, tool costs) from gross revenue, then divides by actual hours worked including meetings, emails, and revisions.",
+          a: "Your real hourly rate subtracts all hidden costs (platform fees, taxes, tool costs) from your gross revenue, then divides by actual hours worked. A $50/hr contract might actually be $23/hr.",
         },
         {
           q: "How do scope creep alerts work?",
@@ -170,11 +170,11 @@ function buildJsonLd(locale: string) {
         },
         {
           q: "Is my data safe and private?",
-          a: "Data is encrypted and stored on Supabase (PostgreSQL) with Row Level Security (RLS). Only you can access your data.",
+          a: "Data is encrypted and stored on Supabase (PostgreSQL) with Row Level Security (RLS). Only you can access your data. It is never shared with other users or third parties.",
         },
         {
           q: "If I downgrade from Pro to Free, will I lose my data?",
-          a: "No, all your data is preserved. Free plan limits (2 projects, 20 AI parses/month) will apply, but previous data remains accessible.",
+          a: "No, all your data is preserved. Free plan limits (2 projects, 20 AI parses/month) will apply, but historical data remains fully accessible.",
         },
         {
           q: "Does RealHourly support both English and Korean?",
