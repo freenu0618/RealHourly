@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-06-18";
+  const dateModified = "2026-06-22";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -255,6 +255,11 @@ function buildJsonLd(locale: string) {
                 "계약 총액, 플랫폼 또는 결제 수수료, 예상 세금, 도구·외주 비용, 제작 시간, 미팅·메시지·수정 같은 비청구 시간, 목표 실제 시급을 먼저 확인해야 합니다.",
             },
             {
+              question: "두 프로젝트 제안을 비교할 때는 어떻게 봐야 하나요?",
+              answer:
+                "총액만 비교하지 말고 각 제안에 같은 전제(수수료, 세금, 도구·외주 비용, 제작 시간, 비청구 시간, 수정 버퍼, 목표 실제 시급)를 적용해 순수익과 실제 시급을 나란히 확인해야 합니다.",
+            },
+            {
               question: "계산 결과는 세무 신고나 법률 자문으로 사용할 수 있나요?",
               answer:
                 "아니요. RealHourly의 계산은 견적과 수익성 의사결정을 돕는 참고용 추정치입니다. 세무·법률 판단은 각 계약과 거주지 기준에 맞게 전문가 검토가 필요합니다.",
@@ -275,6 +280,11 @@ function buildJsonLd(locale: string) {
               question: "What should I check first if I do not have every input?",
               answer:
                 "Start with gross project fee, platform or payment fee, estimated tax, tool or subcontractor costs, production hours, unbilled meetings, messages and revisions, and your target real hourly rate.",
+            },
+            {
+              question: "How should I compare two project offers?",
+              answer:
+                "Do not compare contract totals alone. Apply the same assumptions to each offer: fees, taxes, tool or subcontractor costs, production hours, unbilled time, revision buffer, and target real hourly rate.",
             },
             {
               question: "Is the result tax or legal advice?",
@@ -338,7 +348,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "입력값이 부족할 때",
-            body: "총액만 알고 있다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 목표 시급을 먼저 채워야 비교가 안전합니다.",
+            body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 목표 시급을 같은 기준으로 채워야 합니다.",
           },
         ]
       : [
@@ -356,7 +366,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "Missing inputs",
-            body: "If you only know the fee, add fees, tax, tool costs, production time, unbilled time, and target rate before comparing offers.",
+            body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, and target rate on the same basis.",
           },
         ],
     nextSteps: isKo
