@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-21";
+  const dateModified = "2026-06-24";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -146,6 +146,14 @@ function buildJsonLd(locale: string) {
           q: "영어와 한국어를 모두 지원하나요?",
           a: "네, UI는 한국어/영어를 모두 지원하고 브라우저 언어를 자동 감지합니다. AI 시간 기록도 한국어와 영어 자연어로 입력할 수 있어요.",
         },
+        {
+          q: "두 프로젝트 제안을 비교할 때 무엇을 봐야 하나요?",
+          a: "총액만 비교하지 말고 각 제안에 같은 전제(플랫폼·결제 수수료, 예상 세금, 도구·외주 비용, 제작 시간, 미팅·메시지 시간, 수정 버퍼)를 적용해 순수익과 실제 시급을 나란히 확인하세요.",
+        },
+        {
+          q: "목표 실제 시급은 어떻게 정해야 하나요?",
+          a: "생활비나 월 목표 수입만이 아니라 영업·관리 시간, 휴식일, 세금, 도구 비용, 수정 리스크를 포함해 최소로 지켜야 할 순수익 기준으로 잡는 것이 좋습니다. 입력값이 부족하면 계산 결과는 참고용 범위로 해석하세요.",
+        },
       ]
     : [
         {
@@ -179,6 +187,14 @@ function buildJsonLd(locale: string) {
         {
           q: "Does RealHourly support both English and Korean?",
           a: "Yes, the UI supports both English and Korean with automatic browser language detection. AI time logging also accepts natural language in both languages.",
+        },
+        {
+          q: "What should I compare between two project offers?",
+          a: "Compare more than the total contract value. Apply the same assumptions to each offer: platform or payment fees, estimated taxes, tool or subcontractor costs, production hours, meeting and message time, and revision buffer. Then compare net profit and real hourly rate side by side.",
+        },
+        {
+          q: "How should I choose a target real hourly rate?",
+          a: "Use a minimum net-rate goal that covers more than monthly income. Include sales and admin time, days off, taxes, tool costs, and revision risk. If the inputs are incomplete, treat the calculator result as a rough estimate rather than a final quote.",
         },
       ];
 
