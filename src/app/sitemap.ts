@@ -7,7 +7,7 @@ const baseUrl = getBaseUrl();
 const staticPages = [
   { path: "", lastModified: "2026-06-24", changeFrequency: "weekly" as const, priority: 1.0 },
   { path: "/features", lastModified: "2026-06-19", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/calculator", lastModified: "2026-06-22", changeFrequency: "monthly" as const, priority: 0.8 },
+  { path: "/calculator", lastModified: "2026-06-25", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/privacy", lastModified: "2026-06-16", changeFrequency: "yearly" as const, priority: 0.3 },
   { path: "/terms", lastModified: "2026-06-16", changeFrequency: "yearly" as const, priority: 0.3 },

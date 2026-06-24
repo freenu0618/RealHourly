@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-06-22";
+  const dateModified = "2026-06-25";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"

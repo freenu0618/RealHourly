@@ -255,6 +255,12 @@ export function FullCalculator() {
     { label: t("calcTaxAmount"), val: r.taxAmount, pct: r.taxPct, c: "bg-red-600 dark:bg-red-400", tc: "text-red-600 dark:text-red-400" },
     { label: t("calcToolAmount"), val: toolCost, pct: r.toolPct, c: "bg-gray-600 dark:bg-gray-400", tc: "text-gray-600 dark:text-gray-400" },
   ];
+  const feePresetHint = locale === "ko"
+    ? "프리셋은 시작점입니다. 계약 유형, 국가, 결제 방식에 따라 실제 수수료가 달라질 수 있으니 최종 계약 수수료를 확인해 커스텀으로 조정하세요."
+    : "Presets are starting points. Actual fees can vary by contract type, country, and payout method, so confirm the final fee and adjust with Custom when needed.";
+  const comparisonHint = locale === "ko"
+    ? "플랫폼 비교는 같은 세금, 도구 비용, 비청구 시간 전제를 적용한 추정치입니다."
+    : "Platform comparisons use the same tax, tool-cost, and unbilled-time assumptions, so treat them as estimates.";
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
@@ -305,6 +311,7 @@ export function FullCalculator() {
                 </button>
               ))}
             </div>
+            <p className="mb-3 text-xs leading-relaxed text-muted-foreground">{feePresetHint}</p>
             <Slider value={[feeRate]} onValueChange={(v) => { setFeeRate(v[0]); setSelectedPreset("Custom"); }} min={0} max={30} step={1} aria-label={t("calcFeeLabel")} />
           </div>
           <div>
@@ -431,6 +438,9 @@ export function FullCalculator() {
             <h2 className="text-xl font-semibold">{c("comparePlatforms")}</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-4">{c("comparePlatformsDesc")}</p>
+          <p className="mb-4 rounded-xl border bg-muted/50 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+            {comparisonHint}
+          </p>
           <div className="overflow-hidden rounded-2xl border">
             <table className="w-full text-sm">
               <thead className="bg-muted/60">
