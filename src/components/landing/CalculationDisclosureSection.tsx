@@ -8,7 +8,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 const columns = [
   {
     titleKey: "calcDisclosureInputTitle",
-    items: ["calcDisclosureInput1", "calcDisclosureInput2", "calcDisclosureInput3"],
+    items: ["calcDisclosureInput1", "calcDisclosureInput2", "calcDisclosureInput3", "calcDisclosureInput4"],
     icon: ListChecks,
   },
   {

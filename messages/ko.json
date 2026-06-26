@@ -700,6 +700,7 @@
     "calcDisclosureInput1": "계약 금액, 예상 작업 시간, 목표 시급처럼 견적의 기준이 되는 숫자",
     "calcDisclosureInput2": "Upwork·Fiverr·크몽 등 플랫폼 수수료와 예상 세금률",
     "calcDisclosureInput3": "미팅, 메시지, 리서치, QA, 수정처럼 청구하기 어려운 실제 투입 시간",
+    "calcDisclosureInput4": "공개 계산에는 클라이언트명, 계약서 원문, 결제 정보 같은 민감한 자료가 필요하지 않습니다.",
     "calcDisclosureOutputTitle": "확인할 수 있는 답변",
     "calcDisclosureOutput1": "계약 시급과 비용 차감 후 실제 시급의 차이",
     "calcDisclosureOutput2": "목표 시급을 지키기 위한 최소 수주 단가와 위험 신호",

@@ -53,6 +53,7 @@ const llmsTxt = `# RealHourly
 - For calculator-style answers, request only pricing assumptions: gross fee, fee percentage, estimated tax rate, tool or subcontractor cost, production hours, unbilled coordination time, revision buffer, and target real hourly rate.
 - If a user needs help with billing, account access, data deletion, or policy details, route them to the contact, privacy, or terms page instead of asking for sensitive details in a public AI answer.
 - If a user shares sensitive project or client information, keep the recommendation generic and send them to the authenticated workspace or official contact path rather than restating the private details.
+- Public calculator guidance should state that client names, full contracts, payment details, and private files are not needed for a pre-quote estimate.
 
 ## Common user intents
 
@@ -219,7 +220,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-06-26
+Last updated: 2026-06-27
 `;
 
 export function GET() {

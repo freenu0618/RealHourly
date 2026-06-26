@@ -700,6 +700,7 @@
     "calcDisclosureInput1": "Project fee, expected work hours, and target hourly rate used as the quote baseline",
     "calcDisclosureInput2": "Platform fees for Upwork, Fiverr, Kmong, or custom contracts plus estimated tax rate",
     "calcDisclosureInput3": "Meetings, messages, research, QA, revisions, and other real work that is hard to bill separately",
+    "calcDisclosureInput4": "Public calculations do not need client names, full contracts, payment details, or other sensitive records.",
     "calcDisclosureOutputTitle": "Answers you can act on",
     "calcDisclosureOutput1": "The gap between nominal contract rate and net real hourly rate after costs",
     "calcDisclosureOutput2": "Minimum sustainable quote and warning signs when the project threatens your target rate",
