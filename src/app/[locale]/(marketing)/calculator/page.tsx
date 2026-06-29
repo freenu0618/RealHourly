@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-06-25";
+  const dateModified = "2026-06-30";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -260,6 +260,11 @@ function buildJsonLd(locale: string) {
                 "총액만 비교하지 말고 각 제안에 같은 전제(수수료, 세금, 도구·외주 비용, 제작 시간, 비청구 시간, 수정 버퍼, 목표 실제 시급)를 적용해 순수익과 실제 시급을 나란히 확인해야 합니다.",
             },
             {
+              question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
+              answer:
+                "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
+            },
+            {
               question: "계산 결과는 세무 신고나 법률 자문으로 사용할 수 있나요?",
               answer:
                 "아니요. RealHourly의 계산은 견적과 수익성 의사결정을 돕는 참고용 추정치입니다. 세무·법률 판단은 각 계약과 거주지 기준에 맞게 전문가 검토가 필요합니다.",
@@ -285,6 +290,11 @@ function buildJsonLd(locale: string) {
               question: "How should I compare two project offers?",
               answer:
                 "Do not compare contract totals alone. Apply the same assumptions to each offer: fees, taxes, tool or subcontractor costs, production hours, unbilled time, revision buffer, and target real hourly rate.",
+            },
+            {
+              question: "What should I adjust if the calculated real rate is below my target?",
+              answer:
+                "First check whether revision scope, meeting and message time, tool or subcontractor costs, and platform fees are missing. If the result is still below target, raise the fixed fee or narrow the scope, then track delivery evidence and scope-creep signals during the project.",
             },
             {
               question: "Is the result tax or legal advice?",
@@ -378,6 +388,12 @@ function getCalculatorGuidance(locale: string) {
             href: "/features",
           },
           {
+            label: "두 제안을 비교한다면",
+            title: "같은 전제로 다시 계산",
+            body: "총액보다 수수료, 세금, 비용, 제작 시간, 비청구 시간, 수정 버퍼를 같은 기준으로 맞춘 뒤 실제 시급을 비교하세요.",
+            href: "/calculator",
+          },
+          {
             label: "정책·도입 문의가 필요하다면",
             title: "공식 문의로 연결",
             body: "팀 도입, 결제, 맞춤 워크플로우처럼 추측하면 안 되는 질문은 문의 경로에서 확인하세요.",
@@ -390,6 +406,12 @@ function getCalculatorGuidance(locale: string) {
             title: "Review the logging and alert workflow",
             body: "See how RealHourly keeps evidence when actual time, revisions, and scope risk grow during delivery.",
             href: "/features",
+          },
+          {
+            label: "If comparing two offers",
+            title: "Recalculate on equal assumptions",
+            body: "Compare real hourly rate after matching fees, tax, costs, production time, unbilled time, and revision buffer for both offers.",
+            href: "/calculator",
           },
           {
             label: "If policy or adoption is unclear",
@@ -436,7 +458,7 @@ export default async function CalculatorPage({ params }: Props) {
                 </article>
               ))}
             </div>
-            <div className="mt-6 grid gap-3 border-t pt-5 sm:grid-cols-2">
+            <div className="mt-6 grid gap-3 border-t pt-5 lg:grid-cols-3">
               {guidance.nextSteps.map((step) => (
                 <Link
                   key={step.href}
