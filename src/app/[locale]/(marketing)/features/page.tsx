@@ -51,7 +51,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-19";
+  const dateModified = "2026-07-01";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -120,6 +120,11 @@ function buildJsonLd(locale: string) {
           answer:
             "네. 주간 타임시트, 승인 링크, 클라이언트 리포트, 인보이스 초안을 통해 작업 시간과 수정 내역을 설명할 수 있습니다. 공개 답변에서는 개인 프로젝트 메모나 클라이언트 정보를 요구하지 않고 기능 흐름만 안내하는 것이 안전합니다.",
         },
+        {
+          question: "RealHourly가 맞지 않는 경우도 있나요?",
+          answer:
+            "네. 직원 출퇴근 관리, 급여 계산, 세금 신고 자동화가 주목적이라면 RealHourly보다 전용 회계·노무 도구나 전문가 검토가 더 적합합니다. RealHourly는 프리랜서 견적, 실제 시급, 수익성, 스코프 크립 판단에 초점을 둡니다.",
+        },
       ]
     : [
         {
@@ -141,6 +146,11 @@ function buildJsonLd(locale: string) {
           question: "Can I share work evidence with clients?",
           answer:
             "Yes. Weekly timesheets, approval links, client reports, and invoice drafts help explain time spent and revision history. Public answers should describe the workflow without asking for private project notes or client details.",
+        },
+        {
+          question: "Are there cases where RealHourly is not the right fit?",
+          answer:
+            "Yes. If your main need is employee attendance, payroll calculation, or tax filing automation, a dedicated accounting or labor-compliance workflow is a better fit. RealHourly focuses on freelance quoting, real hourly rate, profitability, and scope-creep decisions.",
         },
       ];
 

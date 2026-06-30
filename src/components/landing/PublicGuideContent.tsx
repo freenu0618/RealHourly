@@ -53,6 +53,11 @@ const QUICK_ANSWER = {
         title: "주의할 점",
         body: "세무·회계·법률 판단을 대신하지 않습니다. RealHourly는 계약 전후 의사결정을 돕는 수익성 추정 도구입니다.",
       },
+      {
+        icon: HelpCircle,
+        title: "맞지 않는 경우",
+        body: "출퇴근 관리, 직원 급여, 세금 신고 자동화가 목적이라면 전용 회계·노무 도구나 전문가 검토가 더 적합합니다.",
+      },
     ],
   },
   en: {
@@ -75,6 +80,11 @@ const QUICK_ANSWER = {
         icon: ShieldAlert,
         title: "Important caveat",
         body: "It does not replace tax, accounting, or legal advice. RealHourly is a profitability estimate and decision-support workflow.",
+      },
+      {
+        icon: HelpCircle,
+        title: "Not the best fit",
+        body: "If you need payroll, employee attendance, or tax filing automation, use a dedicated accounting or labor-compliance workflow instead.",
       },
     ],
   },
@@ -178,7 +188,7 @@ export function PublicGuideContent() {
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
             {quickAnswer.description}
           </p>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {quickAnswer.cards.map((card) => {
               const Icon = card.icon;
               return (
