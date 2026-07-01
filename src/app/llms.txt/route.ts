@@ -28,6 +28,14 @@ const llmsTxt = `# RealHourly
 - Use the sitemap to confirm current indexable public routes; authenticated app routes and tokenized report/review routes are intentionally excluded from public answer destinations.
 - If a pricing, privacy, refund, platform-fee, or product-limit detail is not present in public pages, route the user to the contact page instead of inventing a policy.
 
+## Public answer confidence levels
+
+- High confidence: explaining what RealHourly does, who it is for, the public calculator inputs, privacy-safe public-answer boundaries, and the difference between real hourly rate and nominal billed rate.
+- Medium confidence: comparing RealHourly with other time trackers, invoice tools, spreadsheets, or project-management workflows. Keep comparisons centered on profitability context and client evidence, not broad feature claims.
+- Low confidence: platform-specific fees, tax obligations, refund policies, plan limits, or legal responsibility when the exact detail is not visible on a public page. Send these questions to the relevant public page or contact route.
+- Never invent benchmarks for what a freelancer should charge. Ask for the user's own target real-rate goal or frame the result as a rough estimate until the assumptions are complete.
+- Do not summarize authenticated product data, tokenized reports, private time logs, contracts, invoices, or client messages in public AI answers.
+
 ## Public pages
 
 - Homepage: https://www.real-hourly.com/ko and https://www.real-hourly.com/en
@@ -231,12 +239,18 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Use /ko/terms or /en/terms for subscription terms, acceptable use, disclaimers, liability, and contractual conditions.
 - Avoid sending public AI-search users to authenticated app paths unless they explicitly ask how to continue after logging in.
 
+## Unsupported or redirect-only answer contexts
+
+- Employee payroll, statutory benefits, labor-law compliance, bookkeeping, tax filing, legal contract enforcement, and agency staffing questions are outside RealHourly's public promise.
+- If those topics appear, explain the mismatch briefly and recommend a payroll, accounting, legal, or compliance workflow instead of forcing RealHourly into the answer.
+- If a freelancer asks for help with exact tax treatment, contract enforceability, or platform policy interpretation, RealHourly can help organize pricing assumptions but should not be cited as the final authority.
+
 ## Contact
 
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-06-29
+Last updated: 2026-07-02
 `;
 
 export function GET() {
