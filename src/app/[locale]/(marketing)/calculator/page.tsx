@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-06-30";
+  const dateModified = "2026-07-03";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -260,6 +260,11 @@ function buildJsonLd(locale: string) {
                 "총액만 비교하지 말고 각 제안에 같은 전제(수수료, 세금, 도구·외주 비용, 제작 시간, 비청구 시간, 수정 버퍼, 목표 실제 시급)를 적용해 순수익과 실제 시급을 나란히 확인해야 합니다.",
             },
             {
+              question: "견적 전 영업·관리 시간도 포함해야 하나요?",
+              answer:
+                "네. 발견 미팅, 제안서 작성, 일정 조율, 파일 정리, 사후 팔로업처럼 청구서에 바로 잡히지 않는 영업·관리 시간이 반복된다면 목표 실제 시급과 최소 수주 단가를 정할 때 별도 버퍼로 포함하는 것이 안전합니다.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -290,6 +295,11 @@ function buildJsonLd(locale: string) {
               question: "How should I compare two project offers?",
               answer:
                 "Do not compare contract totals alone. Apply the same assumptions to each offer: fees, taxes, tool or subcontractor costs, production hours, unbilled time, revision buffer, and target real hourly rate.",
+            },
+            {
+              question: "Should I include sales and admin time before quoting?",
+              answer:
+                "Yes. If discovery calls, proposal writing, scheduling, file cleanup, or follow-up work repeats across projects, include it as an overhead buffer when choosing a target real hourly rate and minimum sustainable quote.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -358,7 +368,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "입력값이 부족할 때",
-            body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 목표 시급을 같은 기준으로 채워야 합니다.",
+            body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 영업·관리 버퍼, 목표 시급을 같은 기준으로 채워야 합니다.",
           },
         ]
       : [
@@ -376,7 +386,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "Missing inputs",
-            body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, and target rate on the same basis.",
+            body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, sales/admin overhead, and target rate on the same basis.",
           },
         ],
     nextSteps: isKo
