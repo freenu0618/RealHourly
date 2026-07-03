@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-06-28";
+  const dateModified = "2026-07-04";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -154,6 +154,10 @@ function buildJsonLd(locale: string) {
           q: "목표 실제 시급은 어떻게 정해야 하나요?",
           a: "생활비나 월 목표 수입만이 아니라 영업·관리 시간, 휴식일, 세금, 도구 비용, 수정 리스크를 포함해 최소로 지켜야 할 순수익 기준으로 잡는 것이 좋습니다. 입력값이 부족하면 계산 결과는 참고용 범위로 해석하세요.",
         },
+        {
+          q: "리테이너나 유지보수 계약에도 쓸 수 있나요?",
+          a: "네. 반복 계약은 월 고정 수입을 기준으로 응답 시간, 정기 미팅, 긴급 수정, 보고 같은 운영 시간을 따로 잡아 실제 시급을 확인하는 것이 좋습니다. 범위가 계속 늘어나면 고정가 프로젝트처럼 수정 버퍼와 스코프 조정 근거를 함께 남기세요.",
+        },
       ]
     : [
         {
@@ -195,6 +199,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I choose a target real hourly rate?",
           a: "Use a minimum net-rate goal that covers more than monthly income. Include sales and admin time, days off, taxes, tool costs, and revision risk. If the inputs are incomplete, treat the calculator result as a rough estimate rather than a final quote.",
+        },
+        {
+          q: "Can I use it for retainers or maintenance contracts?",
+          a: "Yes. For recurring work, start with the monthly retainer amount and separately estimate response time, recurring meetings, urgent fixes, and reporting. If the work keeps expanding, keep the same revision buffer and scope-adjustment evidence you would use for a fixed-fee project.",
         },
       ];
 
@@ -324,6 +332,11 @@ function buildJsonLd(locale: string) {
           description:
             "RealHourly 결과는 프리랜서 가격 책정과 프로젝트 수익성 검토를 위한 추정치이며 세무·법률·계약 자문이 아닙니다.",
         },
+        {
+          name: "반복 계약 운영 시간",
+          description:
+            "리테이너나 유지보수 계약은 월 고정 수입과 함께 응답, 회의, 긴급 수정, 보고 시간을 분리해 실제 시급을 확인합니다.",
+        },
       ]
     : [
         {
@@ -345,6 +358,11 @@ function buildJsonLd(locale: string) {
           name: "Decision-support estimate",
           description:
             "RealHourly outputs are pricing and profitability estimates for freelancers, not tax, legal, accounting, or contract advice.",
+        },
+        {
+          name: "Recurring contract overhead",
+          description:
+            "For retainers and maintenance contracts, separate monthly revenue from response time, meetings, urgent fixes, and reporting before judging the real rate.",
         },
       ];
 

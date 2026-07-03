@@ -797,6 +797,8 @@
     "faq9A": "Compare more than the total contract value. Apply the same assumptions to each offer: platform or payment fees, estimated taxes, tool or subcontractor costs, production hours, meeting and message time, and revision buffer. Then compare net profit and real hourly rate side by side.",
     "faq10Q": "How should I choose a target real hourly rate?",
     "faq10A": "Use a minimum net-rate goal that covers more than monthly income. Include sales and admin time, days off, taxes, tool costs, and revision risk. If the inputs are incomplete, treat the calculator result as a rough estimate rather than a final quote.",
+    "faq11Q": "Can I use it for retainers or maintenance contracts?",
+    "faq11A": "Yes. For recurring work, start with the monthly retainer amount and separately estimate response time, recurring meetings, urgent fixes, and reporting. If the work keeps expanding, keep the same revision buffer and scope-adjustment evidence you would use for a fixed-fee project.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",
