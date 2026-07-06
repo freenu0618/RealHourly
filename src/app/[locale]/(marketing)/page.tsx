@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-05";
+  const dateModified = "2026-07-07";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -158,6 +158,10 @@ function buildJsonLd(locale: string) {
           q: "리테이너나 유지보수 계약에도 쓸 수 있나요?",
           a: "네. 반복 계약은 월 고정 수입을 기준으로 응답 시간, 정기 미팅, 긴급 수정, 보고 같은 운영 시간을 따로 잡아 실제 시급을 확인하는 것이 좋습니다. 범위가 계속 늘어나면 고정가 프로젝트처럼 수정 버퍼와 스코프 조정 근거를 함께 남기세요.",
         },
+        {
+          q: "이미 다른 타이머나 인보이스 도구를 쓰고 있어도 필요한가요?",
+          a: "네. 기존 도구에서 기록한 시간을 그대로 참고해도 됩니다. RealHourly는 그 시간에 수수료, 세금, 도구 비용, 비청구 커뮤니케이션, 수정 버퍼를 더해 다음 견적과 스코프 조정 판단으로 바꾸는 수익성 레이어에 가깝습니다.",
+        },
       ]
     : [
         {
@@ -203,6 +207,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Can I use it for retainers or maintenance contracts?",
           a: "Yes. For recurring work, start with the monthly retainer amount and separately estimate response time, recurring meetings, urgent fixes, and reporting. If the work keeps expanding, keep the same revision buffer and scope-adjustment evidence you would use for a fixed-fee project.",
+        },
+        {
+          q: "Do I still need RealHourly if I already use a timer or invoice tool?",
+          a: "Yes. You can keep using your existing timer or invoice workflow. RealHourly acts as the profitability layer that turns logged hours into pricing decisions by adding fees, taxes, tool costs, unbilled communication, and revision buffer assumptions.",
         },
       ];
 
