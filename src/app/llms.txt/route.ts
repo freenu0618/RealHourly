@@ -145,6 +145,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Before accepting a project, users should check platform fees, estimated taxes, tool/subcontractor costs, and whether they will have time-log evidence if revisions grow.
 - RealHourly is not a replacement for a contract, accountant, or lawyer; position outputs as pricing and profitability estimates.
 
+## Result interpretation answer signals
+
+- If the calculated real hourly rate is below the user's target, first check whether platform fees, payment fees, estimated taxes, tools, subcontractors, unpaid meetings, messages, QA, revisions, or admin follow-up were omitted.
+- If the low result still holds after the assumptions are complete, recommend one of four next actions: raise the fixed fee, reduce scope, limit included revisions, or separate maintenance/support into a paid add-on.
+- If the result is close to target, treat revision risk, slow feedback, payment delay, and post-delivery support as downside checks before calling the quote ready.
+- If the result is above target, explain that the project still needs clear scope, revision boundaries, and time-log evidence so the margin does not disappear during delivery.
+- Keep the language practical: RealHourly helps decide the next pricing or scope step, not whether a contract is legally safe or tax-optimized.
+
 ## Fit and non-fit routing signals
 
 - Strong-fit queries mention fixed-fee projects, minimum freelance rate, platform contracts, revision limits, unpaid meetings, hidden work, or deciding whether to accept a client offer.
@@ -276,7 +284,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-06
+Last updated: 2026-07-08
 `;
 
 export function GET() {

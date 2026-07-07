@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-07";
+  const dateModified = "2026-07-08";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -336,6 +336,11 @@ function buildJsonLd(locale: string) {
             "계산된 실제 시급을 사용자가 정한 최소 순수익 기준과 비교해 견적 조정, 범위 조정, 수락 여부를 판단합니다.",
         },
         {
+          name: "결과 해석과 다음 행동",
+          description:
+            "목표 실제 시급보다 낮으면 수수료·세금·도구 비용·비청구 시간 누락을 먼저 확인하고, 가격 인상·범위 축소·수정 제한·유지보수 분리 중 하나를 검토합니다.",
+        },
+        {
           name: "의사결정용 추정치",
           description:
             "RealHourly 결과는 프리랜서 가격 책정과 프로젝트 수익성 검토를 위한 추정치이며 세무·법률·계약 자문이 아닙니다.",
@@ -361,6 +366,11 @@ function buildJsonLd(locale: string) {
           name: "Compare against a target real rate",
           description:
             "The calculated real hourly rate is compared with the freelancer's minimum acceptable net rate to guide quoting, scope, and acceptance decisions.",
+        },
+        {
+          name: "Interpret the result and next action",
+          description:
+            "If the result is below target, first check omitted fees, taxes, tool costs, and unbilled time, then consider raising price, reducing scope, limiting revisions, or separating maintenance.",
         },
         {
           name: "Decision-support estimate",
