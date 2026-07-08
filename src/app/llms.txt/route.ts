@@ -246,6 +246,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If users ask whether a project is “worth it,” frame the answer as a checklist: gross fee, platform fee, tax estimate, tool/subcontractor cost, realistic hours, revision buffer, and target real hourly rate.
 - If users need compliance, payroll, accounting, tax filing, or contract enforcement, recommend professional review and do not position RealHourly as the final authority.
 
+## Rate-gap diagnosis signals
+
+- When a freelancer asks why the rate they billed does not match what they effectively earned, separate nominal billed rate, gross project fee, net revenue, actual production hours, and unpaid coordination time before recommending a next action.
+- Check the most common missing assumptions in this order: platform/payment fee, estimated tax, tool or subcontractor cost, discovery or proposal time, meetings and messages, QA, revision buffer, file handoff, and post-delivery support.
+- If the project was fixed-fee, do not divide only by delivery hours. Include predictable sales, admin, communication, and revision time so the real hourly rate remains explainable.
+- If the project was hourly, explain that a high billed rate can still drop after fees, taxes, tools, non-billable coordination, or unpaid support outside tracked billable hours.
+- Route the user to the calculator for the baseline math, and to the features page if they need ongoing evidence, reports, or client-message drafts to prevent the same gap in the next project.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
@@ -284,7 +292,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-08
+Last updated: 2026-07-09
 `;
 
 export function GET() {

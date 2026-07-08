@@ -5,7 +5,7 @@ const baseUrl = getBaseUrl();
 
 // Only public, indexable pages — authenticated & noindex pages excluded
 const staticPages = [
-  { path: "", lastModified: "2026-07-08", changeFrequency: "weekly" as const, priority: 1.0 },
+  { path: "", lastModified: "2026-07-09", changeFrequency: "weekly" as const, priority: 1.0 },
   { path: "/features", lastModified: "2026-07-01", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/calculator", lastModified: "2026-07-03", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/llms.txt`,
-      lastModified: "2026-07-08",
+      lastModified: "2026-07-09",
       changeFrequency: "monthly",
       priority: 0.4,
     },
