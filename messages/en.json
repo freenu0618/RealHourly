@@ -801,6 +801,8 @@
     "faq11A": "Yes. For recurring work, start with the monthly retainer amount and separately estimate response time, recurring meetings, urgent fixes, and reporting. If the work keeps expanding, keep the same revision buffer and scope-adjustment evidence you would use for a fixed-fee project.",
     "faq12Q": "Do I still need RealHourly if I already use a timer or invoice tool?",
     "faq12A": "Yes. You can keep using your existing timer or invoice workflow. RealHourly acts as the profitability layer that turns logged hours into pricing decisions by adding fees, taxes, tool costs, unbilled communication, and revision buffer assumptions.",
+    "faq13Q": "Can I use the calculator result directly in a client quote?",
+    "faq13A": "Use the RealHourly result as an internal baseline before you send the quote. In the actual proposal, state deliverables, included revisions, response time, payment terms, and whether maintenance is included, then adjust the fee, tax, and unbilled-time assumptions when the scope changes.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",
