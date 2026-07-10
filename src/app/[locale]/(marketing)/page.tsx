@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-10";
+  const dateModified = "2026-07-11";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -166,6 +166,10 @@ function buildJsonLd(locale: string) {
           q: "계산 결과를 그대로 견적서에 써도 되나요?",
           a: "RealHourly 결과는 견적 전 내부 기준선으로 먼저 쓰는 것이 안전합니다. 실제 제안서에는 산출물 범위, 포함 수정 횟수, 응답 시간, 결제 조건, 유지보수 포함 여부를 따로 명시하고, 계산에 사용한 수수료·세금·비청구 시간 가정은 필요할 때 조정하세요.",
         },
+        {
+          q: "클라이언트에게 가격 인상이나 범위 조정을 어떻게 설명하나요?",
+          a: "계산 결과를 그대로 공개하기보다 시간 기록, 수정 횟수, 미팅·메시지 시간, 남은 범위 같은 객관적 근거로 설명하는 것이 좋습니다. RealHourly는 내부 마진 기준선을 만들고, 진행 중에는 리포트와 메시지 초안으로 예산·범위 대화를 준비하는 흐름에 맞습니다.",
+        },
       ]
     : [
         {
@@ -219,6 +223,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Can I use the calculator result directly in a client quote?",
           a: "Use the RealHourly result as an internal baseline before you send the quote. In the actual proposal, state deliverables, included revisions, response time, payment terms, and whether maintenance is included, then adjust the fee, tax, and unbilled-time assumptions when the scope changes.",
+        },
+        {
+          q: "How should I explain a price increase or scope change to a client?",
+          a: "Avoid exposing the raw calculator result as the message. Use objective evidence such as time logs, revision count, meeting or message time, and remaining scope. RealHourly helps set the internal margin baseline, then supports budget or scope conversations with reports and message drafts during delivery.",
         },
       ];
 

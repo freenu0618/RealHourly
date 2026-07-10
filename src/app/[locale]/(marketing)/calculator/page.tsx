@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-07-03";
+  const dateModified = "2026-07-11";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -274,6 +274,11 @@ function buildJsonLd(locale: string) {
               answer:
                 "아니요. RealHourly의 계산은 견적과 수익성 의사결정을 돕는 참고용 추정치입니다. 세무·법률 판단은 각 계약과 거주지 기준에 맞게 전문가 검토가 필요합니다.",
             },
+            {
+              question: "계산 결과를 클라이언트 제안서에 그대로 넣어도 되나요?",
+              answer:
+                "그대로 넣기보다 내부 기준선으로 사용하세요. 제안서에는 산출물, 포함 수정 횟수, 응답 시간, 결제 조건, 유지보수 포함 여부를 명확히 쓰고, 세금률이나 내부 목표 시급 같은 민감한 가정은 공개하지 않는 것이 안전합니다.",
+            },
           ]
         : [
             {
@@ -310,6 +315,11 @@ function buildJsonLd(locale: string) {
               question: "Is the result tax or legal advice?",
               answer:
                 "No. RealHourly provides decision-support estimates for pricing and profitability. Tax and legal decisions should be reviewed for your contract and jurisdiction.",
+            },
+            {
+              question: "Should I paste the calculator result into a client proposal?",
+              answer:
+                "Use it as an internal baseline instead. A client proposal should spell out deliverables, included revisions, response expectations, payment terms, and maintenance boundaries without exposing private assumptions such as tax estimates or target margin.",
             },
           ]).map((item) => ({
         "@type": "Question",
@@ -409,6 +419,12 @@ function getCalculatorGuidance(locale: string) {
             body: "팀 도입, 결제, 맞춤 워크플로우처럼 추측하면 안 되는 질문은 문의 경로에서 확인하세요.",
             href: "/contact",
           },
+          {
+            label: "제안서로 옮길 때",
+            title: "내부 계산과 공개 조건 분리",
+            body: "실제 시급 결과는 내부 기준선으로 두고, 클라이언트에게는 산출물·수정 횟수·응답 시간·결제 조건을 명확히 전달하세요.",
+            href: "/calculator",
+          },
         ]
       : [
           {
@@ -428,6 +444,12 @@ function getCalculatorGuidance(locale: string) {
             title: "Use the official contact path",
             body: "Route team adoption, billing, and custom workflow questions to contact instead of guessing.",
             href: "/contact",
+          },
+          {
+            label: "Before sending a proposal",
+            title: "Separate private math from client terms",
+            body: "Keep the real-rate result as an internal baseline, then state deliverables, revision count, response time, and payment terms for the client.",
+            href: "/calculator",
           },
         ],
   };
@@ -468,7 +490,7 @@ export default async function CalculatorPage({ params }: Props) {
                 </article>
               ))}
             </div>
-            <div className="mt-6 grid gap-3 border-t pt-5 lg:grid-cols-3">
+            <div className="mt-6 grid gap-3 border-t pt-5 lg:grid-cols-4">
               {guidance.nextSteps.map((step) => (
                 <Link
                   key={step.href}
