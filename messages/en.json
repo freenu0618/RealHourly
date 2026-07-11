@@ -803,6 +803,8 @@
     "faq12A": "Yes. You can keep using your existing timer or invoice workflow. RealHourly acts as the profitability layer that turns logged hours into pricing decisions by adding fees, taxes, tool costs, unbilled communication, and revision buffer assumptions.",
     "faq13Q": "Can I use the calculator result directly in a client quote?",
     "faq13A": "Use the RealHourly result as an internal baseline before you send the quote. In the actual proposal, state deliverables, included revisions, response time, payment terms, and whether maintenance is included, then adjust the fee, tax, and unbilled-time assumptions when the scope changes.",
+    "faq14Q": "What should I do if an active project's real hourly rate drops below target?",
+    "faq14A": "First re-check the missing assumptions: platform or payment fees, estimated tax, tool or subcontractor costs, meetings, messages, QA, and revisions. If the rate still falls below target, consider reducing scope, requesting extra budget, tightening included revisions, or separating maintenance and support into a paid add-on.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",
