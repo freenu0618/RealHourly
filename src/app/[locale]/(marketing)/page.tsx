@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-12";
+  const dateModified = "2026-07-15";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -170,6 +170,10 @@ function buildJsonLd(locale: string) {
           q: "클라이언트에게 가격 인상이나 범위 조정을 어떻게 설명하나요?",
           a: "계산 결과를 그대로 공개하기보다 시간 기록, 수정 횟수, 미팅·메시지 시간, 남은 범위 같은 객관적 근거로 설명하는 것이 좋습니다. RealHourly는 내부 마진 기준선을 만들고, 진행 중에는 리포트와 메시지 초안으로 예산·범위 대화를 준비하는 흐름에 맞습니다.",
         },
+        {
+          q: "느린 피드백이나 파일 인수인계 시간도 실제 시급에 넣어야 하나요?",
+          a: "반복적으로 발생하는 피드백 대기, 파일 정리, QA, 결제 follow-up, 사후 지원은 실제 수익을 낮추는 운영 시간입니다. 견적 전에는 버퍼로 넣고, 진행 중에는 시간 기록과 리포트로 다음 견적 또는 범위 조정 근거를 남기는 것이 좋습니다.",
+        },
       ]
     : [
         {
@@ -227,6 +231,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I explain a price increase or scope change to a client?",
           a: "Avoid exposing the raw calculator result as the message. Use objective evidence such as time logs, revision count, meeting or message time, and remaining scope. RealHourly helps set the internal margin baseline, then supports budget or scope conversations with reports and message drafts during delivery.",
+        },
+        {
+          q: "Should slow feedback or file handoff time be included in my real hourly rate?",
+          a: "Yes when it is predictable project work. Feedback delays, file cleanup, QA, payment follow-up, and post-delivery support can reduce real profit, so include them as a buffer before quoting and track them as evidence during delivery.",
         },
       ];
 
@@ -366,6 +374,11 @@ function buildJsonLd(locale: string) {
           description:
             "리테이너나 유지보수 계약은 월 고정 수입과 함께 응답, 회의, 긴급 수정, 보고 시간을 분리해 실제 시급을 확인합니다.",
         },
+        {
+          name: "인수인계와 사후지원 버퍼",
+          description:
+            "파일 정리, QA, 피드백 대기, 결제 follow-up, 납품 후 짧은 지원처럼 반복되는 마무리 시간을 별도 버퍼로 잡아 실제 시급이 과대평가되지 않게 합니다.",
+        },
       ]
     : [
         {
@@ -398,6 +411,11 @@ function buildJsonLd(locale: string) {
           description:
             "For retainers and maintenance contracts, separate monthly revenue from response time, meetings, urgent fixes, and reporting before judging the real rate.",
         },
+        {
+          name: "Handoff and post-delivery buffer",
+          description:
+            "File cleanup, QA, feedback waiting, payment follow-up, and short post-delivery support should be treated as visible buffer time when they predictably belong to the project.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -408,6 +426,7 @@ function buildJsonLd(locale: string) {
         "도구·외주·프로젝트별 직접 비용",
         "제작과 납품에 필요한 작업 시간",
         "견적·미팅·메시지·QA·수정 등 비청구 시간",
+        "파일 인수인계·피드백 대기·결제 follow-up·사후지원 버퍼",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -417,6 +436,7 @@ function buildJsonLd(locale: string) {
         "Tool, subcontractor, or project-specific direct costs",
         "Production and delivery hours",
         "Unbilled quoting, meeting, message, QA, and revision time",
+        "File handoff, feedback waiting, payment follow-up, and post-delivery support buffer",
         "Target real hourly rate and revision buffer",
       ];
 
