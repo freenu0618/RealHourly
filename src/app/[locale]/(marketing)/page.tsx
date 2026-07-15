@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-15";
+  const dateModified = "2026-07-16";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -174,6 +174,10 @@ function buildJsonLd(locale: string) {
           q: "느린 피드백이나 파일 인수인계 시간도 실제 시급에 넣어야 하나요?",
           a: "반복적으로 발생하는 피드백 대기, 파일 정리, QA, 결제 follow-up, 사후 지원은 실제 수익을 낮추는 운영 시간입니다. 견적 전에는 버퍼로 넣고, 진행 중에는 시간 기록과 리포트로 다음 견적 또는 범위 조정 근거를 남기는 것이 좋습니다.",
         },
+        {
+          q: "긴급 납기나 주말 작업은 어떻게 계산해야 하나요?",
+          a: "기존 작업 시간을 압축해야 하거나 야간·주말 대응이 필요하다면 러시 버퍼를 별도 시간 또는 추가 비용으로 분리하는 것이 좋습니다. RealHourly에서는 기본 제작 시간, 비청구 커뮤니케이션, 수정 버퍼와 별도로 긴급 대응 시간을 넣어 목표 실제 시급이 유지되는지 확인하세요.",
+        },
       ]
     : [
         {
@@ -235,6 +239,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Should slow feedback or file handoff time be included in my real hourly rate?",
           a: "Yes when it is predictable project work. Feedback delays, file cleanup, QA, payment follow-up, and post-delivery support can reduce real profit, so include them as a buffer before quoting and track them as evidence during delivery.",
+        },
+        {
+          q: "How should I price urgent deadlines or weekend work?",
+          a: "If a deadline compresses the schedule or requires night or weekend availability, separate the rush buffer as extra time or an added fee. In RealHourly, enter urgent-response time apart from production hours, unbilled communication, and revision buffer to check whether the target real hourly rate still holds.",
         },
       ];
 
