@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-16";
+  const dateModified = "2026-07-18";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -165,6 +165,10 @@ function buildJsonLd(locale: string) {
         {
           q: "계산 결과를 그대로 견적서에 써도 되나요?",
           a: "RealHourly 결과는 견적 전 내부 기준선으로 먼저 쓰는 것이 안전합니다. 실제 제안서에는 산출물 범위, 포함 수정 횟수, 응답 시간, 결제 조건, 유지보수 포함 여부를 따로 명시하고, 계산에 사용한 수수료·세금·비청구 시간 가정은 필요할 때 조정하세요.",
+        },
+        {
+          q: "진행 중인 프로젝트의 실제 시급이 목표보다 낮아지면 어떻게 해야 하나요?",
+          a: "먼저 누락된 전제를 다시 확인하세요. 플랫폼·결제 수수료, 예상 세금, 도구·외주 비용, 미팅·메시지·QA·수정 시간을 빠뜨리지 않았는지 점검한 뒤에도 목표보다 낮다면 범위 축소, 추가 예산, 포함 수정 횟수 조정, 유지보수 분리 같은 다음 행동을 검토하는 것이 안전합니다.",
         },
         {
           q: "클라이언트에게 가격 인상이나 범위 조정을 어떻게 설명하나요?",
@@ -231,6 +235,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Can I use the calculator result directly in a client quote?",
           a: "Use the RealHourly result as an internal baseline before you send the quote. In the actual proposal, state deliverables, included revisions, response time, payment terms, and whether maintenance is included, then adjust the fee, tax, and unbilled-time assumptions when the scope changes.",
+        },
+        {
+          q: "What should I do if an active project's real hourly rate drops below target?",
+          a: "First re-check the missing assumptions: platform or payment fees, estimated tax, tool or subcontractor costs, meetings, messages, QA, and revisions. If the rate still falls below target, consider reducing scope, requesting extra budget, tightening included revisions, or separating maintenance and support into a paid add-on.",
         },
         {
           q: "How should I explain a price increase or scope change to a client?",
