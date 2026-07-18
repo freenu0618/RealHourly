@@ -811,6 +811,8 @@
     "faq16A": "Yes when it is predictable project work. Feedback delays, file cleanup, QA, payment follow-up, and post-delivery support can reduce real profit, so include them as a buffer before quoting and track them as evidence during delivery.",
     "faq17Q": "How should I price urgent deadlines or weekend work?",
     "faq17A": "If a deadline compresses the schedule or requires night or weekend availability, separate the rush buffer as extra time or an added fee. In RealHourly, enter urgent-response time apart from production hours, unbilled communication, and revision buffer to check whether the target real hourly rate still holds.",
+    "faq18Q": "Should deposits or milestone payment terms affect my real-rate decision?",
+    "faq18A": "Yes. Slow approvals or late payments can add follow-up time, schedule churn, and cash-flow risk that reduce real profitability. Before quoting, separate deposit, milestone approval criteria, final payment date, and late-payment boundaries, then track payment-related communication during delivery so the next quote reflects that overhead.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",

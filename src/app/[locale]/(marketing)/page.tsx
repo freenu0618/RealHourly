@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-18";
+  const dateModified = "2026-07-19";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -182,6 +182,10 @@ function buildJsonLd(locale: string) {
           q: "긴급 납기나 주말 작업은 어떻게 계산해야 하나요?",
           a: "기존 작업 시간을 압축해야 하거나 야간·주말 대응이 필요하다면 러시 버퍼를 별도 시간 또는 추가 비용으로 분리하는 것이 좋습니다. RealHourly에서는 기본 제작 시간, 비청구 커뮤니케이션, 수정 버퍼와 별도로 긴급 대응 시간을 넣어 목표 실제 시급이 유지되는지 확인하세요.",
         },
+        {
+          q: "선금이나 마일스톤 결제 조건도 실제 시급 판단에 넣어야 하나요?",
+          a: "네. 결제가 늦거나 승인 단계가 길면 follow-up, 일정 조정, 현금흐름 리스크가 생겨 실제 수익성이 낮아질 수 있습니다. 견적 전에는 선금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 따로 확인하고, 진행 중에는 결제 관련 커뮤니케이션 시간을 기록해 다음 견적 기준에 반영하세요.",
+        },
       ]
     : [
         {
@@ -251,6 +255,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I price urgent deadlines or weekend work?",
           a: "If a deadline compresses the schedule or requires night or weekend availability, separate the rush buffer as extra time or an added fee. In RealHourly, enter urgent-response time apart from production hours, unbilled communication, and revision buffer to check whether the target real hourly rate still holds.",
+        },
+        {
+          q: "Should deposits or milestone payment terms affect my real-rate decision?",
+          a: "Yes. Slow approvals or late payments can add follow-up time, schedule churn, and cash-flow risk that reduce real profitability. Before quoting, separate deposit, milestone approval criteria, final payment date, and late-payment boundaries, then track payment-related communication during delivery so the next quote reflects that overhead.",
         },
       ];
 
@@ -395,6 +403,11 @@ function buildJsonLd(locale: string) {
           description:
             "파일 정리, QA, 피드백 대기, 결제 follow-up, 납품 후 짧은 지원처럼 반복되는 마무리 시간을 별도 버퍼로 잡아 실제 시급이 과대평가되지 않게 합니다.",
         },
+        {
+          name: "결제 조건과 승인 지연",
+          description:
+            "선금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 분리해 follow-up 시간과 현금흐름 리스크가 견적에 빠지지 않게 합니다.",
+        },
       ]
     : [
         {
@@ -432,6 +445,11 @@ function buildJsonLd(locale: string) {
           description:
             "File cleanup, QA, feedback waiting, payment follow-up, and short post-delivery support should be treated as visible buffer time when they predictably belong to the project.",
         },
+        {
+          name: "Payment terms and approval delays",
+          description:
+            "Separate deposit, milestone approval criteria, final payment date, and late-payment boundaries so follow-up time and cash-flow risk are not missing from the quote.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -443,6 +461,7 @@ function buildJsonLd(locale: string) {
         "제작과 납품에 필요한 작업 시간",
         "견적·미팅·메시지·QA·수정 등 비청구 시간",
         "파일 인수인계·피드백 대기·결제 follow-up·사후지원 버퍼",
+        "선금·마일스톤 승인·최종 결제일 조건",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -453,6 +472,7 @@ function buildJsonLd(locale: string) {
         "Production and delivery hours",
         "Unbilled quoting, meeting, message, QA, and revision time",
         "File handoff, feedback waiting, payment follow-up, and post-delivery support buffer",
+        "Deposit, milestone approval, and final payment terms",
         "Target real hourly rate and revision buffer",
       ];
 
