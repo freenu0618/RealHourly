@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-19";
+  const dateModified = "2026-07-20";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -186,6 +186,10 @@ function buildJsonLd(locale: string) {
           q: "선금이나 마일스톤 결제 조건도 실제 시급 판단에 넣어야 하나요?",
           a: "네. 결제가 늦거나 승인 단계가 길면 follow-up, 일정 조정, 현금흐름 리스크가 생겨 실제 수익성이 낮아질 수 있습니다. 견적 전에는 선금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 따로 확인하고, 진행 중에는 결제 관련 커뮤니케이션 시간을 기록해 다음 견적 기준에 반영하세요.",
         },
+        {
+          q: "클라이언트가 할인이나 무료 추가 수정을 요청하면 어떻게 판단하나요?",
+          a: "할인이나 무료 추가 수정은 총수익을 낮추거나 비청구 시간을 늘려 실제 시급을 바로 떨어뜨릴 수 있습니다. 수락 전에는 할인 후 총액, 추가 수정 예상 시간, 미팅·메시지 시간, 납기 영향, 목표 실제 시급을 다시 계산하고, 목표보다 낮아지면 범위 축소·유료 추가 수정·마일스톤 재조정을 먼저 제안하세요.",
+        },
       ]
     : [
         {
@@ -259,6 +263,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Should deposits or milestone payment terms affect my real-rate decision?",
           a: "Yes. Slow approvals or late payments can add follow-up time, schedule churn, and cash-flow risk that reduce real profitability. Before quoting, separate deposit, milestone approval criteria, final payment date, and late-payment boundaries, then track payment-related communication during delivery so the next quote reflects that overhead.",
+        },
+        {
+          q: "How should I judge a discount or free extra revision request?",
+          a: "A discount or free extra revision can lower revenue or add unbilled time, which immediately reduces the real hourly rate. Before accepting, recalculate the discounted fee, expected extra revision time, meeting and message load, deadline impact, and target real hourly rate. If the result falls below target, propose reduced scope, paid revisions, or adjusted milestones first.",
         },
       ];
 

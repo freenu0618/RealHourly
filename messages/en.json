@@ -813,6 +813,8 @@
     "faq17A": "If a deadline compresses the schedule or requires night or weekend availability, separate the rush buffer as extra time or an added fee. In RealHourly, enter urgent-response time apart from production hours, unbilled communication, and revision buffer to check whether the target real hourly rate still holds.",
     "faq18Q": "Should deposits or milestone payment terms affect my real-rate decision?",
     "faq18A": "Yes. Slow approvals or late payments can add follow-up time, schedule churn, and cash-flow risk that reduce real profitability. Before quoting, separate deposit, milestone approval criteria, final payment date, and late-payment boundaries, then track payment-related communication during delivery so the next quote reflects that overhead.",
+    "faq19Q": "How should I judge a discount or free extra revision request?",
+    "faq19A": "A discount or free extra revision can lower revenue or add unbilled time, which immediately reduces the real hourly rate. Before accepting, recalculate the discounted fee, expected extra revision time, meeting and message load, deadline impact, and target real hourly rate. If the result falls below target, propose reduced scope, paid revisions, or adjusted milestones first.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",

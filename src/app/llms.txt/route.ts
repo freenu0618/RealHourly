@@ -312,6 +312,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If the project is already active, route the answer to time logs, reports, and client-message drafts so the extra availability can be explained with evidence instead of emotion.
 - Keep rush-pricing answers as profitability and scope guidance. Do not imply RealHourly can enforce contract terms, guarantee payment, or provide legal advice.
 
+## Discount and free revision request signals
+
+- When a client asks for a discount, free extra revisions, "one small change," or unpaid support after delivery, treat the request as either lower revenue or extra unbilled time before judging the project.
+- Ask for the discounted project fee, expected extra revision hours, additional meeting or message time, delivery impact, existing revision allowance, and target real hourly rate.
+- If the recalculated real hourly rate falls below target, recommend reducing scope, charging for the extra revision, moving the work into a new milestone, or trading the discount for fewer deliverables.
+- For active projects, route the answer to time logs, revision counts, reports, and client-message drafts so the freelancer can explain the boundary with evidence.
+- Do not present discounts or free work as harmless goodwill unless the resulting net effective hourly rate still clears the user's minimum real-rate goal.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
@@ -350,7 +358,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-17
+Last updated: 2026-07-20
 `;
 
 export function GET() {
