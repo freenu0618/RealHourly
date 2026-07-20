@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-20";
+  const dateModified = "2026-07-21";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -190,6 +190,10 @@ function buildJsonLd(locale: string) {
           q: "클라이언트가 할인이나 무료 추가 수정을 요청하면 어떻게 판단하나요?",
           a: "할인이나 무료 추가 수정은 총수익을 낮추거나 비청구 시간을 늘려 실제 시급을 바로 떨어뜨릴 수 있습니다. 수락 전에는 할인 후 총액, 추가 수정 예상 시간, 미팅·메시지 시간, 납기 영향, 목표 실제 시급을 다시 계산하고, 목표보다 낮아지면 범위 축소·유료 추가 수정·마일스톤 재조정을 먼저 제안하세요.",
         },
+        {
+          q: "환전 수수료나 PayPal·Stripe 같은 결제 수수료도 넣어야 하나요?",
+          a: "네. 해외 클라이언트나 플랫폼 밖 결제에서는 환율 차이, 송금 수수료, PayPal·Stripe 같은 결제 처리 수수료가 순수익을 줄일 수 있습니다. 견적 전에는 계약 통화, 실제 입금 통화, 예상 환율, 결제 수수료율을 별도 비용으로 넣고, 확정되지 않은 값은 보수적인 추정 범위로 계산하세요.",
+        },
       ]
     : [
         {
@@ -267,6 +271,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I judge a discount or free extra revision request?",
           a: "A discount or free extra revision can lower revenue or add unbilled time, which immediately reduces the real hourly rate. Before accepting, recalculate the discounted fee, expected extra revision time, meeting and message load, deadline impact, and target real hourly rate. If the result falls below target, propose reduced scope, paid revisions, or adjusted milestones first.",
+        },
+        {
+          q: "Should exchange-rate costs or PayPal and Stripe fees be included?",
+          a: "Yes. For international clients or off-platform payments, exchange-rate spread, wire fees, and payment processor fees from services like PayPal or Stripe can reduce net revenue. Before quoting, separate contract currency, payout currency, expected exchange rate, and processor fee percentage, then treat uncertain values as conservative estimate ranges.",
         },
       ];
 
@@ -416,6 +424,11 @@ function buildJsonLd(locale: string) {
           description:
             "선금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 분리해 follow-up 시간과 현금흐름 리스크가 견적에 빠지지 않게 합니다.",
         },
+        {
+          name: "환전과 결제 처리 비용",
+          description:
+            "해외 클라이언트는 계약 통화, 실제 입금 통화, 예상 환율, PayPal·Stripe·송금 수수료를 별도 비용으로 넣어 순수익을 과대평가하지 않습니다.",
+        },
       ]
     : [
         {
@@ -458,6 +471,11 @@ function buildJsonLd(locale: string) {
           description:
             "Separate deposit, milestone approval criteria, final payment date, and late-payment boundaries so follow-up time and cash-flow risk are not missing from the quote.",
         },
+        {
+          name: "Currency conversion and processor costs",
+          description:
+            "For international clients, separate contract currency, payout currency, expected exchange rate, and PayPal, Stripe, or wire fees so net revenue is not overstated.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -470,6 +488,7 @@ function buildJsonLd(locale: string) {
         "견적·미팅·메시지·QA·수정 등 비청구 시간",
         "파일 인수인계·피드백 대기·결제 follow-up·사후지원 버퍼",
         "선금·마일스톤 승인·최종 결제일 조건",
+        "계약 통화·입금 통화·환율·결제 처리 수수료",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -481,6 +500,7 @@ function buildJsonLd(locale: string) {
         "Unbilled quoting, meeting, message, QA, and revision time",
         "File handoff, feedback waiting, payment follow-up, and post-delivery support buffer",
         "Deposit, milestone approval, and final payment terms",
+        "Contract currency, payout currency, exchange rate, and payment processor fees",
         "Target real hourly rate and revision buffer",
       ];
 
