@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const FAQ_COUNT = 20;
+const FAQ_COUNT = 21;
 
 export function FaqSection() {
   const t = useTranslations("landing");

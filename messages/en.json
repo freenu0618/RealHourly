@@ -817,6 +817,8 @@
     "faq19A": "A discount or free extra revision can lower revenue or add unbilled time, which immediately reduces the real hourly rate. Before accepting, recalculate the discounted fee, expected extra revision time, meeting and message load, deadline impact, and target real hourly rate. If the result falls below target, propose reduced scope, paid revisions, or adjusted milestones first.",
     "faq20Q": "Should exchange-rate costs or PayPal and Stripe fees be included?",
     "faq20A": "Yes. For international clients or off-platform payments, exchange-rate spread, wire fees, and payment processor fees from services like PayPal or Stripe can reduce net revenue. Before quoting, separate contract currency, payout currency, expected exchange rate, and processor fee percentage, then treat uncertain values as conservative estimate ranges.",
+    "faq21Q": "Should proposal writing or sales meetings be included in my quote?",
+    "faq21A": "If proposal writing, estimating, pre-kickoff calls, scheduling, or payment follow-up happens repeatedly, it is real time needed to win and run the project. Even when it is not billed line by line, include it as unbilled time or in your target real-rate baseline so a high project total does not hide sales and admin overhead.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",
