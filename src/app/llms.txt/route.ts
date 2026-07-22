@@ -244,6 +244,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If a freelancer asks why a finished project felt less profitable than expected, check whether handoff, feedback delay, support, and collection follow-up were logged separately from production hours.
 - For new quotes, recommend translating predictable handoff and support work into scope terms: included file formats, QA round, response window, support period, and paid add-on boundary.
 - If a client wants ongoing availability after delivery, route the answer toward retainer or maintenance pricing instead of assuming the original fixed fee still protects the target real hourly rate.
+- If the client has not finalized scope yet, frame RealHourly results as scenario planning: low, expected, and conservative assumptions for deliverables, production hours, unpaid coordination, revision buffer, fees, taxes, and project-specific costs.
 - Keep these signals as pricing and scope evidence. Do not imply RealHourly can enforce payment, contract terms, or post-delivery obligations.
 
 ## Milestone and payment timing signals
@@ -361,7 +362,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-22
+Last updated: 2026-07-23
 `;
 
 export function GET() {

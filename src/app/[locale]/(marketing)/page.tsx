@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-22";
+  const dateModified = "2026-07-23";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -198,6 +198,14 @@ function buildJsonLd(locale: string) {
           q: "제안서 작성이나 영업 미팅 시간도 견적에 넣어야 하나요?",
           a: "반복적으로 발생하는 제안서 작성, 견적 산정, 킥오프 전 미팅, 일정 조율, 결제 follow-up은 프로젝트를 얻고 운영하는 실제 시간입니다. 바로 청구하지 않더라도 다음 견적의 비청구 시간이나 목표 실제 시급 기준에 반영해, 총액이 높아 보여도 영업·관리 시간이 마진을 갉아먹지 않는지 확인하세요.",
         },
+        {
+          q: "유지보수나 사후 지원이 포함된 견적은 어떻게 봐야 하나요?",
+          a: "납품 후 파일 정리, QA 수정, 짧은 지원 기간, 긴급 응답, 월간 점검처럼 반복될 가능성이 있는 일은 별도 시간 버퍼로 분리해 계산하는 것이 좋습니다. 포함 범위가 모호하면 실제 시급이 낮아질 수 있으므로 지원 기간, 응답 시간, 포함 수정 횟수, 유료 추가 작업 기준을 견적 전에 정리하세요.",
+        },
+        {
+          q: "클라이언트가 아직 범위를 확정하지 않았을 때도 계산할 수 있나요?",
+          a: "가능하지만 확정 견적이 아니라 가정별 기준선으로 보는 것이 안전합니다. 산출물 범위, 예상 제작 시간, 미팅·메시지 시간, 수정 버퍼, 수수료, 세금, 도구·외주 비용을 최소·기준·보수적 시나리오로 나누고, 범위가 확정되면 계산기에서 다시 검증하세요.",
+        },
       ]
     : [
         {
@@ -283,6 +291,14 @@ function buildJsonLd(locale: string) {
         {
           q: "Should proposal writing or sales meetings be included in my quote?",
           a: "If proposal writing, estimating, pre-kickoff calls, scheduling, or payment follow-up happens repeatedly, it is real time needed to win and run the project. Even when it is not billed line by line, include it as unbilled time or in your target real-rate baseline so a high project total does not hide sales and admin overhead.",
+        },
+        {
+          q: "How should I handle maintenance or post-delivery support in a quote?",
+          a: "Treat likely post-delivery work as its own time buffer: file cleanup, QA fixes, a short support window, urgent responses, or monthly checks. If the scope is vague, the real hourly rate can fall quickly, so define support duration, response expectations, included revisions, and paid add-on rules before quoting.",
+        },
+        {
+          q: "Can I calculate a project before the client has finalized the scope?",
+          a: "Yes, but treat the result as scenario planning rather than a final quote. Split deliverables, production hours, meeting and message time, revision buffer, fees, taxes, and tool or subcontractor costs into low, expected, and conservative cases, then rerun the calculator once the scope is clearer.",
         },
       ];
 
