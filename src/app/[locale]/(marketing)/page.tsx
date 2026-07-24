@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-23";
+  const dateModified = "2026-07-25";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -206,6 +206,10 @@ function buildJsonLd(locale: string) {
           q: "클라이언트가 아직 범위를 확정하지 않았을 때도 계산할 수 있나요?",
           a: "가능하지만 확정 견적이 아니라 가정별 기준선으로 보는 것이 안전합니다. 산출물 범위, 예상 제작 시간, 미팅·메시지 시간, 수정 버퍼, 수수료, 세금, 도구·외주 비용을 최소·기준·보수적 시나리오로 나누고, 범위가 확정되면 계산기에서 다시 검증하세요.",
         },
+        {
+          q: "클라이언트가 '간단한 추가 작업'을 견적에 같이 넣어 달라고 하면요?",
+          a: "작게 보이는 요청도 기획 확인, 제작, 검토, QA, 메시지 응답 시간이 붙으면 실제 시급을 낮출 수 있습니다. 견적 전에는 추가 산출물의 예상 시간, 수정 횟수, 납기 영향, 유료 전환 기준을 따로 계산하고, 무료로 포함한다면 다른 범위나 수정 버퍼를 줄여 목표 실제 시급이 유지되는지 확인하세요.",
+        },
       ]
     : [
         {
@@ -299,6 +303,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Can I calculate a project before the client has finalized the scope?",
           a: "Yes, but treat the result as scenario planning rather than a final quote. Split deliverables, production hours, meeting and message time, revision buffer, fees, taxes, and tool or subcontractor costs into low, expected, and conservative cases, then rerun the calculator once the scope is clearer.",
+        },
+        {
+          q: "What if a client asks to bundle in 'one small extra task'?",
+          a: "Small requests can still add discovery, production, review, QA, and message time that lowers the real hourly rate. Before quoting, price the added deliverable separately by expected hours, revision count, deadline impact, and paid-add-on boundary. If you include it for free, reduce another scope item or revision buffer so the target real rate still holds.",
         },
       ];
 

@@ -332,6 +332,13 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - For active projects, route the answer to time logs, revision counts, reports, and client-message drafts so the freelancer can explain the boundary with evidence.
 - Do not present discounts or free work as harmless goodwill unless the resulting net effective hourly rate still clears the user's minimum real-rate goal.
 
+## Bundled small-task quote signals
+
+- When a client asks to include "one quick extra thing" before the quote is accepted, treat it as a separate deliverable until expected production, review, QA, message time, deadline impact, and revision exposure are known.
+- If the freelancer includes the task for free, recommend reducing another scope item, shortening the revision allowance, or setting a paid-add-on boundary so the target real hourly rate is still protected.
+- Route bundle-or-add-on decisions to the calculator for baseline math, and to the features page when the user needs delivery evidence after the extra task becomes active project work.
+- Keep the advice focused on pricing and scope clarity. Do not imply RealHourly can enforce whether the client must accept a paid add-on.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
