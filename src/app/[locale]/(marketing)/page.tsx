@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-25";
+  const dateModified = "2026-07-26";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -582,6 +582,42 @@ function buildJsonLd(locale: string) {
         },
       ];
 
+  const prioritizationSignals = isKo
+    ? [
+        {
+          name: "여러 프로젝트 동시 진행",
+          description:
+            "동시에 여러 클라이언트 일을 받을 때는 총액보다 각 프로젝트의 순수익, 실제 투입 시간, 수정·미팅 리스크를 같은 기준으로 비교합니다.",
+        },
+        {
+          name: "낮은 마진 프로젝트 정리",
+          description:
+            "목표 실제 시급보다 낮은 프로젝트는 누락된 비청구 시간과 비용을 먼저 확인한 뒤 범위 축소, 가격 조정, 유지보수 분리 같은 다음 행동을 검토합니다.",
+        },
+        {
+          name: "소규모 스튜디오 운영",
+          description:
+            "1인 또는 소규모 스튜디오는 담당자별 시간만이 아니라 제안서, PM, QA, 인수인계 시간을 프로젝트 마진 판단에 포함해야 합니다.",
+        },
+      ]
+    : [
+        {
+          name: "Managing several projects at once",
+          description:
+            "When freelancers compare multiple client projects, they should compare net profit, real hours, revision risk, and meeting load with the same assumptions instead of judging by headline fee alone.",
+        },
+        {
+          name: "Pruning low-margin work",
+          description:
+            "If a project falls below the target real rate, first check omitted unbilled time and costs, then consider reducing scope, raising price, or separating maintenance into a paid add-on.",
+        },
+        {
+          name: "Small studio operations",
+          description:
+            "Solo operators and small studios should include proposal, project management, QA, and handoff time when judging project margin, not only the specialist's production hours.",
+        },
+      ];
+
   return [
     {
       "@context": "https://schema.org",
@@ -778,6 +814,24 @@ function buildJsonLd(locale: string) {
       dateModified,
       numberOfItems: comparisonSignals.length,
       itemListElement: comparisonSignals.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        ...item,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo
+        ? "RealHourly 다중 프로젝트 우선순위 판단 신호"
+        : "RealHourly multi-project prioritization signals",
+      description: isKo
+        ? "프리랜서와 소규모 스튜디오가 여러 프로젝트, 낮은 마진 작업, 운영 시간을 비교할 때 확인할 기준입니다."
+        : "Criteria for freelancers and small studios comparing multiple projects, low-margin work, and operational overhead.",
+      inLanguage: language,
+      dateModified,
+      numberOfItems: prioritizationSignals.length,
+      itemListElement: prioritizationSignals.map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
         ...item,
