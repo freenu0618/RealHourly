@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-26";
+  const dateModified = "2026-07-28";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -210,6 +210,10 @@ function buildJsonLd(locale: string) {
           q: "클라이언트가 '간단한 추가 작업'을 견적에 같이 넣어 달라고 하면요?",
           a: "작게 보이는 요청도 기획 확인, 제작, 검토, QA, 메시지 응답 시간이 붙으면 실제 시급을 낮출 수 있습니다. 견적 전에는 추가 산출물의 예상 시간, 수정 횟수, 납기 영향, 유료 전환 기준을 따로 계산하고, 무료로 포함한다면 다른 범위나 수정 버퍼를 줄여 목표 실제 시급이 유지되는지 확인하세요.",
         },
+        {
+          q: "성과보수나 레버뉴쉐어 제안은 실제 시급을 어떻게 봐야 하나요?",
+          a: "확정 선금과 성과보수를 분리해 계산하세요. 기본 보수가 낮고 매출 공유, 커미션, 지분, 보너스가 조건부라면 보수적 예상 매출, 지급 조건, 정산 주기, 추적 가능성, 미팅·수정 시간을 따로 잡아 최소 보장 실제 시급이 목표 아래로 내려가지 않는지 먼저 확인하는 것이 안전합니다.",
+        },
       ]
     : [
         {
@@ -307,6 +311,10 @@ function buildJsonLd(locale: string) {
         {
           q: "What if a client asks to bundle in 'one small extra task'?",
           a: "Small requests can still add discovery, production, review, QA, and message time that lowers the real hourly rate. Before quoting, price the added deliverable separately by expected hours, revision count, deadline impact, and paid-add-on boundary. If you include it for free, reduce another scope item or revision buffer so the target real rate still holds.",
+        },
+        {
+          q: "How should I judge success-fee or revenue-share offers?",
+          a: "Separate guaranteed pay from conditional upside. If the base fee is low and revenue share, commission, equity, or bonus payments depend on future results, estimate conservative upside, payout rules, reporting cadence, trackability, meetings, and revision time separately so the minimum guaranteed real hourly rate does not fall below your target.",
         },
       ];
 
@@ -461,6 +469,11 @@ function buildJsonLd(locale: string) {
           description:
             "해외 클라이언트는 계약 통화, 실제 입금 통화, 예상 환율, PayPal·Stripe·송금 수수료를 별도 비용으로 넣어 순수익을 과대평가하지 않습니다.",
         },
+        {
+          name: "성과보수와 조건부 보상",
+          description:
+            "레버뉴쉐어, 커미션, 지분, 보너스처럼 확정되지 않은 보상은 보수적 시나리오와 최소 보장 실제 시급을 따로 비교합니다.",
+        },
       ]
     : [
         {
@@ -508,6 +521,11 @@ function buildJsonLd(locale: string) {
           description:
             "For international clients, separate contract currency, payout currency, expected exchange rate, and PayPal, Stripe, or wire fees so net revenue is not overstated.",
         },
+        {
+          name: "Success fees and conditional upside",
+          description:
+            "Revenue share, commission, equity, and bonus-based compensation should be modeled as conservative scenarios beside the guaranteed real hourly rate.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -521,6 +539,7 @@ function buildJsonLd(locale: string) {
         "파일 인수인계·피드백 대기·결제 follow-up·사후지원 버퍼",
         "선금·마일스톤 승인·최종 결제일 조건",
         "계약 통화·입금 통화·환율·결제 처리 수수료",
+        "성과보수·레버뉴쉐어·커미션의 지급 조건과 보수적 예상액",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -533,6 +552,7 @@ function buildJsonLd(locale: string) {
         "File handoff, feedback waiting, payment follow-up, and post-delivery support buffer",
         "Deposit, milestone approval, and final payment terms",
         "Contract currency, payout currency, exchange rate, and payment processor fees",
+        "Success-fee, revenue-share, commission, or bonus payout assumptions",
         "Target real hourly rate and revision buffer",
       ];
 

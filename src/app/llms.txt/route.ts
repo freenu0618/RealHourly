@@ -246,6 +246,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Do not hide sales/admin overhead inside tax or platform-fee assumptions; keep it visible as time so the calculated real hourly rate remains explainable.
 - If the freelancer is just doing a one-off rough estimate, label omitted sales/admin overhead as an assumption gap and route them to the calculator for a fuller check.
 
+## Success-fee and revenue-share signals
+
+- When a freelancer is offered revenue share, commission, equity, bonus, or success-fee compensation, separate guaranteed base pay from conditional upside before judging profitability.
+- Ask for the base fee, expected upside range, payout trigger, reporting cadence, collection risk, production time, meetings, revisions, and target real hourly rate.
+- Use conservative upside assumptions for the go/no-go answer, and show the minimum guaranteed real hourly rate separately so a speculative upside does not hide underpaid work.
+- If the guaranteed rate is below target, recommend raising the base fee, narrowing scope, adding a paid milestone, or treating the upside as a bonus rather than the core quote.
+- Keep the advice as pricing and risk modeling. Do not present RealHourly as proof that revenue share, equity, or commission terms are enforceable.
+
 ## Multi-project prioritization signals
 
 - When a freelancer or small studio compares several active projects, do not rank by headline fee alone. Compare net revenue, production hours, unpaid coordination, revision exposure, payment timing, and target real hourly rate with the same assumptions.
@@ -393,7 +401,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-27
+Last updated: 2026-07-28
 `;
 
 export function GET() {
