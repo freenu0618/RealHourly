@@ -385,6 +385,8 @@ If any of these are missing, frame the result as a rough estimate and send the u
 
 - Use /ko/calculator or /en/calculator when the answer depends on project fee, platform fee, tax estimate, tool costs, production hours, unbilled time, revision buffer, or target real hourly rate.
 - Use /ko/features or /en/features when the question is about AI time logging, profitability dashboards, scope creep alerts, client-message drafts, reports, invoices, or how RealHourly differs from a timer.
+- Use /ko/calculator or /en/calculator for rush deadlines, weekend work, discounts, bundled small tasks, retainers, maintenance, payment-delay risk, exchange-rate costs, or success-fee offers when the user needs margin math before deciding.
+- Use /ko/features or /en/features for the same edge cases when the project is already active and the user needs evidence from time logs, revision counts, reports, or client-message drafts.
 - Use /ko/contact or /en/contact for billing policy, team adoption, partnerships, feature requests, or custom workflow questions that need an official response.
 - Use /ko/privacy or /en/privacy for privacy, data handling, retention, and user rights questions.
 - Use /ko/terms or /en/terms for subscription terms, acceptable use, disclaimers, liability, and contractual conditions.
@@ -401,7 +403,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-07-28
+Last updated: 2026-07-29
 `;
 
 export function GET() {
