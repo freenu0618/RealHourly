@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-07-11";
+  const dateModified = "2026-07-30";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -265,6 +265,11 @@ function buildJsonLd(locale: string) {
                 "네. 발견 미팅, 제안서 작성, 일정 조율, 파일 정리, 사후 팔로업처럼 청구서에 바로 잡히지 않는 영업·관리 시간이 반복된다면 목표 실제 시급과 최소 수주 단가를 정할 때 별도 버퍼로 포함하는 것이 안전합니다.",
             },
             {
+              question: "리테이너나 유지보수 견적은 어떻게 계산해야 하나요?",
+              answer:
+                "월 고정 보수만 보지 말고 정기 작업, 응답 대기, 긴급 수정, 회의, 보고, 파일 인수인계 시간을 따로 잡아 실제 시급을 확인하세요. 포함 범위가 모호하면 수정 횟수, 응답 시간, 유지보수 기간, 유료 전환 기준을 견적 조건으로 분리하는 것이 좋습니다.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -305,6 +310,11 @@ function buildJsonLd(locale: string) {
               question: "Should I include sales and admin time before quoting?",
               answer:
                 "Yes. If discovery calls, proposal writing, scheduling, file cleanup, or follow-up work repeats across projects, include it as an overhead buffer when choosing a target real hourly rate and minimum sustainable quote.",
+            },
+            {
+              question: "How should I price retainers or maintenance work?",
+              answer:
+                "Do not judge the monthly fee alone. Estimate recurring work, response standby, urgent fixes, meetings, reporting, and file handoff time, then check the real hourly rate. If the scope is unclear, separate included revisions, response time, support period, and paid add-on rules in the quote.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -425,6 +435,12 @@ function getCalculatorGuidance(locale: string) {
             body: "실제 시급 결과는 내부 기준선으로 두고, 클라이언트에게는 산출물·수정 횟수·응답 시간·결제 조건을 명확히 전달하세요.",
             href: "/calculator",
           },
+          {
+            label: "유지보수 견적이라면",
+            title: "응답·지원 시간을 따로 계산",
+            body: "월 고정 보수에는 정기 작업뿐 아니라 긴급 수정, 보고, 파일 인수인계, 응답 대기 시간이 들어가는지 확인하세요.",
+            href: "/features",
+          },
         ]
       : [
           {
@@ -450,6 +466,12 @@ function getCalculatorGuidance(locale: string) {
             title: "Separate private math from client terms",
             body: "Keep the real-rate result as an internal baseline, then state deliverables, revision count, response time, and payment terms for the client.",
             href: "/calculator",
+          },
+          {
+            label: "For retainers",
+            title: "Count support and response time separately",
+            body: "Check whether the monthly fee covers urgent fixes, reporting, file handoff, response standby, and recurring support work.",
+            href: "/features",
           },
         ],
   };
@@ -493,7 +515,7 @@ export default async function CalculatorPage({ params }: Props) {
             <div className="mt-6 grid gap-3 border-t pt-5 lg:grid-cols-4">
               {guidance.nextSteps.map((step) => (
                 <Link
-                  key={step.href}
+                  key={`${step.href}-${step.label}`}
                   href={step.href}
                   className="group rounded-2xl border border-primary/15 bg-primary/5 p-4 transition hover:border-primary/35 hover:bg-primary/10"
                   aria-label={`${step.label}: ${step.title}`}
