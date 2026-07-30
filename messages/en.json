@@ -827,6 +827,8 @@
     "faq24A": "Small requests can still add discovery, production, review, QA, and message time that lowers the real hourly rate. Before quoting, price the added deliverable separately by expected hours, revision count, deadline impact, and paid-add-on boundary. If you include it for free, reduce another scope item or revision buffer so the target real rate still holds.",
     "faq25Q": "How should I judge success-fee or revenue-share offers?",
     "faq25A": "Separate guaranteed pay from conditional upside. If the base fee is low and revenue share, commission, equity, or bonus payments depend on future results, estimate conservative upside, payout rules, reporting cadence, trackability, meetings, and revision time separately so the minimum guaranteed real hourly rate does not fall below your target.",
+    "faq26Q": "Can I calculate projects with subcontractor or collaborator costs?",
+    "faq26A": "Yes. If a project includes subcontractors or collaborators such as designers, developers, translators, or production crews, enter those costs as separate deductions from project revenue. Keep your own production, PM, review, and communication time in the real-hours estimate. If the subcontractor quote is not final, compare low, expected, and conservative cost scenarios before deciding whether the project still meets your target real rate.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",

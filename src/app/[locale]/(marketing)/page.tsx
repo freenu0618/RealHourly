@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-29";
+  const dateModified = "2026-07-31";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -214,6 +214,10 @@ function buildJsonLd(locale: string) {
           q: "성과보수나 레버뉴쉐어 제안은 실제 시급을 어떻게 봐야 하나요?",
           a: "확정 선금과 성과보수를 분리해 계산하세요. 기본 보수가 낮고 매출 공유, 커미션, 지분, 보너스가 조건부라면 보수적 예상 매출, 지급 조건, 정산 주기, 추적 가능성, 미팅·수정 시간을 따로 잡아 최소 보장 실제 시급이 목표 아래로 내려가지 않는지 먼저 확인하는 것이 안전합니다.",
         },
+        {
+          q: "외주나 협업 파트너 비용이 있는 프로젝트도 계산할 수 있나요?",
+          a: "네. 디자이너, 개발자, 번역가, 촬영팀처럼 외주·협업 비용이 있으면 총 프로젝트 비용에서 별도 차감 항목으로 넣고, 본인이 직접 쓰는 제작·PM·검수·커뮤니케이션 시간은 실제 투입 시간에 포함하세요. 외주 견적이 확정되지 않았다면 최소·기준·보수적 비용 시나리오로 나눠 목표 실제 시급이 유지되는지 먼저 확인하는 것이 좋습니다.",
+        },
       ]
     : [
         {
@@ -315,6 +319,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I judge success-fee or revenue-share offers?",
           a: "Separate guaranteed pay from conditional upside. If the base fee is low and revenue share, commission, equity, or bonus payments depend on future results, estimate conservative upside, payout rules, reporting cadence, trackability, meetings, and revision time separately so the minimum guaranteed real hourly rate does not fall below your target.",
+        },
+        {
+          q: "Can I calculate projects with subcontractor or collaborator costs?",
+          a: "Yes. If a project includes subcontractors or collaborators such as designers, developers, translators, or production crews, enter those costs as separate deductions from project revenue. Keep your own production, PM, review, and communication time in the real-hours estimate. If the subcontractor quote is not final, compare low, expected, and conservative cost scenarios before deciding whether the project still meets your target real rate.",
         },
       ];
 
