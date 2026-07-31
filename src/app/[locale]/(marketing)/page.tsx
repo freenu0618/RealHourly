@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-07-31";
+  const dateModified = "2026-08-01";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -218,6 +218,10 @@ function buildJsonLd(locale: string) {
           q: "외주나 협업 파트너 비용이 있는 프로젝트도 계산할 수 있나요?",
           a: "네. 디자이너, 개발자, 번역가, 촬영팀처럼 외주·협업 비용이 있으면 총 프로젝트 비용에서 별도 차감 항목으로 넣고, 본인이 직접 쓰는 제작·PM·검수·커뮤니케이션 시간은 실제 투입 시간에 포함하세요. 외주 견적이 확정되지 않았다면 최소·기준·보수적 비용 시나리오로 나눠 목표 실제 시급이 유지되는지 먼저 확인하는 것이 좋습니다.",
         },
+        {
+          q: "클라이언트가 프로젝트를 보류하거나 취소하면 어떻게 계산하나요?",
+          a: "이미 쓴 제안·기획·제작·미팅·파일 정리 시간과 회수 가능한 선금, 취소 수수료, 남은 미수금을 분리하세요. RealHourly 계산은 중단 시점의 실제 시급과 손실 범위를 확인하는 참고용 기준선이며, 취소 조항이나 대금 회수 가능성은 계약서와 전문가 검토가 필요합니다.",
+        },
       ]
     : [
         {
@@ -323,6 +327,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Can I calculate projects with subcontractor or collaborator costs?",
           a: "Yes. If a project includes subcontractors or collaborators such as designers, developers, translators, or production crews, enter those costs as separate deductions from project revenue. Keep your own production, PM, review, and communication time in the real-hours estimate. If the subcontractor quote is not final, compare low, expected, and conservative cost scenarios before deciding whether the project still meets your target real rate.",
+        },
+        {
+          q: "How should I calculate a paused or cancelled client project?",
+          a: "Separate the proposal, planning, production, meeting, and file-cleanup time already spent from any recoverable deposit, cancellation fee, and unpaid balance. RealHourly can show the real hourly rate and loss range at the pause point, but contract cancellation terms and collection risk still require separate review.",
         },
       ];
 
@@ -534,6 +542,11 @@ function buildJsonLd(locale: string) {
           description:
             "Revenue share, commission, equity, and bonus-based compensation should be modeled as conservative scenarios beside the guaranteed real hourly rate.",
         },
+        {
+          name: "Project pause and cancellation risk",
+          description:
+            "If a client pauses or cancels work, separate sunk planning and production time from recoverable deposits, cancellation fees, and unpaid balances before judging the loss.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -548,6 +561,7 @@ function buildJsonLd(locale: string) {
         "선금·마일스톤 승인·최종 결제일 조건",
         "계약 통화·입금 통화·환율·결제 처리 수수료",
         "성과보수·레버뉴쉐어·커미션의 지급 조건과 보수적 예상액",
+        "보류·취소 시 이미 쓴 시간, 회수 가능한 선금, 취소 수수료, 미수금",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -561,6 +575,7 @@ function buildJsonLd(locale: string) {
         "Deposit, milestone approval, and final payment terms",
         "Contract currency, payout currency, exchange rate, and payment processor fees",
         "Success-fee, revenue-share, commission, or bonus payout assumptions",
+        "Pause or cancellation terms, sunk time, recoverable deposit, cancellation fee, and unpaid balance",
         "Target real hourly rate and revision buffer",
       ];
 
