@@ -829,6 +829,8 @@
     "faq25A": "Separate guaranteed pay from conditional upside. If the base fee is low and revenue share, commission, equity, or bonus payments depend on future results, estimate conservative upside, payout rules, reporting cadence, trackability, meetings, and revision time separately so the minimum guaranteed real hourly rate does not fall below your target.",
     "faq26Q": "Can I calculate projects with subcontractor or collaborator costs?",
     "faq26A": "Yes. If a project includes subcontractors or collaborators such as designers, developers, translators, or production crews, enter those costs as separate deductions from project revenue. Keep your own production, PM, review, and communication time in the real-hours estimate. If the subcontractor quote is not final, compare low, expected, and conservative cost scenarios before deciding whether the project still meets your target real rate.",
+    "faq27Q": "How should I calculate a paused or cancelled client project?",
+    "faq27A": "Separate the proposal, planning, production, meeting, and file-cleanup time already spent from any recoverable deposit, cancellation fee, and unpaid balance. RealHourly can show the real hourly rate and loss range at the pause point, but contract cancellation terms and collection risk still require separate review.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",
