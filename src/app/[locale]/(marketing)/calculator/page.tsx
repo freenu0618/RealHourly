@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-07-30";
+  const dateModified = "2026-08-03";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -71,6 +71,7 @@ function buildJsonLd(locale: string) {
         ["도구·외주 비용", "구독 도구, 폰트·소스 구매, 외주·하청 비용처럼 프로젝트별로 빠지는 비용"],
         ["제작 시간", "디자인, 개발, 번역, 집필 등 직접 산출물을 만드는 청구 가능 작업 시간"],
         ["비청구 시간", "견적, 미팅, 메시지, 리서치, QA, 수정, 관리처럼 실제로 쓰지만 청구에서 빠지기 쉬운 시간"],
+        ["결제 조건", "계약금, 마일스톤 승인, 최종 결제일, 지연 시 후속 커뮤니케이션처럼 현금흐름과 시간을 바꾸는 조건"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
     : [
@@ -80,6 +81,7 @@ function buildJsonLd(locale: string) {
         ["Tool and subcontractor costs", "Project-specific subscriptions, assets, contractors, or specialist support"],
         ["Production hours", "Billable work time spent creating the actual deliverable"],
         ["Unbilled hours", "Quoting, meetings, messages, research, QA, revisions, and admin time that still reduce margin"],
+        ["Payment terms", "Deposit, milestone approval, final payment date, and follow-up work that can change cash flow and time risk"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
 
@@ -270,6 +272,11 @@ function buildJsonLd(locale: string) {
                 "월 고정 보수만 보지 말고 정기 작업, 응답 대기, 긴급 수정, 회의, 보고, 파일 인수인계 시간을 따로 잡아 실제 시급을 확인하세요. 포함 범위가 모호하면 수정 횟수, 응답 시간, 유지보수 기간, 유료 전환 기준을 견적 조건으로 분리하는 것이 좋습니다.",
             },
             {
+              question: "계약금이나 마일스톤 결제 조건도 실제 시급 판단에 넣어야 하나요?",
+              answer:
+                "네. 결제가 대부분 마지막 승인 뒤로 밀리거나 승인 기준이 모호하면 팔로업, 일정 대기, 재작업 시간이 늘어 실제 수익성이 낮아질 수 있습니다. 견적 전에는 계약금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 분리해 확인하세요.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -315,6 +322,11 @@ function buildJsonLd(locale: string) {
               question: "How should I price retainers or maintenance work?",
               answer:
                 "Do not judge the monthly fee alone. Estimate recurring work, response standby, urgent fixes, meetings, reporting, and file handoff time, then check the real hourly rate. If the scope is unclear, separate included revisions, response time, support period, and paid add-on rules in the quote.",
+            },
+            {
+              question: "Should deposit or milestone payment terms affect my real-rate decision?",
+              answer:
+                "Yes. If most payment is delayed until final approval or the approval criteria are vague, follow-up time, waiting, and rework can reduce real profitability. Before quoting, separate deposit, milestone acceptance criteria, final payment date, and late-payment boundaries.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -376,7 +388,7 @@ function getCalculatorGuidance(locale: string) {
       ? [
           {
             title: "입력값",
-            body: "계약 총액, 플랫폼 수수료, 예상 세금, 도구 비용, 미팅·메시지·수정 시간을 모두 포함합니다.",
+            body: "계약 총액, 플랫폼 수수료, 예상 세금, 도구 비용, 미팅·메시지·수정 시간, 결제 조건을 모두 포함합니다.",
           },
           {
             title: "핵심 출력",
@@ -394,7 +406,7 @@ function getCalculatorGuidance(locale: string) {
       : [
           {
             title: "Inputs",
-            body: "Include total project fee, platform fee, estimated tax, tool costs, and unbilled meetings, messages, and revisions.",
+            body: "Include total project fee, platform fee, estimated tax, tool costs, payment terms, and unbilled meetings, messages, and revisions.",
           },
           {
             title: "Key outputs",
@@ -436,6 +448,12 @@ function getCalculatorGuidance(locale: string) {
             href: "/calculator",
           },
           {
+            label: "결제가 늦어질 수 있다면",
+            title: "마일스톤 조건까지 확인",
+            body: "계약금, 승인 기준, 최종 결제일, 지연 시 팔로업 시간을 따로 두어 높은 총액이 낮은 실제 시급을 숨기지 않게 하세요.",
+            href: "/calculator",
+          },
+          {
             label: "유지보수 견적이라면",
             title: "응답·지원 시간을 따로 계산",
             body: "월 고정 보수에는 정기 작업뿐 아니라 긴급 수정, 보고, 파일 인수인계, 응답 대기 시간이 들어가는지 확인하세요.",
@@ -465,6 +483,12 @@ function getCalculatorGuidance(locale: string) {
             label: "Before sending a proposal",
             title: "Separate private math from client terms",
             body: "Keep the real-rate result as an internal baseline, then state deliverables, revision count, response time, and payment terms for the client.",
+            href: "/calculator",
+          },
+          {
+            label: "If payment may lag",
+            title: "Check milestone terms",
+            body: "Separate deposit, approval criteria, final payment date, and follow-up time so a large project total does not hide a weak real hourly rate.",
             href: "/calculator",
           },
           {
