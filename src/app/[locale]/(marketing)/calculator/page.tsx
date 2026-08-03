@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-03";
+  const dateModified = "2026-08-04";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -70,8 +70,9 @@ function buildJsonLd(locale: string) {
         ["예상 세금률", "거주지와 계약 조건에 맞춰 보수적으로 입력하는 세금 추정치"],
         ["도구·외주 비용", "구독 도구, 폰트·소스 구매, 외주·하청 비용처럼 프로젝트별로 빠지는 비용"],
         ["제작 시간", "디자인, 개발, 번역, 집필 등 직접 산출물을 만드는 청구 가능 작업 시간"],
-        ["비청구 시간", "견적, 미팅, 메시지, 리서치, QA, 수정, 관리처럼 실제로 쓰지만 청구에서 빠지기 쉬운 시간"],
+        ["비청구 시간", "견적, 미팅, 메시지, 리서치, QA, 수정, 자료 대기, 관리처럼 실제로 쓰지만 청구에서 빠지기 쉬운 시간"],
         ["결제 조건", "계약금, 마일스톤 승인, 최종 결제일, 지연 시 후속 커뮤니케이션처럼 현금흐름과 시간을 바꾸는 조건"],
+        ["클라이언트 자료와 승인", "원고, 이미지, 접근 권한, 피드백 담당자, 승인 기한처럼 일정 지연과 재작업을 만드는 조건"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
     : [
@@ -80,8 +81,9 @@ function buildJsonLd(locale: string) {
         ["Estimated tax rate", "A conservative tax estimate based on the freelancer's location and contract context"],
         ["Tool and subcontractor costs", "Project-specific subscriptions, assets, contractors, or specialist support"],
         ["Production hours", "Billable work time spent creating the actual deliverable"],
-        ["Unbilled hours", "Quoting, meetings, messages, research, QA, revisions, and admin time that still reduce margin"],
+        ["Unbilled hours", "Quoting, meetings, messages, research, QA, revisions, asset waiting, and admin time that still reduce margin"],
         ["Payment terms", "Deposit, milestone approval, final payment date, and follow-up work that can change cash flow and time risk"],
+        ["Client materials and approvals", "Copy, images, access credentials, reviewer ownership, and approval deadlines that can create delays or rework"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
 
@@ -277,6 +279,11 @@ function buildJsonLd(locale: string) {
                 "네. 결제가 대부분 마지막 승인 뒤로 밀리거나 승인 기준이 모호하면 팔로업, 일정 대기, 재작업 시간이 늘어 실제 수익성이 낮아질 수 있습니다. 견적 전에는 계약금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 분리해 확인하세요.",
             },
             {
+              question: "클라이언트가 자료를 늦게 주면 실제 시급에도 영향을 주나요?",
+              answer:
+                "네. 원고, 이미지, 계정 접근 권한, 피드백 담당자가 늦어지면 대기, 일정 재조정, 재작업, 팔로업 시간이 생겨 실제 시급이 낮아질 수 있습니다. 견적 전에는 자료 제공 기한, 승인 담당자, 지연 시 일정 변경 기준을 분리해 두는 것이 좋습니다.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -327,6 +334,11 @@ function buildJsonLd(locale: string) {
               question: "Should deposit or milestone payment terms affect my real-rate decision?",
               answer:
                 "Yes. If most payment is delayed until final approval or the approval criteria are vague, follow-up time, waiting, and rework can reduce real profitability. Before quoting, separate deposit, milestone acceptance criteria, final payment date, and late-payment boundaries.",
+            },
+            {
+              question: "Do late client materials affect my real hourly rate?",
+              answer:
+                "Yes. Delayed copy, images, account access, or reviewer feedback can add waiting, rescheduling, rework, and follow-up time. Before quoting, separate material due dates, approval ownership, and schedule-change boundaries so the delay risk is visible.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -400,7 +412,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "입력값이 부족할 때",
-            body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 영업·관리 버퍼, 목표 시급을 같은 기준으로 채워야 합니다.",
+            body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 자료 대기, 영업·관리 버퍼, 목표 시급을 같은 기준으로 채워야 합니다.",
           },
         ]
       : [
@@ -418,7 +430,7 @@ function getCalculatorGuidance(locale: string) {
           },
           {
             title: "Missing inputs",
-            body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, sales/admin overhead, and target rate on the same basis.",
+            body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, material-wait risk, sales/admin overhead, and target rate on the same basis.",
           },
         ],
     nextSteps: isKo
@@ -451,6 +463,12 @@ function getCalculatorGuidance(locale: string) {
             label: "결제가 늦어질 수 있다면",
             title: "마일스톤 조건까지 확인",
             body: "계약금, 승인 기준, 최종 결제일, 지연 시 팔로업 시간을 따로 두어 높은 총액이 낮은 실제 시급을 숨기지 않게 하세요.",
+            href: "/calculator",
+          },
+          {
+            label: "자료 제공이 불확실하다면",
+            title: "대기·재작업 시간을 분리",
+            body: "원고, 이미지, 접근 권한, 승인 담당자와 제공 기한을 따로 정리해 자료 지연이 실제 시급을 깎지 않게 하세요.",
             href: "/calculator",
           },
           {
@@ -489,6 +507,12 @@ function getCalculatorGuidance(locale: string) {
             label: "If payment may lag",
             title: "Check milestone terms",
             body: "Separate deposit, approval criteria, final payment date, and follow-up time so a large project total does not hide a weak real hourly rate.",
+            href: "/calculator",
+          },
+          {
+            label: "If inputs may arrive late",
+            title: "Separate waiting and rework",
+            body: "Make copy, assets, access, reviewer ownership, and material deadlines visible so delays do not quietly lower the real rate.",
             href: "/calculator",
           },
           {
