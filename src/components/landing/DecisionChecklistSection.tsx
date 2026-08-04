@@ -11,6 +11,7 @@ const checklistItems = [
   "quoteChecklistItem3",
   "quoteChecklistItem4",
   "quoteChecklistItem5",
+  "quoteChecklistItem6",
 ] as const;
 
 const routes = [
