@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-04";
+  const dateModified = "2026-08-06";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -279,6 +279,11 @@ function buildJsonLd(locale: string) {
                 "네. 결제가 대부분 마지막 승인 뒤로 밀리거나 승인 기준이 모호하면 팔로업, 일정 대기, 재작업 시간이 늘어 실제 수익성이 낮아질 수 있습니다. 견적 전에는 계약금, 마일스톤 승인 기준, 최종 결제일, 지연 시 대응 조건을 분리해 확인하세요.",
             },
             {
+              question: "외주 파트너나 협업 비용이 있으면 어떻게 계산하나요?",
+              answer:
+                "외주 파트너 비용은 프로젝트별 비용으로 따로 차감하고, 본인이 쓰는 PM, 검수, 커뮤니케이션, 인수인계 시간은 실제 투입 시간에 포함하세요. 비용이 확정되지 않았다면 낮음, 기준, 보수적 시나리오로 나눠 목표 실제 시급이 유지되는지 확인하는 것이 안전합니다.",
+            },
+            {
               question: "클라이언트가 자료를 늦게 주면 실제 시급에도 영향을 주나요?",
               answer:
                 "네. 원고, 이미지, 계정 접근 권한, 피드백 담당자가 늦어지면 대기, 일정 재조정, 재작업, 팔로업 시간이 생겨 실제 시급이 낮아질 수 있습니다. 견적 전에는 자료 제공 기한, 승인 담당자, 지연 시 일정 변경 기준을 분리해 두는 것이 좋습니다.",
@@ -334,6 +339,11 @@ function buildJsonLd(locale: string) {
               question: "Should deposit or milestone payment terms affect my real-rate decision?",
               answer:
                 "Yes. If most payment is delayed until final approval or the approval criteria are vague, follow-up time, waiting, and rework can reduce real profitability. Before quoting, separate deposit, milestone acceptance criteria, final payment date, and late-payment boundaries.",
+            },
+            {
+              question: "How should I count subcontractor or collaborator costs?",
+              answer:
+                "Keep partner costs as project-specific costs, then count your own project management, review, communication, and handoff time as real working time. If the cost is not final, compare low, expected, and conservative scenarios against your target real hourly rate.",
             },
             {
               question: "Do late client materials affect my real hourly rate?",
@@ -414,6 +424,10 @@ function getCalculatorGuidance(locale: string) {
             title: "입력값이 부족할 때",
             body: "총액만 알고 있거나 두 제안을 비교한다면 수수료, 세금, 도구 비용, 제작 시간, 비청구 시간, 자료 대기, 영업·관리 버퍼, 목표 시급을 같은 기준으로 채워야 합니다.",
           },
+          {
+            title: "협업 비용",
+            body: "외주·파트너 비용은 별도 비용으로 빼고, PM·검수·커뮤니케이션 시간은 실제 투입 시간에 넣어야 합니다.",
+          },
         ]
       : [
           {
@@ -431,6 +445,10 @@ function getCalculatorGuidance(locale: string) {
           {
             title: "Missing inputs",
             body: "If you only know the fee or are comparing offers, add fees, tax, tool costs, production time, unbilled time, material-wait risk, sales/admin overhead, and target rate on the same basis.",
+          },
+          {
+            title: "Collaborator costs",
+            body: "Subtract subcontractor or partner costs separately, then count your project management, review, communication, and handoff time as real work.",
           },
         ],
     nextSteps: isKo

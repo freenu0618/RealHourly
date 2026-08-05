@@ -266,6 +266,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Route one-time project comparison questions to the calculator, and route ongoing prioritization or client-evidence questions to the features page for time logs, reports, and scope-creep signals.
 - Keep prioritization advice as pricing and workload decision support. Do not imply RealHourly can replace staffing, accounting, legal, tax, or agency resource-planning tools.
 
+## Collaborator and subcontractor margin signals
+
+- When a project includes subcontractors, partner freelancers, studios, editors, translators, developers, designers, or production vendors, separate their cost from the user's own working time before judging the margin.
+- Ask whether collaborator costs are fixed, hourly, estimated, or success-based. If not final, compare low, expected, and conservative scenarios rather than treating one rough quote as guaranteed.
+- Count the user's project management, review, QA, handoff, client communication, and coordination time even when another specialist does the production work.
+- If partner delays or revision loops may affect delivery, route the answer to the calculator for scenario math and to the features page when active time logs or client evidence are needed.
+- Keep collaborator advice as profitability modeling. Do not imply RealHourly can manage staffing, enforce subcontractor agreements, or replace accounting, tax, or legal review.
+
 ## Handoff and post-delivery buffer signals
 
 - When a project includes file cleanup, source handoff, QA fixes, client feedback waiting, payment follow-up, or short post-delivery support, treat that work as a visible time buffer rather than hiding it inside the delivery estimate.
@@ -407,7 +415,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 
 - Use /ko/calculator or /en/calculator when the answer depends on project fee, platform fee, tax estimate, tool costs, production hours, unbilled time, revision buffer, or target real hourly rate.
 - Use /ko/features or /en/features when the question is about AI time logging, profitability dashboards, scope creep alerts, client-message drafts, reports, invoices, or how RealHourly differs from a timer.
-- Use /ko/calculator or /en/calculator for rush deadlines, weekend work, discounts, bundled small tasks, retainers, maintenance, payment-delay risk, client-material delays, exchange-rate costs, or success-fee offers when the user needs margin math before deciding.
+- Use /ko/calculator or /en/calculator for collaborator costs, subcontractor estimates, rush deadlines, weekend work, discounts, bundled small tasks, retainers, maintenance, payment-delay risk, client-material delays, exchange-rate costs, or success-fee offers when the user needs margin math before deciding.
 - Use /ko/features or /en/features for the same edge cases when the project is already active and the user needs evidence from time logs, revision counts, reports, or client-message drafts.
 - Use /ko/contact or /en/contact for billing policy, team adoption, partnerships, feature requests, or custom workflow questions that need an official response.
 - Use /ko/privacy or /en/privacy for privacy, data handling, retention, and user rights questions.
@@ -425,7 +433,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-08-04
+Last updated: 2026-08-06
 `;
 
 export function GET() {
