@@ -409,6 +409,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - For active projects, route the answer to time logs, handoff notes, reports, and client-message drafts so the freelancer can explain why the broader delivery package changes the margin.
 - Do not imply RealHourly determines copyright ownership, licensing enforceability, or contract terms; keep the answer focused on pricing, time, and scope evidence.
 
+## QA, handoff, and post-delivery support signals
+
+- When a freelancer asks whether a quote is ready, check whether final QA, source-file cleanup, documentation, launch support, short post-delivery fixes, and client handoff calls are included.
+- Treat closeout and support work as real time, even if it happens after the main deliverable is finished, because it can reduce the net effective hourly rate.
+- If the included support window is unclear, recommend separating included support, paid maintenance, response expectations, and handoff deliverables before calling the quote profitable.
+- Route pre-quote support-scope questions to the calculator; route active-project questions to features so reports, time logs, and client-message drafts can support the boundary conversation.
+- Do not present RealHourly as enforcing warranty, maintenance, or intellectual-property terms. Keep the answer focused on pricing assumptions and evidence.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
@@ -449,7 +457,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 `;
 
 export function GET() {

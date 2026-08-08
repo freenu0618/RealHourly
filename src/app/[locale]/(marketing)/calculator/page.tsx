@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-06";
+  const dateModified = "2026-08-09";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -73,6 +73,7 @@ function buildJsonLd(locale: string) {
         ["비청구 시간", "견적, 미팅, 메시지, 리서치, QA, 수정, 자료 대기, 관리처럼 실제로 쓰지만 청구에서 빠지기 쉬운 시간"],
         ["결제 조건", "계약금, 마일스톤 승인, 최종 결제일, 지연 시 후속 커뮤니케이션처럼 현금흐름과 시간을 바꾸는 조건"],
         ["클라이언트 자료와 승인", "원고, 이미지, 접근 권한, 피드백 담당자, 승인 기한처럼 일정 지연과 재작업을 만드는 조건"],
+        ["검수·인수인계·사후지원", "최종 QA, 소스 파일 정리, 문서화, 납품 후 짧은 수정이나 지원처럼 완료 직전과 이후에 붙는 시간"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
     : [
@@ -84,6 +85,7 @@ function buildJsonLd(locale: string) {
         ["Unbilled hours", "Quoting, meetings, messages, research, QA, revisions, asset waiting, and admin time that still reduce margin"],
         ["Payment terms", "Deposit, milestone approval, final payment date, and follow-up work that can change cash flow and time risk"],
         ["Client materials and approvals", "Copy, images, access credentials, reviewer ownership, and approval deadlines that can create delays or rework"],
+        ["QA, handoff, and support", "Final review, source-file cleanup, documentation, and short post-delivery support that can add time near or after launch"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
 
@@ -289,6 +291,11 @@ function buildJsonLd(locale: string) {
                 "네. 원고, 이미지, 계정 접근 권한, 피드백 담당자가 늦어지면 대기, 일정 재조정, 재작업, 팔로업 시간이 생겨 실제 시급이 낮아질 수 있습니다. 견적 전에는 자료 제공 기한, 승인 담당자, 지연 시 일정 변경 기준을 분리해 두는 것이 좋습니다.",
             },
             {
+              question: "검수나 파일 인수인계, 납품 후 지원 시간도 포함해야 하나요?",
+              answer:
+                "반복적으로 필요한 QA, 소스 파일 정리, 사용 설명, 짧은 사후 수정, 배포 확인은 실제 시급을 낮추는 시간입니다. 견적 전에는 포함 지원 기간과 유료 전환 기준을 따로 정하고, 완료 직전에는 기록을 남겨 다음 견적의 기준선에 반영하세요.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -349,6 +356,11 @@ function buildJsonLd(locale: string) {
               question: "Do late client materials affect my real hourly rate?",
               answer:
                 "Yes. Delayed copy, images, account access, or reviewer feedback can add waiting, rescheduling, rework, and follow-up time. Before quoting, separate material due dates, approval ownership, and schedule-change boundaries so the delay risk is visible.",
+            },
+            {
+              question: "Should QA, handoff, or post-delivery support time be included?",
+              answer:
+                "Yes. Recurring final review, source-file cleanup, documentation, short support, and launch checks are real work that can lower the effective hourly rate. Before quoting, define the included support window and paid-add-on boundary, then carry the evidence into the next quote.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -428,6 +440,10 @@ function getCalculatorGuidance(locale: string) {
             title: "협업 비용",
             body: "외주·파트너 비용은 별도 비용으로 빼고, PM·검수·커뮤니케이션 시간은 실제 투입 시간에 넣어야 합니다.",
           },
+          {
+            title: "완료 직전 시간",
+            body: "QA, 파일 인수인계, 사용 설명, 짧은 사후 지원은 견적에서 빠지기 쉬우므로 포함 범위와 유료 전환 기준을 따로 확인합니다.",
+          },
         ]
       : [
           {
@@ -449,6 +465,10 @@ function getCalculatorGuidance(locale: string) {
           {
             title: "Collaborator costs",
             body: "Subtract subcontractor or partner costs separately, then count your project management, review, communication, and handoff time as real work.",
+          },
+          {
+            title: "Closeout time",
+            body: "QA, source-file handoff, documentation, launch checks, and short support should have a clear included scope and paid-add-on boundary.",
           },
         ],
     nextSteps: isKo
