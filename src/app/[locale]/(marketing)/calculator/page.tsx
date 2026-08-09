@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-09";
+  const dateModified = "2026-08-10";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -74,6 +74,7 @@ function buildJsonLd(locale: string) {
         ["결제 조건", "계약금, 마일스톤 승인, 최종 결제일, 지연 시 후속 커뮤니케이션처럼 현금흐름과 시간을 바꾸는 조건"],
         ["클라이언트 자료와 승인", "원고, 이미지, 접근 권한, 피드백 담당자, 승인 기한처럼 일정 지연과 재작업을 만드는 조건"],
         ["검수·인수인계·사후지원", "최종 QA, 소스 파일 정리, 문서화, 납품 후 짧은 수정이나 지원처럼 완료 직전과 이후에 붙는 시간"],
+        ["할인·무료 추가 요청", "할인율, 무료 수정 예상 시간, 납기 영향, 유료 전환 기준처럼 총수익과 투입 시간을 동시에 바꾸는 조건"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
     : [
@@ -86,6 +87,7 @@ function buildJsonLd(locale: string) {
         ["Payment terms", "Deposit, milestone approval, final payment date, and follow-up work that can change cash flow and time risk"],
         ["Client materials and approvals", "Copy, images, access credentials, reviewer ownership, and approval deadlines that can create delays or rework"],
         ["QA, handoff, and support", "Final review, source-file cleanup, documentation, and short post-delivery support that can add time near or after launch"],
+        ["Discounts and free extras", "Discount rate, expected unpaid revision time, deadline impact, and paid-add-on boundaries that change both revenue and hours"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
 
@@ -296,6 +298,11 @@ function buildJsonLd(locale: string) {
                 "반복적으로 필요한 QA, 소스 파일 정리, 사용 설명, 짧은 사후 수정, 배포 확인은 실제 시급을 낮추는 시간입니다. 견적 전에는 포함 지원 기간과 유료 전환 기준을 따로 정하고, 완료 직전에는 기록을 남겨 다음 견적의 기준선에 반영하세요.",
             },
             {
+              question: "할인이나 무료 추가 수정을 요청받으면 어떻게 판단하나요?",
+              answer:
+                "할인은 총수익을 낮추고 무료 추가 수정은 실제 투입 시간을 늘리므로 둘 다 실제 시급을 바로 낮출 수 있습니다. 수락 전 할인 후 총액, 추가 작업 예상 시간, 납기 영향, 목표 실제 시급을 다시 계산하고, 목표보다 낮아지면 범위 축소나 유료 추가 수정 기준을 먼저 제안하세요.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -361,6 +368,11 @@ function buildJsonLd(locale: string) {
               question: "Should QA, handoff, or post-delivery support time be included?",
               answer:
                 "Yes. Recurring final review, source-file cleanup, documentation, short support, and launch checks are real work that can lower the effective hourly rate. Before quoting, define the included support window and paid-add-on boundary, then carry the evidence into the next quote.",
+            },
+            {
+              question: "How should I evaluate a discount or free extra revision request?",
+              answer:
+                "A discount lowers revenue and free revisions add real work time, so both can reduce the effective hourly rate quickly. Before accepting, recalculate with the discounted fee, extra hours, deadline impact, and target real hourly rate, then narrow scope or define paid add-ons if the result falls below target.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
@@ -444,6 +456,10 @@ function getCalculatorGuidance(locale: string) {
             title: "완료 직전 시간",
             body: "QA, 파일 인수인계, 사용 설명, 짧은 사후 지원은 견적에서 빠지기 쉬우므로 포함 범위와 유료 전환 기준을 따로 확인합니다.",
           },
+          {
+            title: "할인 요청",
+            body: "할인율과 무료 추가 수정 시간을 함께 넣어 목표 실제 시급이 유지되는지 먼저 확인합니다.",
+          },
         ]
       : [
           {
@@ -469,6 +485,10 @@ function getCalculatorGuidance(locale: string) {
           {
             title: "Closeout time",
             body: "QA, source-file handoff, documentation, launch checks, and short support should have a clear included scope and paid-add-on boundary.",
+          },
+          {
+            title: "Discount requests",
+            body: "Add the discount and unpaid extra revision time together before deciding whether the target real rate still holds.",
           },
         ],
     nextSteps: isKo
@@ -515,6 +535,12 @@ function getCalculatorGuidance(locale: string) {
             body: "월 고정 보수에는 정기 작업뿐 아니라 긴급 수정, 보고, 파일 인수인계, 응답 대기 시간이 들어가는지 확인하세요.",
             href: "/features",
           },
+          {
+            label: "할인을 요청받았다면",
+            title: "무료 범위부터 다시 계산",
+            body: "할인 후 총액과 추가 수정 예상 시간을 함께 넣고, 목표보다 낮으면 포함 범위나 유료 전환 기준을 조정하세요.",
+            href: "/calculator",
+          },
         ]
       : [
           {
@@ -558,6 +584,12 @@ function getCalculatorGuidance(locale: string) {
             title: "Count support and response time separately",
             body: "Check whether the monthly fee covers urgent fixes, reporting, file handoff, response standby, and recurring support work.",
             href: "/features",
+          },
+          {
+            label: "If asked for a discount",
+            title: "Recalculate the free scope",
+            body: "Combine the lower fee with expected extra revision time, then narrow included scope or set paid-add-on rules if the target rate drops.",
+            href: "/calculator",
           },
         ],
   };
