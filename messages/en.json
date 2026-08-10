@@ -723,6 +723,7 @@
     "quoteChecklistItem4": "If revisions grow, will you have time logs and evidence to explain a scope or budget conversation?",
     "quoteChecklistItem5": "Have you set a target real hourly rate and revision buffer to confirm the quote floor?",
     "quoteChecklistItem6": "Have you separated waiting and follow-up time if materials, reviewer approvals, or payment dates slip?",
+    "quoteChecklistItem7": "If the project pauses or is cancelled, have you separated recoverable deposits, cancellation fees, and unpaid balances?",
     "quoteRouteCalculatorTitle": "Set a baseline with the free calculator",
     "quoteRouteCalculatorBody": "Before signing up, estimate the real hourly rate and minimum sustainable quote for fixed-fee or hourly projects.",
     "quoteRouteFeaturesTitle": "See the logging, alert, and report workflow",
