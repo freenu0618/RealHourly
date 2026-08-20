@@ -833,6 +833,8 @@
     "faq26A": "Yes. If a project includes subcontractors or collaborators such as designers, developers, translators, or production crews, enter those costs as separate deductions from project revenue. Keep your own production, PM, review, and communication time in the real-hours estimate. If the subcontractor quote is not final, compare low, expected, and conservative cost scenarios before deciding whether the project still meets your target real rate.",
     "faq27Q": "How should I calculate a paused or cancelled client project?",
     "faq27A": "Separate the proposal, planning, production, meeting, and file-cleanup time already spent from any recoverable deposit, cancellation fee, and unpaid balance. RealHourly can show the real hourly rate and loss range at the pause point, but contract cancellation terms and collection risk still require separate review.",
+    "faq28Q": "Should late client materials or reviewer approvals be included in a quote?",
+    "faq28A": "Yes. Delayed copy, images, account access, reviewer ownership, or final acceptance criteria can add waiting, follow-up, rework, and re-export time that lowers the effective hourly rate. Before quoting, define material deadlines, the decision maker, review rounds, and schedule-change rules, then track that time during delivery so the next quote reflects the real overhead.",
     "ctaTitle": "Your time is valuable",
     "ctaDesc": "Stop settling for \"estimated rates.\" Start discovering and respecting your true value with RealHourly today.",
     "ctaCta": "Get Started Free",

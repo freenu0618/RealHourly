@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-08-11";
+  const dateModified = "2026-08-21";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -222,6 +222,10 @@ function buildJsonLd(locale: string) {
           q: "클라이언트가 프로젝트를 보류하거나 취소하면 어떻게 계산하나요?",
           a: "이미 쓴 제안·기획·제작·미팅·파일 정리 시간과 회수 가능한 선금, 취소 수수료, 남은 미수금을 분리하세요. RealHourly 계산은 중단 시점의 실제 시급과 손실 범위를 확인하는 참고용 기준선이며, 취소 조항이나 대금 회수 가능성은 계약서와 전문가 검토가 필요합니다.",
         },
+        {
+          q: "클라이언트 자료나 승인자가 늦어질 때도 견적에 넣어야 하나요?",
+          a: "네. 원고, 이미지, 계정 접근 권한, 피드백 담당자, 최종 승인 기준이 늦어지면 대기·팔로업·재작업·재전송 시간이 생겨 실제 시급이 낮아질 수 있습니다. 견적 전에는 자료 제공 기한, 승인 담당자, 피드백 횟수, 지연 시 일정 변경 기준을 따로 정하고 진행 중에는 그 시간을 기록해 다음 견적 기준에 반영하세요.",
+        },
       ]
     : [
         {
@@ -331,6 +335,10 @@ function buildJsonLd(locale: string) {
         {
           q: "How should I calculate a paused or cancelled client project?",
           a: "Separate the proposal, planning, production, meeting, and file-cleanup time already spent from any recoverable deposit, cancellation fee, and unpaid balance. RealHourly can show the real hourly rate and loss range at the pause point, but contract cancellation terms and collection risk still require separate review.",
+        },
+        {
+          q: "Should late client materials or reviewer approvals be included in a quote?",
+          a: "Yes. Delayed copy, images, account access, reviewer ownership, or final acceptance criteria can add waiting, follow-up, rework, and re-export time that lowers the effective hourly rate. Before quoting, define material deadlines, the decision maker, review rounds, and schedule-change rules, then track that time during delivery so the next quote reflects the real overhead.",
         },
       ];
 
