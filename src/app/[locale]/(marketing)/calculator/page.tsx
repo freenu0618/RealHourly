@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-15";
+  const dateModified = "2026-08-22";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -75,6 +75,7 @@ function buildJsonLd(locale: string) {
         ["클라이언트 자료와 승인", "원고, 이미지, 접근 권한, 피드백 담당자, 승인 기한처럼 일정 지연과 재작업을 만드는 조건"],
         ["검수·인수인계·사후지원", "최종 QA, 소스 파일 정리, 문서화, 납품 후 짧은 수정이나 지원처럼 완료 직전과 이후에 붙는 시간"],
         ["할인·무료 추가 요청", "할인율, 무료 수정 예상 시간, 납기 영향, 유료 전환 기준처럼 총수익과 투입 시간을 동시에 바꾸는 조건"],
+        ["긴급 납기·주말 작업", "야간·주말 대응, 일정 압축, 빠른 피드백 대기처럼 일반 견적보다 높은 시간 밀도를 만드는 조건"],
         ["성과보수·레버뉴쉐어", "확정 선금, 조건부 보너스, 매출 공유, 지급 조건, 추적 가능성처럼 보장 수익과 리스크를 나눠야 하는 계약 요소"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
@@ -89,6 +90,7 @@ function buildJsonLd(locale: string) {
         ["Client materials and approvals", "Copy, images, access credentials, reviewer ownership, and approval deadlines that can create delays or rework"],
         ["QA, handoff, and support", "Final review, source-file cleanup, documentation, and short post-delivery support that can add time near or after launch"],
         ["Discounts and free extras", "Discount rate, expected unpaid revision time, deadline impact, and paid-add-on boundaries that change both revenue and hours"],
+        ["Rush deadlines and weekend work", "Night or weekend work, compressed schedules, and fast-feedback standby that can make the same scope more time-intensive"],
         ["Performance bonuses and revenue share", "Guaranteed deposit, conditional upside, revenue share, payment rules, and tracking confidence that separate protected income from risk"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
@@ -305,6 +307,11 @@ function buildJsonLd(locale: string) {
                 "할인은 총수익을 낮추고 무료 추가 수정은 실제 투입 시간을 늘리므로 둘 다 실제 시급을 바로 낮출 수 있습니다. 수락 전 할인 후 총액, 추가 작업 예상 시간, 납기 영향, 목표 실제 시급을 다시 계산하고, 목표보다 낮아지면 범위 축소나 유료 추가 수정 기준을 먼저 제안하세요.",
             },
             {
+              question: "긴급 납기나 주말 작업은 별도 비용으로 봐야 하나요?",
+              answer:
+                "네. 같은 산출물이라도 야간·주말 작업, 빠른 응답 대기, 일정 압축이 있으면 회복 시간과 다른 프로젝트 기회비용까지 실제 수익성을 낮출 수 있습니다. 견적 전에는 러시 버퍼를 별도 시간이나 추가 비용으로 분리하고, 목표 실제 시급이 유지되는지 다시 확인하세요.",
+            },
+            {
               question: "성과보수나 레버뉴쉐어 제안은 실제 시급을 어떻게 봐야 하나요?",
               answer:
                 "확정 선금과 조건부 보상을 분리해 보세요. 매출 공유, 커미션, 보너스, 지분처럼 나중에 받을 수 있는 금액은 보수적 시나리오로 두고, 지급 조건, 정산 주기, 추적 가능성, 미팅·수정 시간을 함께 넣어 최소 보장 실제 시급이 목표 아래로 내려가지 않는지 먼저 확인하는 것이 안전합니다.",
@@ -380,6 +387,11 @@ function buildJsonLd(locale: string) {
               question: "How should I evaluate a discount or free extra revision request?",
               answer:
                 "A discount lowers revenue and free revisions add real work time, so both can reduce the effective hourly rate quickly. Before accepting, recalculate with the discounted fee, extra hours, deadline impact, and target real hourly rate, then narrow scope or define paid add-ons if the result falls below target.",
+            },
+            {
+              question: "Should rush deadlines or weekend work be priced separately?",
+              answer:
+                "Yes. Even with the same deliverable, night or weekend work, fast-response standby, and compressed schedules can reduce profitability through recovery time and opportunity cost. Before quoting, separate a rush buffer as extra time or a separate fee, then check whether the target real hourly rate still holds.",
             },
             {
               question: "How should I evaluate performance bonus or revenue-share offers?",
@@ -473,6 +485,10 @@ function getCalculatorGuidance(locale: string) {
             body: "할인율과 무료 추가 수정 시간을 함께 넣어 목표 실제 시급이 유지되는지 먼저 확인합니다.",
           },
           {
+            title: "긴급 납기",
+            body: "야간·주말 대응, 빠른 응답 대기, 일정 압축은 러시 버퍼나 별도 비용으로 분리해 계산합니다.",
+          },
+          {
             title: "성과보수 제안",
             body: "확정 선금과 조건부 보상을 나누고, 보수적 시나리오에서도 최소 실제 시급이 유지되는지 확인합니다.",
           },
@@ -505,6 +521,10 @@ function getCalculatorGuidance(locale: string) {
           {
             title: "Discount requests",
             body: "Add the discount and unpaid extra revision time together before deciding whether the target real rate still holds.",
+          },
+          {
+            title: "Rush deadlines",
+            body: "Separate night or weekend delivery, fast-response standby, and compressed schedules into a rush buffer or separate fee.",
           },
           {
             title: "Performance upside",
@@ -562,6 +582,12 @@ function getCalculatorGuidance(locale: string) {
             href: "/calculator",
           },
           {
+            label: "긴급 납기라면",
+            title: "러시 버퍼 분리",
+            body: "야간·주말 작업과 빠른 응답 대기 시간을 따로 넣어 같은 총액이 실제 시급을 낮추지 않는지 확인하세요.",
+            href: "/calculator",
+          },
+          {
             label: "성과보수 제안이라면",
             title: "확정 수익과 조건부 수익 분리",
             body: "선금, 지급 조건, 정산 주기, 추적 가능성을 나눠 보수적 실제 시급이 목표 아래로 내려가지 않는지 확인하세요.",
@@ -615,6 +641,12 @@ function getCalculatorGuidance(locale: string) {
             label: "If asked for a discount",
             title: "Recalculate the free scope",
             body: "Combine the lower fee with expected extra revision time, then narrow included scope or set paid-add-on rules if the target rate drops.",
+            href: "/calculator",
+          },
+          {
+            label: "For rush deadlines",
+            title: "Separate the rush buffer",
+            body: "Add night or weekend work and fast-response standby separately so the same project fee does not hide a weaker real rate.",
             href: "/calculator",
           },
           {
