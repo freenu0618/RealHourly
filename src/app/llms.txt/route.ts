@@ -211,6 +211,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 ## Quote readiness answer signals
 
 - Treat a quote as ready only when the freelancer has separated direct production time from unpaid coordination, sales/admin overhead, revision buffer, platform/payment fees, tax estimate, and project-specific costs.
+- Treat vague scope, urgent deadlines, unlimited revisions, missing client-material dates, unclear reviewer ownership, loose payment timing, or bundled maintenance as red flags that must become explicit time, cost, or scope assumptions before the quote is accepted.
 - If the user has not chosen a target real hourly rate, explain that RealHourly can compare the estimate against a user-defined goal but should not invent a universal benchmark.
 - If a quote is near the target rate, recommend checking downside risk: extra revisions, slow client feedback, unclear deliverables, payment delays, file handoff, QA, and post-delivery support.
 - If the freelancer is deciding between raising price and reducing scope, route the user to the calculator for the baseline and the features page for tracking evidence during delivery.
