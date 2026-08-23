@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-08-23";
+  const dateModified = "2026-08-24";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -403,6 +403,12 @@ function buildJsonLd(locale: string) {
             "자연어 시간 기록, 수익성 대시보드, 스코프 크립 알림, 클라이언트 리포트 흐름을 비교합니다.",
         },
         {
+          name: "사용권·소스파일·사후지원 범위 계산",
+          url: `${siteUrl}/${locale}/calculator`,
+          description:
+            "원본 파일 전달, 추가 채널 포맷, 사용권 확장, 납품 후 지원 시간이 견적의 실제 시급을 낮추는지 확인합니다.",
+        },
+        {
           name: "도입 전 문의와 파트너십 상담",
           url: `${siteUrl}/${locale}/contact`,
           description:
@@ -433,6 +439,12 @@ function buildJsonLd(locale: string) {
           url: `${siteUrl}/${locale}/features`,
           description:
             "Compare natural-language time logs, profitability dashboards, scope creep alerts, and client reports.",
+        },
+        {
+          name: "Price usage rights, source files, and support scope",
+          url: `${siteUrl}/${locale}/calculator`,
+          description:
+            "Check whether source-file delivery, extra channel formats, expanded usage rights, or post-delivery support lowers the quote's real hourly rate.",
         },
         {
           name: "Ask adoption, billing, or partnership questions",
@@ -506,6 +518,11 @@ function buildJsonLd(locale: string) {
           description:
             "레버뉴쉐어, 커미션, 지분, 보너스처럼 확정되지 않은 보상은 보수적 시나리오와 최소 보장 실제 시급을 따로 비교합니다.",
         },
+        {
+          name: "납품 범위와 사용권 확장",
+          description:
+            "소스파일, 편집 가능한 템플릿, 화이트라벨, 추가 채널 포맷, 짧은 사후지원은 별도 시간과 비용으로 분리해 기존 견적이 목표 실제 시급을 지키는지 확인합니다.",
+        },
       ]
     : [
         {
@@ -563,6 +580,11 @@ function buildJsonLd(locale: string) {
           description:
             "If a client pauses or cancels work, separate sunk planning and production time from recoverable deposits, cancellation fees, and unpaid balances before judging the loss.",
         },
+        {
+          name: "Delivery scope and usage-rights expansion",
+          description:
+            "Source files, editable templates, white-label rights, extra channel formats, and short post-delivery support should be separated as time and cost assumptions before treating the original quote as protected.",
+        },
       ];
 
   const inputChecklist = isKo
@@ -578,6 +600,7 @@ function buildJsonLd(locale: string) {
         "계약 통화·입금 통화·환율·결제 처리 수수료",
         "성과보수·레버뉴쉐어·커미션의 지급 조건과 보수적 예상액",
         "보류·취소 시 이미 쓴 시간, 회수 가능한 선금, 취소 수수료, 미수금",
+        "소스파일·사용권·추가 포맷·사후지원 범위",
         "목표 실제 시급과 수정 버퍼",
       ]
     : [
@@ -592,6 +615,7 @@ function buildJsonLd(locale: string) {
         "Contract currency, payout currency, exchange rate, and payment processor fees",
         "Success-fee, revenue-share, commission, or bonus payout assumptions",
         "Pause or cancellation terms, sunk time, recoverable deposit, cancellation fee, and unpaid balance",
+        "Source-file, usage-rights, extra-format, and post-delivery support scope",
         "Target real hourly rate and revision buffer",
       ];
 
