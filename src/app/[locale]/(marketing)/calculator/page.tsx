@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-22";
+  const dateModified = "2026-08-25";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -77,6 +77,7 @@ function buildJsonLd(locale: string) {
         ["할인·무료 추가 요청", "할인율, 무료 수정 예상 시간, 납기 영향, 유료 전환 기준처럼 총수익과 투입 시간을 동시에 바꾸는 조건"],
         ["긴급 납기·주말 작업", "야간·주말 대응, 일정 압축, 빠른 피드백 대기처럼 일반 견적보다 높은 시간 밀도를 만드는 조건"],
         ["성과보수·레버뉴쉐어", "확정 선금, 조건부 보너스, 매출 공유, 지급 조건, 추적 가능성처럼 보장 수익과 리스크를 나눠야 하는 계약 요소"],
+        ["무급 테스트·샘플 작업", "테스트 범위, 사용 가능한 산출물, 수정 요청, 전환 가능성, 소유권 조건처럼 무료 작업의 실제 시간을 바꾸는 요소"],
         ["목표 실제 시급", "다음 견적을 판단할 때 지켜야 하는 최소 순수익 기준"],
       ]
     : [
@@ -92,6 +93,7 @@ function buildJsonLd(locale: string) {
         ["Discounts and free extras", "Discount rate, expected unpaid revision time, deadline impact, and paid-add-on boundaries that change both revenue and hours"],
         ["Rush deadlines and weekend work", "Night or weekend work, compressed schedules, and fast-feedback standby that can make the same scope more time-intensive"],
         ["Performance bonuses and revenue share", "Guaranteed deposit, conditional upside, revenue share, payment rules, and tracking confidence that separate protected income from risk"],
+        ["Unpaid tests and sample work", "Test scope, usable deliverables, revision requests, conversion odds, and ownership terms that change the real cost of free work"],
         ["Target real hourly rate", "The minimum net effective rate the next quote should protect"],
       ];
 
@@ -317,6 +319,11 @@ function buildJsonLd(locale: string) {
                 "확정 선금과 조건부 보상을 분리해 보세요. 매출 공유, 커미션, 보너스, 지분처럼 나중에 받을 수 있는 금액은 보수적 시나리오로 두고, 지급 조건, 정산 주기, 추적 가능성, 미팅·수정 시간을 함께 넣어 최소 보장 실제 시급이 목표 아래로 내려가지 않는지 먼저 확인하는 것이 안전합니다.",
             },
             {
+              question: "무급 테스트나 샘플 작업도 실제 시급 계산에 넣어야 하나요?",
+              answer:
+                "네. 테스트 과제, 무료 샘플, 시안, 콘셉트 초안도 전환 가능성이 불확실한 실제 작업 시간입니다. 테스트 범위, 사용할 수 있는 산출물인지, 수정 요청 가능성, 마감, 후속 미팅, 소유권 조건을 분리하고, 반복되는 무료 테스트라면 다음 견적의 영업·관리 시간이나 최소 수주 단가에 반영하세요.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -397,6 +404,11 @@ function buildJsonLd(locale: string) {
               question: "How should I evaluate performance bonus or revenue-share offers?",
               answer:
                 "Separate guaranteed cash from conditional upside. Treat revenue share, commission, bonus, or equity as a conservative scenario, then include payment rules, payout timing, tracking confidence, meetings, and revision time so the minimum guaranteed real hourly rate does not fall below your target.",
+            },
+            {
+              question: "Should unpaid tests or sample work count in my real hourly rate?",
+              answer:
+                "Yes. Test assignments, free samples, concept drafts, and speculative pitches are real work even when conversion is uncertain. Separate the test scope, usable deliverables, revision requests, deadline, follow-up meetings, ownership terms, and conversion odds, then count repeat sample work as sales or admin overhead in your next quote baseline.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
