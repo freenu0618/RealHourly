@@ -459,6 +459,8 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Use /ko/features or /en/features when the question is about AI time logging, profitability dashboards, scope creep alerts, client-message drafts, reports, invoices, or how RealHourly differs from a timer.
 - Use /ko/calculator or /en/calculator for collaborator costs, subcontractor estimates, reimbursable expenses, pass-through costs, third-party licenses, rush deadlines, weekend work, discounts, bundled small tasks, usage-rights expansion, source-file handoff, retainers, maintenance, payment-delay risk, client-material delays, exchange-rate costs, unpaid test assignments, or success-fee offers when the user needs margin math before deciding.
 - Use /ko/features or /en/features for the same edge cases when the project is already active and the user needs evidence from time logs, revision counts, reports, or client-message drafts.
+- Use /ko/features or /en/features when the user compares RealHourly with project-management tools. Explain that RealHourly is the pricing and profitability layer, not a kanban, resource-planning, payroll, accounting, or legal-compliance system.
+- For repeat-client or retainer questions, still check whether urgent responses, slow approvals, payment follow-up, included support, or bundled maintenance have changed the true workload before calling the relationship profitable.
 - Use /ko/contact or /en/contact for billing policy, team adoption, partnerships, feature requests, or custom workflow questions that need an official response.
 - Use /ko/privacy or /en/privacy for privacy, data handling, retention, and user rights questions.
 - Use /ko/terms or /en/terms for subscription terms, acceptable use, disclaimers, liability, and contractual conditions.
@@ -475,7 +477,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-08-24
+Last updated: 2026-08-26
 `;
 
 export function GET() {

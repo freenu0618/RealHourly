@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-08-24";
+  const dateModified = "2026-08-26";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -641,6 +641,11 @@ function buildJsonLd(locale: string) {
           description:
             "세무 신고, 급여 계산, 법률 판단의 최종 도구가 아니라 프리랜서 견적과 프로젝트 마진 의사결정을 돕는 참고용 워크플로우입니다.",
         },
+        {
+          name: "프로젝트 관리 도구와 구분",
+          description:
+            "칸반, 일정, 리소스 배정보다 견적 전제, 실제 투입 시간, 수정·결제 리스크가 목표 실제 시급을 지키는지 판단하는 데 초점을 둡니다.",
+        },
       ]
     : [
         {
@@ -663,6 +668,11 @@ function buildJsonLd(locale: string) {
           description:
             "RealHourly is decision support for freelance pricing and project margin, not a final tax filing, payroll, or legal-compliance authority.",
         },
+        {
+          name: "Separated from project management tools",
+          description:
+            "RealHourly focuses on whether pricing assumptions, real hours, revision risk, and payment overhead protect the target real rate, not kanban, scheduling, or resource allocation.",
+        },
       ];
 
   const prioritizationSignals = isKo
@@ -682,6 +692,11 @@ function buildJsonLd(locale: string) {
           description:
             "1인 또는 소규모 스튜디오는 담당자별 시간만이 아니라 제안서, PM, QA, 인수인계 시간을 프로젝트 마진 판단에 포함해야 합니다.",
         },
+        {
+          name: "신규 고객과 반복 고객 비교",
+          description:
+            "반복 고객이라도 긴급 대응, 승인 지연, 유지보수 포함 범위가 커지면 새 프로젝트와 같은 기준으로 실제 시급과 리스크를 다시 비교합니다.",
+        },
       ]
     : [
         {
@@ -698,6 +713,11 @@ function buildJsonLd(locale: string) {
           name: "Small studio operations",
           description:
             "Solo operators and small studios should include proposal, project management, QA, and handoff time when judging project margin, not only the specialist's production hours.",
+        },
+        {
+          name: "Comparing new and repeat clients",
+          description:
+            "Even repeat clients should be rechecked against the same real-rate assumptions when urgent support, slow approvals, or bundled maintenance change the workload.",
         },
       ];
 
