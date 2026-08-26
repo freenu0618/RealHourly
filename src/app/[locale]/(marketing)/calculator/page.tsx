@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-25";
+  const dateModified = "2026-08-27";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -338,6 +338,11 @@ function buildJsonLd(locale: string) {
               answer:
                 "그대로 넣기보다 내부 기준선으로 사용하세요. 제안서에는 산출물, 포함 수정 횟수, 응답 시간, 결제 조건, 유지보수 포함 여부를 명확히 쓰고, 세금률이나 내부 목표 시급 같은 민감한 가정은 공개하지 않는 것이 안전합니다.",
             },
+            {
+              question: "왜 견적이 올라갔는지 클라이언트에게 어떻게 설명하나요?",
+              answer:
+                "세금률이나 개인 목표 시급을 공개하기보다 클라이언트가 확인할 수 있는 조건으로 설명하세요. 산출물 범위, 포함 수정 횟수, 응답 시간, 자료 제공 기한, QA와 인수인계, 긴급 납기나 유지보수 포함 여부를 나눠 견적 조건으로 제시하는 것이 안전합니다.",
+            },
           ]
         : [
             {
@@ -424,6 +429,11 @@ function buildJsonLd(locale: string) {
               question: "Should I paste the calculator result into a client proposal?",
               answer:
                 "Use it as an internal baseline instead. A client proposal should spell out deliverables, included revisions, response expectations, payment terms, and maintenance boundaries without exposing private assumptions such as tax estimates or target margin.",
+            },
+            {
+              question: "How should I explain a higher quote to a client?",
+              answer:
+                "Translate the internal calculation into client-visible scope terms instead of sharing tax rates or personal margin goals. Explain deliverables, included revisions, response time, material due dates, QA, handoff, rush timing, and support boundaries as quote conditions.",
             },
           ]).map((item) => ({
         "@type": "Question",
@@ -570,6 +580,12 @@ function getCalculatorGuidance(locale: string) {
             href: "/calculator",
           },
           {
+            label: "견적 인상 설명이 필요하다면",
+            title: "클라이언트가 보는 조건으로 변환",
+            body: "세금률이나 내부 목표 시급 대신 산출물 범위, 수정 횟수, 자료 기한, QA, 인수인계, 지원 범위를 견적 조건으로 설명하세요.",
+            href: "/features",
+          },
+          {
             label: "결제가 늦어질 수 있다면",
             title: "마일스톤 조건까지 확인",
             body: "계약금, 승인 기준, 최종 결제일, 지연 시 팔로업 시간을 따로 두어 높은 총액이 낮은 실제 시급을 숨기지 않게 하세요.",
@@ -630,6 +646,12 @@ function getCalculatorGuidance(locale: string) {
             title: "Separate private math from client terms",
             body: "Keep the real-rate result as an internal baseline, then state deliverables, revision count, response time, and payment terms for the client.",
             href: "/calculator",
+          },
+          {
+            label: "If justifying a higher quote",
+            title: "Use client-visible scope terms",
+            body: "Explain deliverables, revision count, material deadlines, QA, handoff, and support scope instead of exposing tax assumptions or target margin.",
+            href: "/features",
           },
           {
             label: "If payment may lag",
