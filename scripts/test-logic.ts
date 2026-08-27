@@ -22,7 +22,6 @@ async function importSrc<T>(path: string): Promise<T> {
 // ── 테스트 유틸 ──
 let passed = 0;
 let failed = 0;
-let currentTest = "";
 
 function describe(name: string, fn: () => void | Promise<void>) {
   console.log(`\n${"=".repeat(60)}`);
