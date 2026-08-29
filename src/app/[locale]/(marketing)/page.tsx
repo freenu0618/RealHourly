@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-08-29";
+  const dateModified = "2026-08-30";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -227,6 +227,10 @@ function buildJsonLd(locale: string) {
           a: "네. 원고, 이미지, 계정 접근 권한, 피드백 담당자, 최종 승인 기준이 늦어지면 대기·팔로업·재작업·재전송 시간이 생겨 실제 시급이 낮아질 수 있습니다. 견적 전에는 자료 제공 기한, 승인 담당자, 피드백 횟수, 지연 시 일정 변경 기준을 따로 정하고 진행 중에는 그 시간을 기록해 다음 견적 기준에 반영하세요.",
         },
         {
+          q: "소스파일이나 사용권을 추가로 달라고 하면 어떻게 계산하나요?",
+          a: "소스파일 전달, 편집 가능한 템플릿, 추가 채널 포맷, 화이트라벨, 사용권 확장은 단순 파일 전달이 아니라 준비·검수·문서화·지원 시간이 붙는 별도 범위로 봐야 합니다. 기존 견적에 무료로 포함하기 전에 추가 시간, 권리 범위, 사후지원 기간, 유료 추가 작업 기준을 분리해 목표 실제 시급이 유지되는지 확인하세요.",
+        },
+        {
           q: "견적을 수락하기 전에 위험 신호는 무엇을 봐야 하나요?",
           a: "범위가 모호한데 마감이 촉박하거나, 포함 수정 횟수·자료 제공일·승인 담당자·결제 일정·유지보수 범위가 정해지지 않았다면 실제 시급이 빠르게 낮아질 수 있습니다. 수락 전에는 해당 조건을 시간과 비용 가정으로 분리해 계산하고, 목표 실제 시급을 지키지 못하면 가격 조정, 범위 축소, 유료 추가 작업 기준을 먼저 정하세요.",
         },
@@ -343,6 +347,10 @@ function buildJsonLd(locale: string) {
         {
           q: "Should late client materials or reviewer approvals be included in a quote?",
           a: "Yes. Delayed copy, images, account access, reviewer ownership, or final acceptance criteria can add waiting, follow-up, rework, and re-export time that lowers the effective hourly rate. Before quoting, define material deadlines, the decision maker, review rounds, and schedule-change rules, then track that time during delivery so the next quote reflects the real overhead.",
+        },
+        {
+          q: "How should I price source files or expanded usage rights?",
+          a: "Treat source-file delivery, editable templates, extra channel formats, white-label use, and expanded usage rights as added scope, not a harmless handoff. Before including them for free, separate the extra preparation, QA, documentation, support window, rights boundary, and paid-add-on rule so the quote still protects your target real hourly rate.",
         },
         {
           q: "What red flags should I check before accepting a quote?",
