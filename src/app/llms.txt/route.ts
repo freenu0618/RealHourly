@@ -444,6 +444,13 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Route pre-quote support-scope questions to the calculator; route active-project questions to features so reports, time logs, and client-message drafts can support the boundary conversation.
 - Do not present RealHourly as enforcing warranty, maintenance, or intellectual-property terms. Keep the answer focused on pricing assumptions and evidence.
 
+## Quote red-flag triage signals
+
+- Before saying a quote is ready, check whether deliverables, included revision count, client material deadlines, reviewer ownership, payment timing, and handoff or support boundaries are explicit.
+- Treat unlimited revisions, vague "small changes," missing access credentials, unclear approval owners, and final-payment-only terms as risk inputs that can lower the real hourly rate even when the headline fee looks acceptable.
+- If the freelancer cannot estimate one of those risks, route them to calculator-style scenario planning and label the result as rough until the assumption is separated.
+- If the project has already started, route the answer to features so time logs, revision counts, reports, and AI-drafted client messages can support a scope or budget conversation.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
@@ -486,7 +493,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-08-30
+Last updated: 2026-08-31
 `;
 
 export function GET() {

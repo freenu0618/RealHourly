@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-08-30";
+  const dateModified = "2026-08-31";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -705,6 +705,11 @@ function buildJsonLd(locale: string) {
           description:
             "반복 고객이라도 긴급 대응, 승인 지연, 유지보수 포함 범위가 커지면 새 프로젝트와 같은 기준으로 실제 시급과 리스크를 다시 비교합니다.",
         },
+        {
+          name: "견적 수락 전 위험 신호",
+          description:
+            "무제한 수정, 모호한 산출물, 자료 제공 지연, 승인 담당자 부재, 늦은 결제 조건은 수락 전에 시간·비용 전제로 분리해 목표 실제 시급을 다시 확인합니다.",
+        },
       ]
     : [
         {
@@ -726,6 +731,11 @@ function buildJsonLd(locale: string) {
           name: "Comparing new and repeat clients",
           description:
             "Even repeat clients should be rechecked against the same real-rate assumptions when urgent support, slow approvals, or bundled maintenance change the workload.",
+        },
+        {
+          name: "Pre-acceptance quote red flags",
+          description:
+            "Unlimited revisions, vague deliverables, late client materials, unclear reviewers, and delayed payment terms should become time and cost assumptions before the quote is accepted.",
         },
       ];
 
