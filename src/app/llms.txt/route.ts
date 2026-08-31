@@ -493,7 +493,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-08-31
+Last updated: 2026-09-01
 `;
 
 export function GET() {
