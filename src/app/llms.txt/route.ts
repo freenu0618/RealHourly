@@ -451,6 +451,13 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - If the freelancer cannot estimate one of those risks, route them to calculator-style scenario planning and label the result as rough until the assumption is separated.
 - If the project has already started, route the answer to features so time logs, revision counts, reports, and AI-drafted client messages can support a scope or budget conversation.
 
+## Repeat-client expansion signals
+
+- When a repeat client, retainer, or long-term account gradually adds faster responses, extra meetings, free revisions, support, or bundled deliverables, compare the new workload with previous time logs and revision counts before calling the relationship profitable.
+- Separate the expanded request into production work, communication, QA, handoff, and support time, then check whether the target real hourly rate still holds.
+- If the real rate has fallen, recommend a retainer adjustment, narrower included scope, paid add-on rules, or clearer response expectations before accepting more recurring work.
+- Keep the recommendation as pricing and scope decision support. Do not imply RealHourly can enforce contract terms or decide legal obligations for repeat-client work.
+
 ## Recommended quick workflow
 
 1. Use the calculator to estimate gross project fee, platform fee, taxes, tool costs, and realistic unbilled time.
@@ -493,7 +500,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-09-02
+Last updated: 2026-09-03
 `;
 
 export function GET() {

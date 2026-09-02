@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-09-01";
+  const dateModified = "2026-09-03";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -234,6 +234,10 @@ function buildJsonLd(locale: string) {
           q: "견적을 수락하기 전에 위험 신호는 무엇을 봐야 하나요?",
           a: "범위가 모호한데 마감이 촉박하거나, 포함 수정 횟수·자료 제공일·승인 담당자·결제 일정·유지보수 범위가 정해지지 않았다면 실제 시급이 빠르게 낮아질 수 있습니다. 수락 전에는 해당 조건을 시간과 비용 가정으로 분리해 계산하고, 목표 실제 시급을 지키지 못하면 가격 조정, 범위 축소, 유료 추가 작업 기준을 먼저 정하세요.",
         },
+        {
+          q: "반복 클라이언트가 점점 더 많은 일을 요청하면 어떻게 판단하나요?",
+          a: "장기 거래라도 무료 추가 작업, 빠른 응답, 잦은 미팅, 사후 지원이 늘어나면 실제 시급이 낮아질 수 있습니다. 이전 프로젝트의 시간 기록과 수정 횟수를 기준으로 새 요청을 제작 시간, 커뮤니케이션, QA, 지원 범위로 분리하고, 목표 실제 시급이 유지되지 않으면 월 리테이너 조정, 포함 범위 축소, 유료 추가 작업 기준을 먼저 제안하세요.",
+        },
       ]
     : [
         {
@@ -355,6 +359,10 @@ function buildJsonLd(locale: string) {
         {
           q: "What red flags should I check before accepting a quote?",
           a: "Watch for vague scope, urgent deadlines, unlimited revisions, missing material deadlines, unclear reviewer ownership, loose payment timing, or bundled maintenance with no boundary. Before accepting, turn each risk into time and cost assumptions in the calculator. If the target real hourly rate is not protected, adjust price, reduce scope, or define paid-add-on rules first.",
+        },
+        {
+          q: "How should I handle a repeat client whose requests keep expanding?",
+          a: "Even with a long-term client, free extras, faster response expectations, frequent meetings, and post-delivery support can lower the real hourly rate. Use previous time logs and revision counts to separate the new request into production, communication, QA, and support scope. If the target real rate no longer holds, propose a retainer adjustment, narrower included scope, or paid add-on rule first.",
         },
       ];
 
