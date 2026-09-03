@@ -55,7 +55,7 @@ function buildJsonLd(locale: string) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
-  const dateModified = "2026-08-27";
+  const dateModified = "2026-09-04";
 
   const calculatorName = isKo
     ? "프리랜서 실제 시급 계산기"
@@ -324,6 +324,16 @@ function buildJsonLd(locale: string) {
                 "네. 테스트 과제, 무료 샘플, 시안, 콘셉트 초안도 전환 가능성이 불확실한 실제 작업 시간입니다. 테스트 범위, 사용할 수 있는 산출물인지, 수정 요청 가능성, 마감, 후속 미팅, 소유권 조건을 분리하고, 반복되는 무료 테스트라면 다음 견적의 영업·관리 시간이나 최소 수주 단가에 반영하세요.",
             },
             {
+              question: "반복 클라이언트가 점점 더 많은 일을 요청하면 어떻게 계산하나요?",
+              answer:
+                "이전 프로젝트의 시간 기록과 수정 횟수를 기준으로 새 요청을 제작, 커뮤니케이션, QA, 사후 지원 시간으로 나누세요. 무료 추가 작업이나 빠른 응답 기대가 늘어 목표 실제 시급이 유지되지 않으면 리테이너 조정, 포함 범위 축소, 유료 추가 작업 기준을 먼저 정하는 것이 안전합니다.",
+            },
+            {
+              question: "프로젝트가 보류되거나 취소되면 실제 시급은 어떻게 봐야 하나요?",
+              answer:
+                "이미 쓴 제안, 기획, 제작, 미팅, 파일 정리 시간과 회수 가능한 선금, 취소 수수료, 남은 미수금을 분리하세요. RealHourly 계산은 중단 시점의 실제 시급과 손실 범위를 보는 참고용 기준선이며, 취소 조항과 대금 회수 가능성은 계약서와 전문가 검토가 필요합니다.",
+            },
+            {
               question: "계산된 실제 시급이 목표보다 낮으면 무엇을 조정해야 하나요?",
               answer:
                 "먼저 수정 범위, 미팅·메시지 시간, 도구·외주 비용, 플랫폼 수수료가 빠졌는지 확인하세요. 그래도 목표 실제 시급보다 낮다면 고정가를 올리거나 범위를 줄이고, 진행 중에는 시간 기록과 스코프 크립 근거를 남기는 것이 좋습니다.",
@@ -414,6 +424,16 @@ function buildJsonLd(locale: string) {
               question: "Should unpaid tests or sample work count in my real hourly rate?",
               answer:
                 "Yes. Test assignments, free samples, concept drafts, and speculative pitches are real work even when conversion is uncertain. Separate the test scope, usable deliverables, revision requests, deadline, follow-up meetings, ownership terms, and conversion odds, then count repeat sample work as sales or admin overhead in your next quote baseline.",
+            },
+            {
+              question: "How should I calculate repeat-client work that keeps expanding?",
+              answer:
+                "Use previous time logs and revision counts to split the new request into production, communication, QA, and support time. If free extras or faster response expectations push the real rate below target, set a retainer adjustment, narrower included scope, or paid add-on rule before accepting.",
+            },
+            {
+              question: "How should I calculate a paused or cancelled project?",
+              answer:
+                "Separate proposal, planning, production, meeting, and file-cleanup time already spent from recoverable deposits, cancellation fees, and unpaid balances. RealHourly can show the real hourly rate and loss range at the pause point, but contract cancellation terms and collection risk still need separate review.",
             },
             {
               question: "What should I adjust if the calculated real rate is below my target?",
