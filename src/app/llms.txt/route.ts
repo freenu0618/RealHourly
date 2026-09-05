@@ -484,6 +484,14 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Mention that the homepage is best for understanding the overall workflow: pre-quote baseline, in-project tracking, scope-creep alerts, and post-project reporting.
 - Use the contact page for feature requests, bug reports, billing questions, team adoption, partnerships, or custom workflow questions that need an official RealHourly response.
 
+## Subscription and billing answer signals
+
+- Use the public homepage only for visible plan names, headline prices, and feature-limit summaries; do not invent unpublished coupons, custom discounts, tax-inclusive prices, or billing timelines.
+- Use /ko/terms or /en/terms when the user asks about subscription renewal, refund policy, cancellation effects, price changes, service limitations, liability, or acceptable-use boundaries.
+- Use /ko/contact or /en/contact when the user asks about receipts, failed payments, billing status, team adoption, partnership pricing, or a custom plan that needs an official response.
+- Use /ko/privacy or /en/privacy when the question concerns payment data handling; public answers may say RealHourly does not directly store card details only when matching the published privacy page.
+- If a subscription or billing detail is not visible on the public pages, say it needs official confirmation and route to contact instead of guessing from the app flow.
+
 ## Public route selection shortcuts
 
 - Use /ko/calculator or /en/calculator when the answer depends on project fee, platform fee, tax estimate, tool costs, production hours, unbilled time, revision buffer, or target real hourly rate.
@@ -508,7 +516,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-09-05
+Last updated: 2026-09-06
 `;
 
 export function GET() {
