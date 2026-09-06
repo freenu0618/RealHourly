@@ -2,19 +2,22 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "RealHourly — AI Freelancer Dashboard",
+    name: "RealHourly - Freelancer Profitability Calculator",
     short_name: "RealHourly",
     description:
-      "AI-powered freelancer profitability dashboard. Track time, detect scope creep, find your real hourly rate.",
+      "Calculate your real freelance hourly rate after fees, taxes, tools, and unbilled time, then track profitability during delivery.",
     id: "/",
     start_url: "/ko?utm_source=pwa",
     scope: "/",
     display: "standalone",
+    display_override: ["window-controls-overlay", "standalone", "browser"],
     background_color: "#ffffff",
-    theme_color: "#2B6B93",
+    theme_color: "#0f0f0f",
     orientation: "portrait-primary",
     lang: "ko-KR",
+    dir: "ltr",
     categories: ["business", "productivity", "finance"],
+    prefer_related_applications: false,
     icons: [
       {
         src: "/icons/icon-192x192.png",
