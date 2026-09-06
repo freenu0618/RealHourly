@@ -21,6 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
+  applicationName: "RealHourly",
+  manifest: "/manifest.webmanifest",
   title: {
     default: "RealHourly - Freelancer Hourly Rate Calculator & Profitability Dashboard",
     template: "%s | RealHourly",
@@ -34,6 +36,11 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "RealHourly",
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
   openGraph: {
     title: "RealHourly",
