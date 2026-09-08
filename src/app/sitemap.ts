@@ -8,7 +8,7 @@ const staticPages = [
   { path: "", lastModified: "2026-09-03", changeFrequency: "weekly" as const, priority: 1.0 },
   { path: "/features", lastModified: "2026-08-13", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/calculator", lastModified: "2026-09-04", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/contact", lastModified: "2026-06-09", changeFrequency: "monthly" as const, priority: 0.5 },
+  { path: "/contact", lastModified: "2026-09-09", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/privacy", lastModified: "2026-09-08", changeFrequency: "yearly" as const, priority: 0.3 },
   { path: "/terms", lastModified: "2026-09-08", changeFrequency: "yearly" as const, priority: 0.3 },
 ];

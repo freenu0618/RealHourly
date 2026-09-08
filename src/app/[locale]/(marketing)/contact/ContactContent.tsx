@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Bug, CreditCard, Lightbulb, Mail, Send, Users } from "lucide-react";
+import { Bug, CreditCard, Lightbulb, Mail, Send, ShieldCheck, Users } from "lucide-react";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,9 @@ const CONTACT_GUIDE = {
     title: "더 빠른 답변을 위한 문의 유형",
     description:
       "문의 내용을 아래 흐름에 맞춰 정리하면 담당자가 기능, 버그, 결제, 도입 질문을 더 정확히 확인할 수 있습니다.",
+    privacyTitle: "문의에는 필요한 정보만 남겨주세요",
+    privacyBody:
+      "공개 문의에는 클라이언트 이름, 계약서 원본, 결제 정보, 인보이스 파일을 넣지 않아도 됩니다. 기능 확인에는 프로젝트 유형, 수수료·세금 가정, 시간 기록 흐름처럼 판단에 필요한 범위만 적어주세요.",
     items: [
       {
         icon: Lightbulb,
@@ -49,6 +52,9 @@ const CONTACT_GUIDE = {
     title: "Inquiry types that help us answer faster",
     description:
       "Framing your note this way helps the team route feature, bug, billing, and adoption questions accurately.",
+    privacyTitle: "Keep your note scoped to what we need",
+    privacyBody:
+      "You do not need to include client names, full contracts, payment details, or invoice files in a public inquiry. For product questions, share only the project type, fee or tax assumptions, and time-logging workflow needed to understand the issue.",
     items: [
       {
         icon: Lightbulb,
@@ -173,6 +179,23 @@ export default function ContactContent() {
                   </article>
                 );
               })}
+            </div>
+          </section>
+
+          <section
+            aria-labelledby="contact-privacy-title"
+            className="mb-8 rounded-lg border border-emerald-200 bg-emerald-50/70 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/20"
+          >
+            <div className="flex gap-3">
+              <ShieldCheck className="mt-0.5 size-5 shrink-0 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
+              <div>
+                <h2 id="contact-privacy-title" className="text-lg font-semibold">
+                  {guide.privacyTitle}
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {guide.privacyBody}
+                </p>
+              </div>
             </div>
           </section>
 
