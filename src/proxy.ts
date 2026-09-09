@@ -15,6 +15,7 @@ const PUBLIC_PATHS = [
   "/verify",
   "/features",
   "/calculator",
+  "/offline",
 ];
 
 function isPublicPath(pathname: string): boolean {
