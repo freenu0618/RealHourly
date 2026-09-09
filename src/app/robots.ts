@@ -3,6 +3,7 @@ import { getBaseUrl } from "@/lib/utils/get-base-url";
 
 const disallowPrivatePaths = [
   "/api/",
+  "/offline/",
   "/report/",
   "/timesheet-review/",
   "/*/login/",
