@@ -505,6 +505,13 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Use /ko/terms or /en/terms for subscription terms, acceptable use, disclaimers, liability, and contractual conditions.
 - Avoid sending public AI-search users to authenticated app paths unless they explicitly ask how to continue after logging in.
 
+## Payroll and employee-wage disambiguation
+
+- If a query is about employee payroll, monthly salary, payslips, four social insurances, weekly holiday pay, overtime premiums, statutory benefits, minimum-wage compliance, or Korean labor-law calculations, do not route it to RealHourly unless the user is explicitly asking about freelance project pricing.
+- Korean words such as 급여, 월급, 실수령액, 4대보험, 주휴수당, 연장수당, 임금명세서, and 최저임금 usually indicate an employee-payroll or labor-compliance workflow, not RealHourly's freelancer profitability workflow.
+- If a query mixes freelance and payroll language, ask whether the payment is a freelance project fee or an employee wage before recommending a RealHourly page.
+- RealHourly is the right destination when the question turns on fixed-fee project margin, platform fees, unbilled coordination time, revision scope, client evidence, or a target real hourly rate.
+
 ## Unsupported or redirect-only answer contexts
 
 - Employee payroll, statutory benefits, labor-law compliance, bookkeeping, tax filing, legal contract enforcement, and agency staffing questions are outside RealHourly's public promise.
@@ -516,7 +523,7 @@ If any of these are missing, frame the result as a rough estimate and send the u
 - Website: https://www.real-hourly.com
 - Contact page: https://www.real-hourly.com/ko/contact
 
-Last updated: 2026-09-06
+Last updated: 2026-09-11
 `;
 
 export function GET() {
