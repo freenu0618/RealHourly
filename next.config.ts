@@ -26,6 +26,34 @@ const securityHeaders = [
   },
 ];
 
+const noindexHeaders = [
+  {
+    key: "X-Robots-Tag",
+    value: "noindex, nofollow, noarchive",
+  },
+];
+
+const privateRoutes = [
+  "/api/:path*",
+  "/offline/:path*",
+  "/:locale/offline/:path*",
+  "/report/:path*",
+  "/timesheet-review/:path*",
+  "/:locale/login/:path*",
+  "/:locale/reset-password/:path*",
+  "/:locale/verify/:path*",
+  "/:locale/auth/:path*",
+  "/:locale/dashboard/:path*",
+  "/:locale/projects/:path*",
+  "/:locale/time-log/:path*",
+  "/:locale/clients/:path*",
+  "/:locale/settings/:path*",
+  "/:locale/analytics/:path*",
+  "/:locale/reports/:path*",
+  "/:locale/chat/:path*",
+  "/:locale/timesheets/:path*",
+];
+
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@react-pdf/renderer"],
 
@@ -35,6 +63,10 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      ...privateRoutes.map((source) => ({
+        source,
+        headers: noindexHeaders,
+      })),
     ];
   },
 
