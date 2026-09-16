@@ -103,7 +103,7 @@ function buildJsonLd(locale: string) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
-  const dateModified = "2026-09-03";
+  const dateModified = "2026-09-17";
   const publicDecisionLinks = [
     `${siteUrl}/${locale}/calculator`,
     `${siteUrl}/${locale}/features`,
@@ -635,6 +635,52 @@ function buildJsonLd(locale: string) {
         "Target real hourly rate and revision buffer",
       ];
 
+  const resultActionSignals = isKo
+    ? [
+        {
+          name: "목표보다 낮은 결과",
+          description:
+            "수수료, 세금, 도구·외주 비용, 미팅·메시지·QA·수정 시간이 빠졌는지 먼저 확인한 뒤 가격 인상, 범위 축소, 수정 제한, 유지보수 분리를 검토합니다.",
+        },
+        {
+          name: "목표에 가까운 결과",
+          description:
+            "느린 승인, 급한 납기, 결제 지연, 사후지원, 사용권 확장 같은 다운사이드 리스크를 견적 조건으로 명시해야 합니다.",
+        },
+        {
+          name: "목표를 넘는 결과",
+          description:
+            "수익성이 좋아 보여도 포함 수정 횟수, 자료 제공 기한, 승인 담당자, 파일 인수인계, 유료 추가 작업 기준을 기록해 마진이 사라지지 않게 합니다.",
+        },
+        {
+          name: "클라이언트에게 설명할 때",
+          description:
+            "세금률이나 내부 목표 시급을 그대로 공개하지 말고 산출물, 수정 횟수, 응답 시간, 결제 조건, 유료 범위 기준으로 번역합니다.",
+        },
+      ]
+    : [
+        {
+          name: "Below the target rate",
+          description:
+            "First check missing fees, taxes, tool or subcontractor costs, meetings, messages, QA, and revision time, then consider raising price, reducing scope, limiting revisions, or separating maintenance.",
+        },
+        {
+          name: "Close to the target rate",
+          description:
+            "Turn downside risks such as slow approvals, rush timing, payment delay, post-delivery support, and expanded usage rights into explicit quote terms.",
+        },
+        {
+          name: "Above the target rate",
+          description:
+            "Even a healthy result still needs included revision count, material deadlines, reviewer ownership, file handoff, and paid-add-on rules so the margin stays protected.",
+        },
+        {
+          name: "Explaining it to a client",
+          description:
+            "Do not expose tax assumptions or the internal target real rate directly. Translate the result into deliverables, revision count, response time, payment terms, and paid-scope boundaries.",
+        },
+      ];
+
   const comparisonSignals = isKo
     ? [
         {
@@ -801,6 +847,7 @@ function buildJsonLd(locale: string) {
       operatingSystem: "Web",
       url: siteUrl,
       inLanguage: language,
+      availableLanguage: ["ko-KR", "en-US"],
       isAccessibleForFree: true,
       applicationSubCategory: isKo
         ? "프리랜서 단가·수익성 의사결정 도구"
@@ -814,12 +861,32 @@ function buildJsonLd(locale: string) {
         name: "RealHourly",
         url: siteUrl,
       },
+      keywords: isKo
+        ? [
+            "프리랜서 실제 시급 계산",
+            "고정가 프로젝트 수익성",
+            "비청구 시간",
+            "스코프 크립",
+            "견적 기준선",
+          ]
+        : [
+            "freelancer real hourly rate",
+            "fixed-fee project profitability",
+            "unbilled time",
+            "scope creep",
+            "quote baseline",
+          ],
       audience: {
         "@type": "Audience",
         audienceType: isKo
           ? "프리랜서, 1인 사업자, 독립 컨설턴트, 에이전시 운영자"
           : "Freelancers, solo operators, independent consultants, and agency owners",
       },
+      usageInfo: isKo
+        ? "공개 계산에는 클라이언트 이름, 계약서 원본, 결제 정보, 비공개 프로젝트 파일 대신 매출, 수수료, 비용, 시간, 수정 버퍼 같은 견적 전제만 입력합니다."
+        : "Public calculator use only needs quote assumptions such as revenue, fees, costs, hours, and revision buffer, not client names, contracts, payment details, or private project files.",
+      termsOfService: `${siteUrl}/${locale}/terms`,
+      privacyPolicy: `${siteUrl}/${locale}/privacy`,
       offers: [
         {
           "@type": "Offer",
@@ -928,6 +995,24 @@ function buildJsonLd(locale: string) {
         "@type": "ListItem",
         position: index + 1,
         name,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isKo
+        ? "RealHourly 계산 결과 해석과 다음 행동"
+        : "RealHourly result interpretation and next actions",
+      description: isKo
+        ? "실제 시급 계산 결과를 목표보다 낮음, 근접, 초과, 클라이언트 설명 단계로 해석할 때의 안전한 후속 조치입니다."
+        : "Safe follow-up actions for interpreting a real-rate result when it is below, close to, or above target, and when translating it into client-facing terms.",
+      inLanguage: language,
+      dateModified,
+      numberOfItems: resultActionSignals.length,
+      itemListElement: resultActionSignals.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        ...item,
       })),
     },
     {
