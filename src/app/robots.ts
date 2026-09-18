@@ -33,6 +33,8 @@ const disallowPrivatePaths = [
   "/*/chat/",
   "/*/timesheets",
   "/*/timesheets/",
+  "/*/guide",
+  "/*/guide/",
 ];
 
 export default function robots(): MetadataRoute.Robots {
