@@ -38,6 +38,7 @@ export function LandingNav() {
 
   return (
     <nav
+      aria-label={locale === "ko" ? "주요 메뉴" : "Primary navigation"}
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         scrolled
@@ -53,8 +54,8 @@ export function LandingNav() {
       </a>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/images/logo.webp" alt="RealHourly" width={28} height={28} className="rounded-lg" />
+        <Link href="/" className="flex items-center gap-2" aria-current={isHome ? "page" : undefined}>
+          <Image src="/images/logo.webp" alt="" width={28} height={28} className="rounded-lg" />
           <span className="text-lg font-bold text-foreground">RealHourly</span>
         </Link>
 
@@ -71,10 +72,10 @@ export function LandingNav() {
               </Link>
             ),
           )}
-          <Link href="/features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/features" aria-current={pathname === "/features" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             {t("nav.guide")}
           </Link>
-          <Link href="/calculator" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/calculator" aria-current={pathname === "/calculator" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             {t("nav.calculator")}
           </Link>
         </div>
@@ -85,7 +86,11 @@ export function LandingNav() {
             type="button"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="Toggle theme"
+            aria-label={
+              locale === "ko"
+                ? theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"
+                : theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </button>
@@ -110,14 +115,21 @@ export function LandingNav() {
         </div>
 
         {/* Mobile hamburger */}
-        <button type="button" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? t("nav.close") : "Menu"} aria-expanded={mobileOpen}>
+        <button
+          type="button"
+          className="rounded-lg p-2 md:hidden"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? t("nav.close") : locale === "ko" ? "메뉴 열기" : "Open menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
+        >
           {mobileOpen ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t bg-background px-6 pb-6 pt-4 md:hidden">
+        <div id="mobile-navigation" className="border-t bg-background px-6 pb-6 pt-4 md:hidden">
           <div className="flex flex-col gap-4">
             {links.map((link) =>
               isHome ? (
@@ -130,10 +142,10 @@ export function LandingNav() {
                 </Link>
               ),
             )}
-            <Link href="/features" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/features" onClick={() => setMobileOpen(false)} aria-current={pathname === "/features" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.guide")}
             </Link>
-            <Link href="/calculator" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/calculator" onClick={() => setMobileOpen(false)} aria-current={pathname === "/calculator" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.calculator")}
             </Link>
             <button

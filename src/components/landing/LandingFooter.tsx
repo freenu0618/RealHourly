@@ -37,7 +37,7 @@ export function LandingFooter() {
           <div className="mb-2 flex items-center gap-2">
             <Image
               src="/images/logo.webp"
-              alt="RealHourly"
+              alt=""
               width={24}
               height={24}
               className="rounded"
