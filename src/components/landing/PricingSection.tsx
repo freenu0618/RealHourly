@@ -125,13 +125,11 @@ export function PricingSection() {
               </p>
             </div>
 
-            <Link href="/login?view=signup">
-              <button
-                type="button"
-                className="w-full rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-muted"
-              >
-                {t("pricingFreeBtn")}
-              </button>
+            <Link
+              href="/login?view=signup"
+              className="block w-full rounded-xl border border-border bg-background px-6 py-3 text-center text-sm font-medium transition-colors hover:bg-muted"
+            >
+              {t("pricingFreeBtn")}
             </Link>
 
             <div className="mt-6 border-t pt-6">
@@ -207,16 +205,17 @@ export function PricingSection() {
               </p>
             </div>
 
-            <Link href="/login?view=signup">
-              <ShimmerButton
-                shimmerColor="#ffffff"
-                background="var(--primary)"
-                borderRadius="12px"
-                className="w-full py-3 font-medium text-primary-foreground"
-              >
+            <ShimmerButton
+              asChild
+              shimmerColor="#ffffff"
+              background="var(--primary)"
+              borderRadius="12px"
+              className="w-full py-3 font-medium text-primary-foreground"
+            >
+              <Link href="/login?view=signup">
                 {t("pricingProBtn")}
-              </ShimmerButton>
-            </Link>
+              </Link>
+            </ShimmerButton>
 
             <div className="mt-6 border-t pt-6">
               <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">

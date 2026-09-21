@@ -410,22 +410,22 @@ export function FullCalculator() {
             </div>
 
             <div className="space-y-2 pt-1">
-              <Link href="/login" className="block w-full">
-                <ShimmerButton className="w-full justify-center gap-2 text-sm font-semibold" shimmerDuration="2.5s">
+              <ShimmerButton asChild className="w-full justify-center gap-2 text-sm font-semibold" shimmerDuration="2.5s">
+                <Link href="/login" className="block w-full">
                   {c("ctaLabel")}
                   <ArrowRight className="w-4 h-4" />
-                </ShimmerButton>
-              </Link>
+                </Link>
+              </ShimmerButton>
               <p className="text-center text-xs text-muted-foreground">{c("saveResultDesc")}</p>
             </div>
 
             <div className="mt-2 p-4 rounded-xl border bg-muted/50 text-center">
               <p className="text-sm text-muted-foreground mb-3">{c("trackCta")}</p>
-              <Link href="/login">
-                <ShimmerButton className="justify-center text-sm font-semibold" shimmerDuration="2.5s">
+              <ShimmerButton asChild className="justify-center text-sm font-semibold" shimmerDuration="2.5s">
+                <Link href="/login">
                   {c("trackCtaButton")}
-                </ShimmerButton>
-              </Link>
+                </Link>
+              </ShimmerButton>
             </div>
           </div>
         </FadeIn>

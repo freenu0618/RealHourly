@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, RefreshCw, Loader2, Bot, ArrowRight } from "lucide-react";
+import { X, RefreshCw, Bot, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -143,18 +143,19 @@ export function BriefingCard() {
 
       {/* Recommended action button */}
       {actionText && (
-        <Link href="/projects" className="mt-3 block">
-          <ShimmerButton
-            shimmerColor="#4ade80"
-            shimmerSize="0.08em"
-            background="rgba(255,255,255,0.05)"
-            borderRadius="12px"
-            className="w-full justify-between text-xs text-white/90 h-9 px-3"
-          >
+        <ShimmerButton
+          asChild
+          shimmerColor="#4ade80"
+          shimmerSize="0.08em"
+          background="rgba(255,255,255,0.05)"
+          borderRadius="12px"
+          className="mt-3 w-full justify-between text-xs text-white/90 h-9 px-3"
+        >
+          <Link href="/projects" className="block">
             <span className="truncate text-left">👉 {actionText}</span>
             <ArrowRight className="ml-2 size-3.5 shrink-0" />
-          </ShimmerButton>
-        </Link>
+          </Link>
+        </ShimmerButton>
       )}
     </div>
   );

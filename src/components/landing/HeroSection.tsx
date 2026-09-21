@@ -96,18 +96,19 @@ export function HeroSection() {
             <FadeIn delay={0.6}>
               <div className="flex flex-col items-center justify-center gap-3">
                 <div className="flex flex-col items-center gap-3 sm:flex-row">
-                  <Link href="/login?view=signup">
-                    <ShimmerButton
-                      background="var(--primary)"
-                      shimmerColor="#ffffff"
-                      borderRadius="12px"
-                      className="px-8 py-3.5 text-base font-medium"
-                    >
+                  <ShimmerButton
+                    asChild
+                    background="var(--primary)"
+                    shimmerColor="#ffffff"
+                    borderRadius="12px"
+                    className="px-8 py-3.5 text-base font-medium"
+                  >
+                    <Link href="/login?view=signup">
                       <span className="flex items-center gap-2">
                         {t("heroCta")} <ArrowRight className="h-4 w-4" />
                       </span>
-                    </ShimmerButton>
-                  </Link>
+                    </Link>
+                  </ShimmerButton>
                   <Link
                     href="/calculator"
                     className="inline-flex items-center gap-2 rounded-xl border border-border bg-background/80 px-8 py-3.5 text-base font-medium text-foreground transition-colors hover:bg-muted"

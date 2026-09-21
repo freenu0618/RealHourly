@@ -160,15 +160,16 @@ export function PublicGuideContent() {
             {tf("subtitle")}
           </p>
           <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link href="/login">
-              <ShimmerButton
-                background="rgba(43, 107, 147, 1)"
-                className="px-6 py-2.5 text-sm font-semibold"
-              >
+            <ShimmerButton
+              asChild
+              background="rgba(43, 107, 147, 1)"
+              className="px-6 py-2.5 text-sm font-semibold"
+            >
+              <Link href="/login">
                 {tf("ctaLabel")}
                 <ArrowRight className="ml-2 size-4" />
-              </ShimmerButton>
-            </Link>
+              </Link>
+            </ShimmerButton>
             <p className="text-xs text-muted-foreground">{tf("ctaSub")}</p>
           </div>
         </div>
@@ -256,15 +257,16 @@ export function PublicGuideContent() {
             {tf("bottomDesc")}
           </p>
           <div className="mt-6 flex flex-col items-center gap-3">
-            <Link href="/login">
-              <ShimmerButton
-                background="rgba(43, 107, 147, 1)"
-                className="px-8 py-3 text-sm font-semibold"
-              >
+            <ShimmerButton
+              asChild
+              background="rgba(43, 107, 147, 1)"
+              className="px-8 py-3 text-sm font-semibold"
+            >
+              <Link href="/login">
                 {tf("ctaLabel")}
                 <ArrowRight className="ml-2 size-4" />
-              </ShimmerButton>
-            </Link>
+              </Link>
+            </ShimmerButton>
             <Link
               href="/calculator"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
