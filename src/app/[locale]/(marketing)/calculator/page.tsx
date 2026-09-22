@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props) {
     : "Calculate your real hourly rate after platform fees, taxes, and unbilled time. Free online calculator to measure freelancer profitability, set a smarter minimum rate, and price projects with more confidence.";
 
   return {
-    title,
+    title: { absolute: title },
     description,
     keywords: isKo
       ? [

@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
     : "Contact RealHourly for feature requests, bug reports, and billing questions without sharing client names, contracts, or payment details.";
 
   return {
-    title,
+    title: { absolute: title },
     description,
     robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/contact"),

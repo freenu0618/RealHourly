@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
     : "Privacy Policy for RealHourly. Learn about how we collect, use, and protect your personal information.";
 
   return {
-    title,
+    title: { absolute: title },
     description,
     robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/privacy"),

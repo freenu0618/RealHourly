@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
     : "Terms of Service for RealHourly. Review the conditions and user rights for using our service.";
 
   return {
-    title,
+    title: { absolute: title },
     description,
     robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/terms"),

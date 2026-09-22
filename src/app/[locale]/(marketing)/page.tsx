@@ -15,10 +15,12 @@ export async function generateMetadata({ params }: Props) {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
 
   return {
-    title:
-      locale === "ko"
-        ? "RealHourly - 프리랜서 실제 시급·단가 계산기 | 수익성 분석·시간 추적"
-        : "RealHourly - Freelancer Hourly Rate & Pricing Calculator | Profitability & Time Tracking",
+    title: {
+      absolute:
+        locale === "ko"
+          ? "RealHourly - 프리랜서 실제 시급·단가 계산기 | 수익성 분석·시간 추적"
+          : "RealHourly - Freelancer Hourly Rate & Pricing Calculator | Profitability & Time Tracking",
+    },
     description:
       locale === "ko"
         ? "플랫폼 수수료, 세금, 비청구 시간, 숨겨진 비용을 차감한 진짜 시급과 최소 수주 단가를 확인하세요. AI가 시간을 자동 기록하고, 스코프 크립을 감지하고, 프로젝트 수익성을 분석합니다. 프리랜서를 위한 무료 수익 관리 도구입니다."

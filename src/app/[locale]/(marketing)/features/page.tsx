@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props) {
     : "Explore RealHourly's key features: AI time tracking, real hourly rate calculation, scope creep detection, invoicing, and more. All-in-one tool for freelancer revenue management.";
 
   return {
-    title,
+    title: { absolute: title },
     description,
     keywords: isKo
       ? [
