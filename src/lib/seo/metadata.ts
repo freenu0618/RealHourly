@@ -33,7 +33,7 @@ export function getOpenGraph(
     siteName: "RealHourly",
     images: [
       {
-        url: "/api/og",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "RealHourly - AI Freelancer Revenue Analytics",
@@ -51,6 +51,6 @@ export function getTwitter(title: string, description: string) {
     card: "summary_large_image" as const,
     title,
     description,
-    images: ["/api/og"],
+    images: ["/og-image.png"],
   };
 }

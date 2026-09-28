@@ -45,14 +45,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "RealHourly",
     description: "AI-powered freelancer hourly rate calculator and profitability dashboard. Find your real hourly rate and smarter minimum freelance rate.",
-    images: ["/api/og"],
+    images: ["/og-image.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "RealHourly",
     description: "AI-powered freelancer hourly rate calculator, minimum rate tool, and profitability dashboard.",
-    images: ["/api/og"],
+    images: ["/og-image.png"],
   },
 };
 

@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props) {
       siteName: "RealHourly",
       images: [
         {
-          url: "/api/og",
+          url: "/og-image.png",
           width: 1200,
           height: 630,
           alt: "RealHourly - AI Freelancer Revenue Analytics",
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: Props) {
         locale === "ko"
           ? "계약 시급이 아닌 진짜 시급을 확인하세요. 수수료·세금·비청구 시간까지 반영합니다."
           : "See your real rate, not your contract rate. Includes fees, taxes, and unbilled time.",
-      images: ["/api/og"],
+      images: ["/og-image.png"],
     },
     robots: {
       index: true,

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "generate:og": "tsx scripts/generate-og-image.ts",
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed-demo.ts",
