@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useId } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
@@ -23,6 +23,7 @@ const PLATFORM_PRESETS = [
 
 export function InteractiveCalcSection() {
   const t = useTranslations("landing");
+  const advancedId = useId();
 
   // Simple inputs
   const [amount, setAmount] = useState(3000);
@@ -132,6 +133,7 @@ export function InteractiveCalcSection() {
                     key={preset.name}
                     type="button"
                     onClick={() => handlePresetClick(preset)}
+                    aria-pressed={selectedPreset === preset.name}
                     className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                       selectedPreset === preset.name
                         ? "bg-primary text-primary-foreground border-primary"
@@ -161,6 +163,8 @@ export function InteractiveCalcSection() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAdvanced((v) => !v)}
+                aria-expanded={showAdvanced}
+                aria-controls={showAdvanced ? advancedId : undefined}
                 className="gap-1 text-xs"
               >
                 {showAdvanced ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -170,7 +174,7 @@ export function InteractiveCalcSection() {
 
             {/* Advanced Inputs */}
             {showAdvanced && (
-              <div className="space-y-4 pt-2 border-t">
+              <div id={advancedId} className="space-y-4 pt-2 border-t">
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     {t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span>

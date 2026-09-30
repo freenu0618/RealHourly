@@ -299,6 +299,7 @@ export function FullCalculator() {
                   key={preset.name}
                   type="button"
                   onClick={() => handlePresetClick(preset)}
+                  aria-pressed={selectedPreset === preset.name}
                   className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                     selectedPreset === preset.name
                       ? "bg-primary text-primary-foreground border-primary"
