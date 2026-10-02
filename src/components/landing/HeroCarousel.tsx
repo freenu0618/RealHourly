@@ -45,9 +45,9 @@ const COLUMNS: ReactNode[][] = [
   ],
 ];
 
-function CarouselColumn({ children, direction }: { children: ReactNode[]; direction: "up" | "down" }) {
+function CarouselColumn({ children, direction, className }: { children: ReactNode[]; direction: "up" | "down"; className?: string }) {
   return (
-    <div className="relative flex-1 overflow-hidden">
+    <div className={cn("relative flex-1 overflow-hidden", className)}>
       <div className={cn("carousel-column", direction === "up" ? "carousel-up" : "carousel-down")}>
         {children.map((card, i) => (
           <div key={i} className="min-h-[100px] rounded-2xl border border-border/30 bg-card/80 p-1 shadow-sm backdrop-blur-sm">
@@ -71,16 +71,16 @@ export function HeroCarousel() {
       className="absolute inset-0 overflow-hidden opacity-40 dark:opacity-25"
       aria-hidden="true"
     >
-      {/* Mobile: 2 columns */}
-      <div className="flex h-full gap-3 px-3 md:hidden">
-        {COLUMNS.slice(0, 2).map((col, i) => (
-          <CarouselColumn key={i} direction={i % 2 === 0 ? "up" : "down"}>{col}</CarouselColumn>
-        ))}
-      </div>
-      {/* Desktop: 4 columns */}
-      <div className="hidden h-full gap-4 px-4 md:flex">
+      {/* Share the first two columns across breakpoints instead of rendering them twice. */}
+      <div className="flex h-full gap-3 px-3 md:gap-4 md:px-4">
         {COLUMNS.map((col, i) => (
-          <CarouselColumn key={i} direction={i % 2 === 0 ? "up" : "down"}>{col}</CarouselColumn>
+          <CarouselColumn
+            key={i}
+            direction={i % 2 === 0 ? "up" : "down"}
+            className={i >= 2 ? "hidden md:block" : undefined}
+          >
+            {col}
+          </CarouselColumn>
         ))}
       </div>
 
