@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
@@ -16,6 +16,7 @@ export function LandingNav() {
   const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -38,6 +39,13 @@ export function LandingNav() {
 
   return (
     <nav
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && mobileOpen) {
+          event.preventDefault();
+          setMobileOpen(false);
+          mobileMenuButtonRef.current?.focus();
+        }
+      }}
       aria-label={locale === "ko" ? "주요 메뉴" : "Primary navigation"}
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
@@ -116,8 +124,9 @@ export function LandingNav() {
 
         {/* Mobile hamburger */}
         <button
+          ref={mobileMenuButtonRef}
           type="button"
-          className="rounded-lg p-2 md:hidden"
+          className="rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? t("nav.close") : locale === "ko" ? "메뉴 열기" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -152,10 +161,11 @@ export function LandingNav() {
               type="button"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              {locale === "ko"
+                ? theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"
+                : theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             </button>
             <button
               type="button"
@@ -169,7 +179,7 @@ export function LandingNav() {
             <Link href="/login" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.login")}
             </Link>
-            <Link href="/login" className="rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
+            <Link href="/login" onClick={() => setMobileOpen(false)} className="rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
               {t("nav.cta")}
             </Link>
           </div>
