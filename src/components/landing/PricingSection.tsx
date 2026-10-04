@@ -22,7 +22,6 @@ import {
 import { FadeIn } from "@/components/ui/fade-in";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BorderBeam } from "@/components/ui/border-beam";
-import { NumberTicker } from "@/components/ui/number-ticker";
 import { cn } from "@/lib/utils";
 
 type Interval = "monthly" | "yearly";
@@ -79,6 +78,7 @@ export function PricingSection() {
           <button
             type="button"
             onClick={() => setInterval("monthly")}
+            aria-pressed={interval === "monthly"}
             className={cn(
               "rounded-full px-5 py-2 text-sm font-medium transition-all",
               interval === "monthly"
@@ -91,6 +91,7 @@ export function PricingSection() {
           <button
             type="button"
             onClick={() => setInterval("yearly")}
+            aria-pressed={interval === "yearly"}
             className={cn(
               "relative rounded-full px-5 py-2 text-sm font-medium transition-all",
               interval === "yearly"
@@ -179,27 +180,25 @@ export function PricingSection() {
                 </span>
               </div>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold">
+                <span className="text-4xl font-bold tabular-nums">
                   $
-                  <NumberTicker
-                    value={interval === "yearly" ? yearlyMonthly : monthlyPrice}
-                  />
+                  {interval === "yearly" ? yearlyMonthly : monthlyPrice}
                 </span>
-                <span className="text-sm text-muted-foreground">/mo</span>
+                <span className="text-sm text-muted-foreground">{t("pricingPerMonth")}</span>
                 {interval === "yearly" && (
                   <span className="ml-2 text-xs text-muted-foreground line-through">
-                    ${monthlyPrice}/mo
+                    ${monthlyPrice}{t("pricingPerMonth")}
                   </span>
                 )}
               </div>
-              {interval === "yearly" && (
-                <p className="mt-1 text-xs text-green-600 dark:text-green-400">
-                  {t("pricingYearlySave", {
-                    total: yearlyTotal,
-                    save: monthlyPrice * 12 - yearlyTotal,
-                  })}
-                </p>
-              )}
+              <p className="mt-1 text-xs text-green-600 dark:text-green-400" aria-live="polite" aria-atomic="true">
+                {interval === "yearly"
+                  ? t("pricingYearlySave", {
+                      total: yearlyTotal,
+                      save: monthlyPrice * 12 - yearlyTotal,
+                    })
+                  : t("pricingMonthlyBilled", { total: monthlyPrice })}
+              </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 {t("pricingProDesc")}
               </p>
