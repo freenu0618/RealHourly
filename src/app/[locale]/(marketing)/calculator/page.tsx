@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/seo/site-url";
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getAlternates, getOpenGraph, getTwitter } from "@/lib/seo/metadata";
@@ -52,8 +53,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 function buildJsonLd(locale: string) {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
+  const siteUrl = getSiteUrl();
   const isKo = locale === "ko";
   const dateModified = "2026-09-04";
 

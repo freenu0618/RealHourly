@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/seo/site-url";
 import { setRequestLocale } from "next-intl/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
@@ -11,8 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
+  const siteUrl = getSiteUrl();
 
   return {
     title: {
@@ -101,8 +101,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 function buildJsonLd(locale: string) {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
+  const siteUrl = getSiteUrl();
   const isKo = locale === "ko";
   const language = isKo ? "ko-KR" : "en-US";
   const dateModified = "2026-09-17";

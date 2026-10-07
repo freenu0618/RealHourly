@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { getBaseUrl } from "@/lib/utils/get-base-url";
+import { getSiteUrl } from "@/lib/seo/site-url";
 
-const baseUrl = getBaseUrl();
+const baseUrl = getSiteUrl();
 
 // Only public, indexable pages — authenticated & noindex pages excluded
 const staticPages = [

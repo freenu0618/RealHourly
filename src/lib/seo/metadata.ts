@@ -1,5 +1,4 @@
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.real-hourly.com";
+import { getSiteUrl } from "./site-url";
 
 /**
  * Generate alternates (canonical + hreflang + x-default) for a given locale and path.
@@ -7,11 +6,11 @@ const SITE_URL =
  */
 export function getAlternates(locale: string, path: string = "") {
   return {
-    canonical: `${SITE_URL}/${locale}${path}`,
+    canonical: `${getSiteUrl()}/${locale}${path}`,
     languages: {
-      ko: `${SITE_URL}/ko${path}`,
-      en: `${SITE_URL}/en${path}`,
-      "x-default": `${SITE_URL}/ko${path}`,
+      ko: `${getSiteUrl()}/ko${path}`,
+      en: `${getSiteUrl()}/en${path}`,
+      "x-default": `${getSiteUrl()}/ko${path}`,
     },
   };
 }
@@ -29,7 +28,7 @@ export function getOpenGraph(
     title,
     description,
     type: "website" as const,
-    url: `${SITE_URL}/${locale}${path}`,
+    url: `${getSiteUrl()}/${locale}${path}`,
     siteName: "RealHourly",
     images: [
       {

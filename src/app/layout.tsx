@@ -3,7 +3,7 @@ import Script from "next/script";
 import { getLocale } from "next-intl/server";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { getBaseUrl } from "@/lib/utils/get-base-url";
+import { getSiteUrl } from "@/lib/seo/site-url";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import "./globals.css";
 
@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getBaseUrl()),
+  metadataBase: new URL(getSiteUrl()),
   applicationName: "RealHourly",
   manifest: "/manifest.webmanifest",
   title: {

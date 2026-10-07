@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBaseUrl } from "@/lib/utils/get-base-url";
+import { getSiteUrl } from "@/lib/seo/site-url";
 
 const disallowPrivatePaths = [
   "/api/",
@@ -38,7 +38,7 @@ const disallowPrivatePaths = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getSiteUrl();
 
   return {
     rules: [
