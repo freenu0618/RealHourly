@@ -4,7 +4,6 @@ import { useState, useMemo, useId } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
-import { NumberTicker } from "@/components/ui/number-ticker";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -270,7 +269,7 @@ export function InteractiveCalcSection() {
               <div className="text-center py-6 border-y">
                 <p className="text-sm text-muted-foreground mb-2">{t("calcResultLabel")}</p>
                 <div className="text-5xl font-bold text-primary">
-                  $<NumberTicker value={realRate} decimalPlaces={2} />
+                  <span className="tabular-nums">${realRate.toFixed(2)}</span>
                 </div>
               </div>
 

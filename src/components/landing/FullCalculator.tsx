@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
-import { NumberTicker } from "@/components/ui/number-ticker";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Slider } from "@/components/ui/slider";
@@ -355,7 +354,7 @@ export function FullCalculator() {
             <div className="text-center py-5 border-y">
               <p className="text-sm text-muted-foreground mb-2">{t("calcResultLabel")}</p>
               <div className="text-5xl font-bold text-primary">
-                $<NumberTicker value={r.realWith} decimalPlaces={2} />
+                <span className="tabular-nums">${r.realWith.toFixed(2)}</span>
               </div>
             </div>
 
