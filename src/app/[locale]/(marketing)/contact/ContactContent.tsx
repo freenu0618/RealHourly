@@ -204,6 +204,8 @@ export default function ContactContent() {
               <Label htmlFor="name">{t("nameLabel")}</Label>
               <Input
                 id="name"
+                name="name"
+                autoComplete="name"
                 type="text"
                 required
                 value={formData.name}
@@ -217,6 +219,8 @@ export default function ContactContent() {
               <Label htmlFor="email">{t("emailLabel")}</Label>
               <Input
                 id="email"
+                name="email"
+                autoComplete="email"
                 type="email"
                 required
                 value={formData.email}
@@ -258,8 +262,13 @@ export default function ContactContent() {
               />
             </div>
 
+            <p id="contact-email-help" className="text-sm leading-6 text-muted-foreground">
+              {t("emailAppHelp")}
+            </p>
+
             <Button
               type="submit"
+              aria-describedby="contact-email-help"
               size="lg"
               className="w-full"
               disabled={!formData.name || !formData.email || !formData.subject || !formData.message}
