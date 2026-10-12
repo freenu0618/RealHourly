@@ -280,15 +280,15 @@ export function FullCalculator() {
       <div className="grid md:grid-cols-2 gap-8 items-start">
         <FadeIn delay={0.1} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span></label>
+            <label htmlFor="calculator-amount" className="block text-sm font-medium mb-2">{t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span></label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
-              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={t("calcInputAmount")} />
+              <input id="calculator-amount" type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={t("calcInputAmount")} />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcInputHours")} <span className="text-muted-foreground">({hours}h)</span></label>
-            <input type="number" value={hours} onChange={(e) => setHours(Number(e.target.value))} min={1} step={1} className={ni} aria-label={t("calcInputHours")} />
+            <label htmlFor="calculator-hours" className="block text-sm font-medium mb-2">{t("calcInputHours")} <span className="text-muted-foreground">({hours}h)</span></label>
+            <input id="calculator-hours" type="number" value={hours} onChange={(e) => setHours(Number(e.target.value))} min={1} step={1} className={ni} aria-label={t("calcInputHours")} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></label>
@@ -319,22 +319,22 @@ export function FullCalculator() {
             <Slider value={[taxRate]} onValueChange={(v) => setTaxRate(v[0])} min={0} max={50} step={1} aria-label={t("calcTaxLabel")} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span></label>
+            <label htmlFor="calculator-toolCost" className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span></label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
-              <input type="number" value={toolCost} onChange={(e) => setToolCost(Number(e.target.value))} min={0} step={10} className={`${ni} pl-9`} aria-label={t("calcToolLabel")} />
+              <input id="calculator-toolCost" type="number" value={toolCost} onChange={(e) => setToolCost(Number(e.target.value))} min={0} step={10} className={`${ni} pl-9`} aria-label={t("calcToolLabel")} />
             </div>
           </div>
 
           <div className="pt-5 border-t space-y-4">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{c("unbilledTitle")}</h2>
             <div>
-              <label className="block text-sm font-medium mb-2">{c("meetingHours")} <span className="text-muted-foreground">({meetingHours}h)</span></label>
-              <input type="number" value={meetingHours} onChange={(e) => setMeetingHours(Number(e.target.value))} min={0} step={0.5} className={ni} aria-label={c("meetingHours")} />
+              <label htmlFor="calculator-meetingHours" className="block text-sm font-medium mb-2">{c("meetingHours")} <span className="text-muted-foreground">({meetingHours}h)</span></label>
+              <input id="calculator-meetingHours" type="number" value={meetingHours} onChange={(e) => setMeetingHours(Number(e.target.value))} min={0} step={0.5} className={ni} aria-label={c("meetingHours")} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">{c("emailHours")} <span className="text-muted-foreground">({emailHours}h)</span></label>
-              <input type="number" value={emailHours} onChange={(e) => setEmailHours(Number(e.target.value))} min={0} step={0.5} className={ni} aria-label={c("emailHours")} />
+              <label htmlFor="calculator-emailHours" className="block text-sm font-medium mb-2">{c("emailHours")} <span className="text-muted-foreground">({emailHours}h)</span></label>
+              <input id="calculator-emailHours" type="number" value={emailHours} onChange={(e) => setEmailHours(Number(e.target.value))} min={0} step={0.5} className={ni} aria-label={c("emailHours")} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">{c("revisionPercent")} <span className="text-muted-foreground">({revisionPercent}%)</span></label>
@@ -432,17 +432,23 @@ export function FullCalculator() {
       </div>
 
       <FadeIn delay={0.25} className="mt-8 grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
-        <div className="rounded-[24px] border bg-card p-6">
+        <div className="min-w-0 rounded-[24px] border bg-card p-6">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-5 h-5 text-amber-500" />
-            <h2 className="text-xl font-semibold">{c("comparePlatforms")}</h2>
+            <h2 id="platform-comparison-title" className="text-xl font-semibold">{c("comparePlatforms")}</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-4">{c("comparePlatformsDesc")}</p>
           <p className="mb-4 rounded-xl border bg-muted/50 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
             {comparisonHint}
           </p>
-          <div className="overflow-hidden rounded-2xl border">
-            <table className="w-full text-sm">
+          <div
+            role="region"
+            aria-labelledby="platform-comparison-title"
+            tabIndex={0}
+            className="overflow-x-auto rounded-2xl border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <table className="w-full min-w-[28rem] text-sm">
+              <caption className="sr-only">{c("comparePlatforms")}</caption>
               <thead className="bg-muted/60">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium">{c("platformName")}</th>
@@ -484,21 +490,21 @@ export function FullCalculator() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">{c("targetIncome")}</label>
+              <label htmlFor="calculator-targetIncome" className="block text-sm font-medium mb-2">{c("targetIncome")}</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
-                <input type="number" value={targetIncome} onChange={(e) => setTargetIncome(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={c("targetIncome")} />
+                <input id="calculator-targetIncome" type="number" value={targetIncome} onChange={(e) => setTargetIncome(Number(e.target.value))} min={0} step={100} className={`${ni} pl-9`} aria-label={c("targetIncome")} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">{c("workingDays")}</label>
-                <input type="number" value={workingDays} onChange={(e) => setWorkingDays(Number(e.target.value))} min={1} max={31} step={1} className={ni} aria-label={c("workingDays")} />
+                <label htmlFor="calculator-workingDays" className="block text-sm font-medium mb-2">{c("workingDays")}</label>
+                <input id="calculator-workingDays" type="number" value={workingDays} onChange={(e) => setWorkingDays(Number(e.target.value))} min={1} max={31} step={1} className={ni} aria-label={c("workingDays")} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">{c("maxHoursDay")}</label>
-                <input type="number" value={maxHoursDay} onChange={(e) => setMaxHoursDay(Number(e.target.value))} min={1} max={24} step={0.5} className={ni} aria-label={c("maxHoursDay")} />
+                <label htmlFor="calculator-maxHoursDay" className="block text-sm font-medium mb-2">{c("maxHoursDay")}</label>
+                <input id="calculator-maxHoursDay" type="number" value={maxHoursDay} onChange={(e) => setMaxHoursDay(Number(e.target.value))} min={1} max={24} step={0.5} className={ni} aria-label={c("maxHoursDay")} />
               </div>
             </div>
 
