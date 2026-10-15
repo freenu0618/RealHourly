@@ -138,7 +138,7 @@ export function LandingNav() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div id="mobile-navigation" className="border-t bg-background px-6 pb-6 pt-4 md:hidden">
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t bg-background px-6 pb-6 pt-4 md:hidden">
           <div className="flex flex-col gap-4">
             {links.map((link) =>
               isHome ? (
