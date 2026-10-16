@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/ui/fade-in";
@@ -58,7 +58,6 @@ export function FullCalculator() {
   const t = useTranslations("landing");
   const c = useTranslations("calculatorPage");
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -203,8 +202,13 @@ export function FullCalculator() {
   }, [amount, hours, feeRate, taxRate, toolCost, meetingHours, emailHours, revisionPercent, targetIncome, workingDays, maxHoursDay, pathname]);
 
   useEffect(() => {
-    router.replace(`${pathname}?${shareUrl.split("?")[1]}`, { scroll: false });
-  }, [router, pathname, shareUrl]);
+    // These inputs are client-only. Keep links shareable without a server navigation
+    // on every keystroke, and preserve any in-page anchor and existing history entry.
+    const nextUrl = `${pathname}?${shareUrl.split("?")[1]}${window.location.hash}`;
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== nextUrl) {
+      window.history.replaceState(null, "", nextUrl);
+    }
+  }, [pathname, shareUrl]);
 
   const handleShare = useCallback(() => {
     const text = locale === "ko"
