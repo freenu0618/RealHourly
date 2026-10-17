@@ -46,7 +46,7 @@ export function FadeIn({
       viewport={{ once, margin: "-50px" }}
       variants={variants}
       transition={{ delay }}
-      className={cn(className)}
+      className={cn("progressive-reveal", className)}
     >
       {children}
     </motion.div>
@@ -75,7 +75,7 @@ export function StaggerContainer({
           transition: { staggerChildren: staggerDelay, delayChildren: 0.1 },
         },
       }}
-      className={cn(className)}
+      className={cn("progressive-reveal", className)}
     >
       {children}
     </motion.div>
@@ -100,7 +100,7 @@ export function StaggerItem({
           transition: { duration: 0.4, ease: "easeOut" },
         },
       }}
-      className={cn(className)}
+      className={cn("progressive-reveal", className)}
     >
       {children}
     </motion.div>
