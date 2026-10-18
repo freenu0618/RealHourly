@@ -23,6 +23,7 @@ const PLATFORM_PRESETS = [
 export function InteractiveCalcSection() {
   const t = useTranslations("landing");
   const advancedId = useId();
+  const inputId = useId();
 
   // Simple inputs
   const [amount, setAmount] = useState(3000);
@@ -88,13 +89,14 @@ export function InteractiveCalcSection() {
           <FadeIn delay={0.1} className="space-y-6">
             {/* Simple: Project Amount */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label htmlFor={`${inputId}-amount`} className="block text-sm font-medium mb-2">
                 {t("calcInputAmount")} <span className="text-muted-foreground">(${amount})</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
                 <input
                   type="number"
+                  id={`${inputId}-amount`}
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
                   min={0}
@@ -107,11 +109,12 @@ export function InteractiveCalcSection() {
 
             {/* Simple: Expected Hours */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label htmlFor={`${inputId}-hours`} className="block text-sm font-medium mb-2">
                 {t("calcInputHours")} <span className="text-muted-foreground">({hours}h)</span>
               </label>
               <input
                 type="number"
+                id={`${inputId}-hours`}
                 value={hours}
                 onChange={(e) => setHours(Number(e.target.value))}
                 min={1}
@@ -123,9 +126,9 @@ export function InteractiveCalcSection() {
 
             {/* Simple: Platform Preset */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <p id={`${inputId}-feeRate-label`} className="block text-sm font-medium mb-2">
                 {t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span>
-              </label>
+              </p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {PLATFORM_PRESETS.map((preset) => (
                   <button
@@ -151,7 +154,7 @@ export function InteractiveCalcSection() {
                 min={0}
                 max={30}
                 step={1}
-                aria-label={t("calcFeeLabel")}
+                aria-labelledby={`${inputId}-feeRate-label`}
               />
             </div>
 
@@ -175,26 +178,27 @@ export function InteractiveCalcSection() {
             {showAdvanced && (
               <div id={advancedId} className="space-y-4 pt-2 border-t">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <p id={`${inputId}-taxRate-label`} className="block text-sm font-medium mb-2">
                     {t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span>
-                  </label>
+                  </p>
                   <Slider
                     value={[taxRate]}
                     onValueChange={(v) => setTaxRate(v[0])}
                     min={0}
                     max={50}
                     step={1}
-                    aria-label={t("calcTaxLabel")}
+                    aria-labelledby={`${inputId}-taxRate-label`}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label htmlFor={`${inputId}-toolCost`} className="block text-sm font-medium mb-2">
                     {t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-lg">$</span>
                     <input
                       type="number"
+                      id={`${inputId}-toolCost`}
                       value={toolCost}
                       onChange={(e) => setToolCost(Number(e.target.value))}
                       min={0}
@@ -205,11 +209,12 @@ export function InteractiveCalcSection() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label htmlFor={`${inputId}-meetingHours`} className="block text-sm font-medium mb-2">
                     {t("calcMeetingHoursLabel")} <span className="text-muted-foreground">({meetingHours}h)</span>
                   </label>
                   <input
                     type="number"
+                    id={`${inputId}-meetingHours`}
                     value={meetingHours}
                     onChange={(e) => setMeetingHours(Number(e.target.value))}
                     min={0}
@@ -219,11 +224,12 @@ export function InteractiveCalcSection() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label htmlFor={`${inputId}-emailHours`} className="block text-sm font-medium mb-2">
                     {t("calcAdminHoursLabel")} <span className="text-muted-foreground">({emailHours}h)</span>
                   </label>
                   <input
                     type="number"
+                    id={`${inputId}-emailHours`}
                     value={emailHours}
                     onChange={(e) => setEmailHours(Number(e.target.value))}
                     min={0}
@@ -233,16 +239,16 @@ export function InteractiveCalcSection() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <p id={`${inputId}-revisionPercent-label`} className="block text-sm font-medium mb-2">
                     {t("calcRevisionTimeLabel")} <span className="text-muted-foreground">({revisionPercent}% · {t("calcRevisionTimeSuffix")})</span>
-                  </label>
+                  </p>
                   <Slider
                     value={[revisionPercent]}
                     onValueChange={(v) => setRevisionPercent(v[0])}
                     min={0}
                     max={60}
                     step={1}
-                    aria-label={t("calcRevisionTimeLabel")}
+                    aria-labelledby={`${inputId}-revisionPercent-label`}
                   />
                 </div>
               </div>
