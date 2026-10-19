@@ -1,5 +1,17 @@
 import { getSiteUrl } from "./site-url";
 
+/** Shared preview artwork with a description in the page language. */
+export function getSocialImage(locale: string) {
+  return {
+    url: "/og-image.png",
+    width: 1200,
+    height: 630,
+    alt: locale === "ko"
+      ? "RealHourly - 프리랜서 실제 시급과 수익성 분석"
+      : "RealHourly - Freelancer real hourly rate and profitability analytics",
+  };
+}
+
 /**
  * Generate alternates (canonical + hreflang + x-default) for a given locale and path.
  * Usage: `alternates: getAlternates(locale, "/features")`
@@ -30,14 +42,7 @@ export function getOpenGraph(
     type: "website" as const,
     url: `${getSiteUrl()}/${locale}${path}`,
     siteName: "RealHourly",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "RealHourly - AI Freelancer Revenue Analytics",
-      },
-    ],
+    images: [getSocialImage(locale)],
     locale: locale === "ko" ? "ko_KR" : "en_US",
   };
 }
@@ -45,11 +50,11 @@ export function getOpenGraph(
 /**
  * Generate Twitter card metadata for a page.
  */
-export function getTwitter(title: string, description: string) {
+export function getTwitter(locale: string, title: string, description: string) {
   return {
     card: "summary_large_image" as const,
     title,
     description,
-    images: ["/og-image.png"],
+    images: [getSocialImage(locale)],
   };
 }

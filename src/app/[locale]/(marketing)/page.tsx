@@ -2,7 +2,7 @@ import { getSiteUrl } from "@/lib/seo/site-url";
 import { setRequestLocale } from "next-intl/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
-import { getAlternates } from "@/lib/seo/metadata";
+import { getAlternates, getSocialImage } from "@/lib/seo/metadata";
 import { LandingContent } from "@/components/landing/LandingContent";
 
 type Props = {
@@ -69,14 +69,7 @@ export async function generateMetadata({ params }: Props) {
       type: "website" as const,
       url: `${siteUrl}/${locale}`,
       siteName: "RealHourly",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: "RealHourly - AI Freelancer Revenue Analytics",
-        },
-      ],
+      images: [getSocialImage(locale)],
       locale: locale === "ko" ? "ko_KR" : "en_US",
     },
     twitter: {
@@ -89,7 +82,7 @@ export async function generateMetadata({ params }: Props) {
         locale === "ko"
           ? "계약 시급이 아닌 진짜 시급을 확인하세요. 수수료·세금·비청구 시간까지 반영합니다."
           : "See your real rate, not your contract rate. Includes fees, taxes, and unbilled time.",
-      images: ["/og-image.png"],
+      images: [getSocialImage(locale)],
     },
     robots: {
       index: true,

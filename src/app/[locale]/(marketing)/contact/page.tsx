@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props) {
     robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/contact"),
     openGraph: getOpenGraph(locale, "/contact", title, description),
-    twitter: getTwitter(title, description),
+    twitter: getTwitter(locale, title, description),
   };
 }
 

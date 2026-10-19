@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props) {
     robots: { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1 },
     alternates: getAlternates(locale, "/features"),
     openGraph: getOpenGraph(locale, "/features", title, description),
-    twitter: getTwitter(title, description),
+    twitter: getTwitter(locale, title, description),
   };
 }
 
