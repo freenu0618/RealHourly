@@ -1423,6 +1423,7 @@
     "shareTitle": "결과 공유하기",
     "shareCopied": "링크가 복사되었습니다",
     "shareCopyFailed": "링크 복사에 실패했어요",
+    "shareFailed": "공유에 실패했어요. 다시 시도해 주세요.",
     "shareUnsupported": "이 기기에서는 공유를 지원하지 않아요",
     "resetButton": "입력값 초기화",
     "resetDone": "기본값으로 초기화했어요",

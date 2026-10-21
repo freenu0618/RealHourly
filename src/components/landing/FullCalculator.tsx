@@ -210,13 +210,20 @@ export function FullCalculator() {
     }
   }, [pathname, shareUrl]);
 
-  const handleShare = useCallback(() => {
+  const handleShare = useCallback(async () => {
     const text = locale === "ko"
       ? `계약 단가 $${r.nominal.toFixed(0)}/시간, 실제 시급 $${r.realWith.toFixed(0)}/시간으로 계산됐어요. 직접 계산해보기: ${shareUrl}`
       : `My contract rate is $${r.nominal.toFixed(0)}/hr, but my real rate is $${r.realWith.toFixed(0)}/hr. Calculate yours: ${shareUrl}`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
-      navigator.share({ text, url: shareUrl }).catch(() => {});
+      try {
+        await navigator.share({ text, url: shareUrl });
+      } catch (error) {
+        // Dismissing the share sheet is not a failure. Other errors must be visible.
+        if (!(error instanceof Error && error.name === "AbortError")) {
+          toast.error(c("shareFailed"));
+        }
+      }
       return;
     }
 
