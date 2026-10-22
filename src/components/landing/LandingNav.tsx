@@ -34,7 +34,9 @@ export function LandingNav() {
 
   function toggleLocale() {
     const next = locale === "ko" ? "en" : "ko";
-    router.replace(pathname, { locale: next });
+    // Calculator inputs live in the URL; changing language must not reset them.
+    const href = `${pathname}${window.location.search}${window.location.hash}`;
+    router.replace(href, { locale: next });
   }
 
   return (
