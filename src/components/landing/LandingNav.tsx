@@ -128,7 +128,7 @@ export function LandingNav() {
         <button
           ref={mobileMenuButtonRef}
           type="button"
-          className="rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? t("nav.close") : locale === "ko" ? "메뉴 열기" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -141,28 +141,28 @@ export function LandingNav() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div id="mobile-navigation" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t bg-background px-6 pb-6 pt-4 md:hidden">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
             {links.map((link) =>
               isHome ? (
-                <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {link.label}
                 </a>
               ) : (
-                <Link key={link.href} href={link.href as "/"} onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link key={link.href} href={link.href as "/"} onClick={() => setMobileOpen(false)} className="flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {link.label}
                 </Link>
               ),
             )}
-            <Link href="/features" onClick={() => setMobileOpen(false)} aria-current={pathname === "/features" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/features" onClick={() => setMobileOpen(false)} aria-current={pathname === "/features" ? "page" : undefined} className="flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.guide")}
             </Link>
-            <Link href="/calculator" onClick={() => setMobileOpen(false)} aria-current={pathname === "/calculator" ? "page" : undefined} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/calculator" onClick={() => setMobileOpen(false)} aria-current={pathname === "/calculator" ? "page" : undefined} className="flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.calculator")}
             </Link>
             <button
               type="button"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
+              className="flex min-h-11 items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
             >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
               {locale === "ko"
@@ -172,16 +172,16 @@ export function LandingNav() {
             <button
               type="button"
               onClick={toggleLocale}
-              className="flex items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
+              className="flex min-h-11 items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
               aria-label={locale === "ko" ? "Switch language to English" : "언어를 한국어로 변경"}
             >
               <Globe className="size-4" />
               {locale === "ko" ? "English" : "한국어"}
             </button>
-            <Link href="/login" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/login" onClick={() => setMobileOpen(false)} className="flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground">
               {t("nav.login")}
             </Link>
-            <Link href="/login" onClick={() => setMobileOpen(false)} className="rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
+            <Link href="/login" onClick={() => setMobileOpen(false)} className="flex min-h-11 items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
               {t("nav.cta")}
             </Link>
           </div>
