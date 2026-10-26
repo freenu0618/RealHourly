@@ -8,12 +8,14 @@ export function LandingFooter() {
   const t = useTranslations("landing");
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const linkClassName =
+    "flex min-h-11 items-center rounded-sm py-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
 
   const sectionLink = (
     href: "#features" | "#pricing" | "#faq",
     label: string,
   ) => {
-    const className = "block text-muted-foreground hover:text-foreground";
+    const className = linkClassName;
 
     if (isHome) {
       return (
@@ -49,20 +51,20 @@ export function LandingFooter() {
           </p>
         </div>
 
-        <div className="flex gap-12 text-sm">
+        <div className="grid w-full grid-cols-2 gap-x-6 gap-y-6 text-sm sm:w-auto sm:grid-cols-3 sm:gap-x-12">
           <div>
             <h4 className="mb-2 font-medium">{t("footerProduct")}</h4>
             {sectionLink("#features", t("footerFeatures"))}
             {sectionLink("#pricing", t("footerPricing"))}
             <Link
               href="/features"
-              className="block text-muted-foreground hover:text-foreground"
+              className={linkClassName}
             >
               {t("footerGuide")}
             </Link>
             <Link
               href="/calculator"
-              className="block text-muted-foreground hover:text-foreground"
+              className={linkClassName}
             >
               {t("footerCalculator")}
             </Link>
@@ -72,7 +74,7 @@ export function LandingFooter() {
             {sectionLink("#faq", t("footerFaq"))}
             <Link
               href="/contact"
-              className="block text-muted-foreground hover:text-foreground"
+              className={linkClassName}
             >
               {t("footerContact")}
             </Link>
@@ -81,13 +83,13 @@ export function LandingFooter() {
             <h4 className="mb-2 font-medium">{t("footerLegal")}</h4>
             <Link
               href="/terms"
-              className="block text-muted-foreground hover:text-foreground"
+              className={linkClassName}
             >
               {t("footerTerms")}
             </Link>
             <Link
               href="/privacy"
-              className="block text-muted-foreground hover:text-foreground"
+              className={linkClassName}
             >
               {t("footerPrivacy")}
             </Link>
