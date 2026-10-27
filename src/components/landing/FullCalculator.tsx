@@ -11,6 +11,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator, Trophy, Target } from "lucide-react";
 import { toast } from "sonner";
+import { getCalculatorParam } from "@/lib/calculator/share-params";
 
 const PLATFORM_PRESETS = [
   { name: "Upwork", fee: 10, icon: "🟢" },
@@ -38,12 +39,6 @@ const DEFAULT_VALUES = {
   maxHoursDay: 6,
 } as const;
 
-const getNumberParam = (value: string | null, fallback: number) => {
-  if (value === null || value === "") return fallback;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-};
-
 const getPresetName = (feeRate: number) => {
   const preset = PLATFORM_PRESETS.find((item) => item.fee === feeRate);
   return preset?.name ?? "Custom";
@@ -63,17 +58,17 @@ export function FullCalculator() {
 
   const initialValues = useMemo(() => {
     const values = {
-      amount: getNumberParam(searchParams.get("amount"), DEFAULT_VALUES.amount),
-      hours: getNumberParam(searchParams.get("hours"), DEFAULT_VALUES.hours),
-      feeRate: getNumberParam(searchParams.get("fee"), DEFAULT_VALUES.feeRate),
-      taxRate: getNumberParam(searchParams.get("tax"), DEFAULT_VALUES.taxRate),
-      toolCost: getNumberParam(searchParams.get("tool"), DEFAULT_VALUES.toolCost),
-      meetingHours: getNumberParam(searchParams.get("meeting"), DEFAULT_VALUES.meetingHours),
-      emailHours: getNumberParam(searchParams.get("email"), DEFAULT_VALUES.emailHours),
-      revisionPercent: getNumberParam(searchParams.get("revision"), DEFAULT_VALUES.revisionPercent),
-      targetIncome: getNumberParam(searchParams.get("target"), DEFAULT_VALUES.targetIncome),
-      workingDays: getNumberParam(searchParams.get("days"), DEFAULT_VALUES.workingDays),
-      maxHoursDay: getNumberParam(searchParams.get("maxDay"), DEFAULT_VALUES.maxHoursDay),
+      amount: getCalculatorParam(searchParams.get("amount"), DEFAULT_VALUES.amount, 0),
+      hours: getCalculatorParam(searchParams.get("hours"), DEFAULT_VALUES.hours, 1),
+      feeRate: getCalculatorParam(searchParams.get("fee"), DEFAULT_VALUES.feeRate, 0, 30),
+      taxRate: getCalculatorParam(searchParams.get("tax"), DEFAULT_VALUES.taxRate, 0, 50),
+      toolCost: getCalculatorParam(searchParams.get("tool"), DEFAULT_VALUES.toolCost, 0),
+      meetingHours: getCalculatorParam(searchParams.get("meeting"), DEFAULT_VALUES.meetingHours, 0),
+      emailHours: getCalculatorParam(searchParams.get("email"), DEFAULT_VALUES.emailHours, 0),
+      revisionPercent: getCalculatorParam(searchParams.get("revision"), DEFAULT_VALUES.revisionPercent, 0, 60),
+      targetIncome: getCalculatorParam(searchParams.get("target"), DEFAULT_VALUES.targetIncome, 0),
+      workingDays: getCalculatorParam(searchParams.get("days"), DEFAULT_VALUES.workingDays, 1, 31),
+      maxHoursDay: getCalculatorParam(searchParams.get("maxDay"), DEFAULT_VALUES.maxHoursDay, 1, 24),
     };
 
     return {
