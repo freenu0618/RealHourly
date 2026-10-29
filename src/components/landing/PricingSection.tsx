@@ -135,7 +135,7 @@ export function PricingSection() {
 
             <div className="mt-6 border-t pt-6">
               <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {t("pricingIncludes")}
+                {t("pricingFeatureAvailability")}
               </p>
               <ul className="space-y-3">
                 {freeFeatures.map((f, i) => (
@@ -143,7 +143,7 @@ export function PricingSection() {
                     key={i}
                     className={cn(
                       "flex items-center gap-2.5 text-sm",
-                      !f.included && "text-muted-foreground/50",
+                      !f.included && "text-muted-foreground",
                     )}
                   >
                     {f.included ? (
@@ -152,9 +152,12 @@ export function PricingSection() {
                       </div>
                     ) : (
                       <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted">
-                        <X className="size-3 text-muted-foreground/50" />
+                        <X className="size-3 text-muted-foreground" />
                       </div>
                     )}
+                    <span className="sr-only">
+                      {t(f.included ? "pricingFeatureIncluded" : "pricingFeatureExcluded")}{" "}
+                    </span>
                     <span className={cn(!f.included && "line-through")}>
                       {f.label}
                     </span>
@@ -226,6 +229,7 @@ export function PricingSection() {
                     <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
                       <Check className="size-3 text-primary" />
                     </div>
+                    <span className="sr-only">{t("pricingFeatureIncluded")}{" "}</span>
                     {f.label}
                   </li>
                 ))}
