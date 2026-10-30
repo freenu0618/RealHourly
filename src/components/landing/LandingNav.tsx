@@ -13,7 +13,7 @@ export function LandingNav() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -94,15 +94,16 @@ export function LandingNav() {
         <div className="hidden items-center gap-3 md:flex">
           <button
             type="button"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
             className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label={
-              locale === "ko"
-                ? theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"
-                : theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-            }
           >
-            {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            {/* CSS follows the applied theme even before hydration. */}
+            <Sun className="hidden size-4 dark:block" aria-hidden="true" />
+            <Moon className="size-4 dark:hidden" aria-hidden="true" />
+            <span className="sr-only">
+              <span className="hidden dark:inline">{locale === "ko" ? "라이트 모드로 전환" : "Switch to light mode"}</span>
+              <span className="dark:hidden">{locale === "ko" ? "다크 모드로 전환" : "Switch to dark mode"}</span>
+            </span>
           </button>
           <button
             type="button"
@@ -161,13 +162,13 @@ export function LandingNav() {
             </Link>
             <button
               type="button"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               className="flex min-h-11 items-center gap-2 text-left text-sm text-muted-foreground hover:text-foreground"
             >
-              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-              {locale === "ko"
-                ? theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"
-                : theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              <Sun className="hidden size-4 dark:block" aria-hidden="true" />
+              <Moon className="size-4 dark:hidden" aria-hidden="true" />
+              <span className="hidden dark:inline">{locale === "ko" ? "라이트 모드로 전환" : "Switch to light mode"}</span>
+              <span className="dark:hidden">{locale === "ko" ? "다크 모드로 전환" : "Switch to dark mode"}</span>
             </button>
             <button
               type="button"
