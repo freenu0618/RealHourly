@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator, Trophy, Target } from "lucide-react";
 import { toast } from "sonner";
 import { getCalculatorParam } from "@/lib/calculator/share-params";
+import { getIncomeGoalRate } from "@/lib/calculator/income-goal";
 
 const PLATFORM_PRESETS = [
   { name: "Upwork", fee: 10, icon: "🟢" },
@@ -151,11 +152,9 @@ export function FullCalculator() {
     const availableBillableHours = Math.max(0, (monthlyCapacity - monthlyAdminHours) / revisionMultiplier);
     const retentionRate = Math.max(0.05, 1 - feeRate / 100 - taxRate / 100);
     const requiredGross = (targetIncome + toolCost) / retentionRate;
-    const requiredRate = availableBillableHours > 0 ? requiredGross / availableBillableHours : 0;
+    const { requiredRate, status } = getIncomeGoalRate(requiredGross, availableBillableHours, r.nominal);
     const requiredHoursWeek = availableBillableHours / MONTHS_PER_WEEK;
     const projectsNeeded = r.net > 0 ? targetIncome / r.net : 0;
-    const rateRatio = r.nominal > 0 ? requiredRate / r.nominal : Infinity;
-    const status = rateRatio <= 1 ? "goalAchievable" : rateRatio <= 1.3 ? "goalTight" : "goalExceeds";
 
     return {
       monthlyCapacity,
@@ -517,7 +516,11 @@ export function FullCalculator() {
             <div className="rounded-2xl bg-muted/50 p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{c("requiredRate")}</span>
-                <span className="text-2xl font-bold text-primary">${goal.requiredRate.toFixed(2)}{c("perHour")}</span>
+                <span className="text-2xl font-bold text-primary">
+                  {goal.requiredRate === null
+                    ? c("requiredRateUnavailable")
+                    : `$${goal.requiredRate.toFixed(2)}${c("perHour")}`}
+                </span>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="rounded-xl bg-background p-3 border">
@@ -536,6 +539,9 @@ export function FullCalculator() {
               <div className="inline-flex rounded-full border px-3 py-1 text-xs font-semibold">
                 {c(goal.status)}
               </div>
+              {goal.status === "goalNoCapacity" && (
+                <p className="text-sm text-muted-foreground">{c("goalNoCapacityHint")}</p>
+              )}
             </div>
           </div>
         </div>
