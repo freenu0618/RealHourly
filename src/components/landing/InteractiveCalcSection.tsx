@@ -155,6 +155,7 @@ export function InteractiveCalcSection() {
                 max={30}
                 step={1}
                 aria-labelledby={`${inputId}-feeRate-label`}
+                aria-valuetext={`${feeRate}%`}
               />
             </div>
 
@@ -188,6 +189,7 @@ export function InteractiveCalcSection() {
                     max={50}
                     step={1}
                     aria-labelledby={`${inputId}-taxRate-label`}
+                    aria-valuetext={`${taxRate}%`}
                   />
                 </div>
                 <div>
@@ -249,6 +251,7 @@ export function InteractiveCalcSection() {
                     max={60}
                     step={1}
                     aria-labelledby={`${inputId}-revisionPercent-label`}
+                    aria-valuetext={`${revisionPercent}%`}
                   />
                 </div>
               </div>

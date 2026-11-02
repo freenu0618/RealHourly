@@ -296,7 +296,7 @@ export function FullCalculator() {
             <input id="calculator-hours" type="number" value={hours} onChange={(e) => setHours(Number(e.target.value))} min={1} step={1} className={ni} aria-label={t("calcInputHours")} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></label>
+            <p id="calculator-fee-label" className="block text-sm font-medium mb-2">{t("calcFeeLabel")} <span className="text-muted-foreground">({feeRate}%)</span></p>
             <div className="flex flex-wrap gap-2 mb-3">
               {PLATFORM_PRESETS.map((preset) => (
                 <button
@@ -316,12 +316,12 @@ export function FullCalculator() {
                 </button>
               ))}
             </div>
-            <p className="mb-3 text-xs leading-relaxed text-muted-foreground">{feePresetHint}</p>
-            <Slider value={[feeRate]} onValueChange={(v) => { setFeeRate(v[0]); setSelectedPreset("Custom"); }} min={0} max={30} step={1} aria-label={t("calcFeeLabel")} />
+            <p id="calculator-fee-hint" className="mb-3 text-xs leading-relaxed text-muted-foreground">{feePresetHint}</p>
+            <Slider value={[feeRate]} onValueChange={(v) => { setFeeRate(v[0]); setSelectedPreset("Custom"); }} min={0} max={30} step={1} aria-labelledby="calculator-fee-label" aria-describedby="calculator-fee-hint" aria-valuetext={`${feeRate}%`} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">{t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span></label>
-            <Slider value={[taxRate]} onValueChange={(v) => setTaxRate(v[0])} min={0} max={50} step={1} aria-label={t("calcTaxLabel")} />
+            <p id="calculator-tax-label" className="block text-sm font-medium mb-2">{t("calcTaxLabel")} <span className="text-muted-foreground">({taxRate}%)</span></p>
+            <Slider value={[taxRate]} onValueChange={(v) => setTaxRate(v[0])} min={0} max={50} step={1} aria-labelledby="calculator-tax-label" aria-valuetext={`${taxRate}%`} />
           </div>
           <div>
             <label htmlFor="calculator-toolCost" className="block text-sm font-medium mb-2">{t("calcToolLabel")} <span className="text-muted-foreground">(${toolCost})</span></label>
@@ -342,8 +342,8 @@ export function FullCalculator() {
               <input id="calculator-emailHours" type="number" value={emailHours} onChange={(e) => setEmailHours(Number(e.target.value))} min={0} step={0.5} className={ni} aria-label={c("emailHours")} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">{c("revisionPercent")} <span className="text-muted-foreground">({revisionPercent}%)</span></label>
-              <Slider value={[revisionPercent]} onValueChange={(v) => setRevisionPercent(v[0])} min={0} max={60} step={1} aria-label={c("revisionPercent")} />
+              <p id="calculator-revision-label" className="block text-sm font-medium mb-2">{c("revisionPercent")} <span className="text-muted-foreground">({revisionPercent}%)</span></p>
+              <Slider value={[revisionPercent]} onValueChange={(v) => setRevisionPercent(v[0])} min={0} max={60} step={1} aria-labelledby="calculator-revision-label" aria-valuetext={`${revisionPercent}%`} />
             </div>
           </div>
         </FadeIn>
