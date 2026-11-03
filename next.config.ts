@@ -52,6 +52,7 @@ const privateRoutes = [
   "/:locale/reports/:path*",
   "/:locale/chat/:path*",
   "/:locale/timesheets/:path*",
+  "/:locale/guide/:path*",
 ];
 
 const nextConfig: NextConfig = {
