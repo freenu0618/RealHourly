@@ -69,8 +69,8 @@ export function LandingNav() {
           <span className="text-lg font-bold text-foreground">RealHourly</span>
         </Link>
 
-        {/* Desktop center menu */}
-        <div className="hidden items-center gap-8 md:flex">
+        {/* Keep the compact menu on tablets so the full navigation does not overlap. */}
+        <div className="hidden items-center gap-8 xl:flex">
           {links.map((link) =>
             isHome ? (
               <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -91,7 +91,7 @@ export function LandingNav() {
         </div>
 
         {/* Desktop right */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <button
             type="button"
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -129,7 +129,7 @@ export function LandingNav() {
         <button
           ref={mobileMenuButtonRef}
           type="button"
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 xl:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? t("nav.close") : locale === "ko" ? "메뉴 열기" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -141,7 +141,7 @@ export function LandingNav() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div id="mobile-navigation" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t bg-background px-6 pb-6 pt-4 md:hidden">
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t bg-background px-6 pb-6 pt-4 xl:hidden">
           <div className="flex flex-col gap-1">
             {links.map((link) =>
               isHome ? (
