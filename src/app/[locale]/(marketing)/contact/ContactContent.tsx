@@ -98,6 +98,23 @@ export default function ContactContent() {
     message: "",
   });
 
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
+
+  const createEmailDraft = () => ({
+    subject: `[${formData.subject}] ${t("emailSubjectPrefix")} - ${formData.name}`,
+    body: `${t("emailBodyName")}: ${formData.name}\n${t("emailBodyEmail")}: ${formData.email}\n\n${t("emailBodyMessage")}:\n${formData.message}`,
+  });
+
+  const handleCopyDraft = async () => {
+    try {
+      const { subject, body } = createEmailDraft();
+      await navigator.clipboard.writeText(`support@real-hourly.com\n${subject}\n\n${body}`);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("failed");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -107,8 +124,7 @@ export default function ContactContent() {
     }
 
     // Create mailto link
-    const subjectLine = `[${formData.subject}] ${t("emailSubjectPrefix")} - ${formData.name}`;
-    const body = `${t("emailBodyName")}: ${formData.name}\n${t("emailBodyEmail")}: ${formData.email}\n\n${t("emailBodyMessage")}:\n${formData.message}`;
+    const { subject: subjectLine, body } = createEmailDraft();
 
     const mailtoLink = `mailto:support@real-hourly.com?subject=${encodeURIComponent(subjectLine)}&body=${encodeURIComponent(body)}`;
 
@@ -117,6 +133,7 @@ export default function ContactContent() {
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setCopyStatus("idle");
   };
 
   return (
@@ -276,6 +293,24 @@ export default function ContactContent() {
               <Send className="h-4 w-4 mr-2" />
               {t("submitButton")}
             </Button>
+
+            <div className="space-y-2">
+              <p id="contact-copy-help" className="text-sm leading-6 text-muted-foreground">
+                {t("copyDraftHelp")}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCopyDraft}
+                aria-describedby="contact-copy-help"
+                className="w-full"
+              >
+                {t("copyDraftButton")}
+              </Button>
+              <p role="status" aria-atomic="true" className="text-sm leading-6 text-muted-foreground">
+                {copyStatus === "copied" ? t("copyDraftSuccess") : copyStatus === "failed" ? t("copyDraftFailed") : ""}
+              </p>
+            </div>
           </form>
         </div>
       </main>
